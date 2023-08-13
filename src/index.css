@@ -2,28 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-*  {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  }
-
-
-html {
-  font-size: 62.5%;
-}
-
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    @apply bg-white text-dark-grey;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.dark body {
+    @apply text-white bg-dark-bg;
 }
+
+h1 {
+    @apply text-lg font-bold;
+}
+
+h2 {
+    @apply text-base font-bold;
+}
+
+input {
+    @apply transition-all border rounded border-border focus:outline-none focus:border-primary;
+
+}
+
+.responsive-padding {
+    @apply p-4 md:p-8 lg:p-12;
+}
+
+.responsive-margin {
+    @apply m-4 md:m-8 lg:m-12;
+}
+
+
 
