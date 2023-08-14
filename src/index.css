@@ -18,17 +18,17 @@ h2 {
     @apply text-base font-bold;
 }
 
-input {
+input, select, textarea {
     @apply transition-all border rounded border-border focus:outline-none focus:border-primary;
 
 }
 
 .responsive-padding {
-    @apply p-4 md:p-8 lg:p-12;
+    @apply px-6 py-4 md:py-8 md:px-10 lg:py-12 lg:px-16;
 }
 
 .responsive-margin {
-    @apply m-4 md:m-8 lg:m-12;
+    @apply mx-6 my-4 md:my-8 md:mx-10 lg:my-12 lg:mx-16;
 }
 
 
