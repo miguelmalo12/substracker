@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Subscriptions from "./pages/Subscriptions";
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -16,6 +18,7 @@ function App() {
         {/* <Route path="/" element={<Home />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/subscriptions" element={<Subscriptions />} />
 
       </Routes>
       </div>

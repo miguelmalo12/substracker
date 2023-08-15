@@ -2,19 +2,12 @@ import Navbar from "../components/Navbar";
 import Field from "../components/Field";
 import Button from "../components/Button";
 
-import logo from "../assets/logos/SubsTracker-Logo.png";
-
 function Login() {
   return (
-    <div className="responsive-padding">
-      <div>
-        <Navbar content={"Select Account"} />
-        <div className="flex justify-center">
-          <img className="w-40 responsive-margin" src={logo} alt="" />
-        </div>
-        <div className="mt-4 mb-4 border"></div>
-      </div>
-      <div className="max-w-sm md:mx-auto">
+    <div className="responsive-navbar-padding">
+     <Navbar content={"Select Account"} />
+
+      <div className="max-w-sm mx-auto">
         <div>
           <h1 className="text-2xl text-left">Login</h1>
           <div className="mt-1 mb-5 border-4 w-18 border-primary"></div>
