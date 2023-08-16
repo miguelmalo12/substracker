@@ -7,6 +7,8 @@ import DropdownFilter from "../components/DropdownFilter";
 import ButtonSmall from "../components/ButtonSmall";
 import Filters from "../components/Filters";
 import NoSubs from "../components/NoSubs";
+import Footer from "../components/Footer";
+
 
 function Subscriptions() {
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
@@ -29,7 +31,7 @@ function Subscriptions() {
   }, [menuRef]);
 
   return (
-    <div className="responsive-padding">
+    <main className="responsive-padding">
       <NavbarMobile
         content={"Subscriptions"}
         toggleMenu={() => setMenuVisible(!isMenuVisible)}
@@ -66,7 +68,8 @@ function Subscriptions() {
       <div className="mt-6 mb-6 border"></div>
       <Filters />
       <NoSubs />
-    </div>
+      <Footer />
+    </main>
   );
 }
 

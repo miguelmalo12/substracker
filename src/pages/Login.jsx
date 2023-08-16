@@ -1,6 +1,8 @@
 import Navbar from "../components/Navbar";
 import Field from "../components/Field";
 import Button from "../components/Button";
+import Footer from "../components/Footer";
+
 
 function Login() {
   return (
@@ -20,6 +22,7 @@ function Login() {
           <a className="font-bold cursor-pointer text-primary">Signup</a>
         </p>
       </div>
+      <Footer />
     </div>
   );
 }
