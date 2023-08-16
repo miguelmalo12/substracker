@@ -2,8 +2,10 @@ import { useState, useRef, useEffect } from "react";
 
 import NavbarMobile from "../components/NavbarMobile";
 import MenuMobile from "../components/MenuMobile";
+import MenuDesktop from "../components/MenuDesktop";
 import DropdownFilter from "../components/DropdownFilter";
 import ButtonSmall from "../components/ButtonSmall";
+import Filters from "../components/Filters";
 import NoSubs from "../components/NoSubs";
 
 function Subscriptions() {
@@ -32,10 +34,17 @@ function Subscriptions() {
         content={"Subscriptions"}
         toggleMenu={() => setMenuVisible(!isMenuVisible)}
       />
+
+      {/* Menu on Mobile */}
       <div ref={menuRef}>
         {isMenuVisible && <MenuMobile activePage="subscriptions" />}
       </div>
-      <div className="flex gap-2.5 justify-between">
+      {/* Menu on Desktop */}
+      <div className="hidden md:block">
+        <MenuDesktop activePage="subscriptions" />
+      </div>
+
+      <div className="flex gap-2.5 justify-between flex-wrap-reverse">
         <div className="flex gap-2.5">
           <DropdownFilter
             options={["Monthly", "Yearly", "Weekly"]}
@@ -55,6 +64,7 @@ function Subscriptions() {
         </h4>
       </div>
       <div className="mt-6 mb-6 border"></div>
+      <Filters />
       <NoSubs />
     </div>
   );

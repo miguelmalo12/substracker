@@ -32,7 +32,7 @@ input, select, textarea {
 }
 
 .responsive-padding {
-    @apply px-6 py-4 md:py-8 md:px-10 lg:py-12 lg:px-16;
+    @apply px-6 py-4 md:px-10;
 }
 
 .responsive-margin {
@@ -51,4 +51,8 @@ input, select, textarea {
 
 .double-arrow-dropdown {
     appearance: none; 
+}
+
+.text-primary svg {
+    color: #9145B6; /* replace with your actual primary color code */
 }

@@ -17,7 +17,7 @@ function NavbarMobile({ content, toggleMenu }) {
       {/* Desktop View Navbar */}
       <div className="hidden md:block">
         <nav className="flex items-center justify-between w-full p-5">
-        <BurgerMenu className="cursor-pointer"/>
+        <h1 className="content-center text-3xl">{content}</h1>
           <div className="flex justify-center">
           </div>{" "}
           <div></div>
