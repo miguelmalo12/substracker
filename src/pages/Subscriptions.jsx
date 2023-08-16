@@ -8,7 +8,7 @@ import ButtonSmall from "../components/ButtonSmall";
 import Filters from "../components/Filters";
 import NoSubs from "../components/NoSubs";
 import Footer from "../components/Footer";
-
+import NavSubsDesktop from "../components/NavSubsDesktop";
 
 function Subscriptions() {
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
@@ -32,10 +32,14 @@ function Subscriptions() {
 
   return (
     <main className="responsive-padding">
+      {/* Nav on Mobile */}
       <NavbarMobile
         content={"Subscriptions"}
         toggleMenu={() => setMenuVisible(!isMenuVisible)}
       />
+
+      {/* Nav on Desktop */}
+      <NavSubsDesktop content={"Subscriptions"} />
 
       {/* Menu on Mobile */}
       <div ref={menuRef}>
@@ -46,27 +50,30 @@ function Subscriptions() {
         <MenuDesktop activePage="subscriptions" />
       </div>
 
-      <div className="flex gap-2.5 justify-between flex-wrap-reverse">
-        <div className="flex gap-2.5">
-          <DropdownFilter
-            options={["Monthly", "Yearly", "Weekly"]}
-            onChange={setSelectedInterval}
-          />
-          <DropdownFilter
-            options={["Average", "Total"]}
-            onChange={setSelectedMetric}
-          />
+      <section className="md:hidden">
+        <div className="flex gap-2.5 justify-between flex-wrap-reverse">
+          <div className="flex gap-2.5">
+            <DropdownFilter
+              options={["Monthly", "Yearly", "Weekly"]}
+              onChange={setSelectedInterval}
+            />
+            <DropdownFilter
+              options={["Average", "Total"]}
+              onChange={setSelectedMetric}
+            />
+          </div>
+          <ButtonSmall content={"+ Add"} type={"primary"} />
         </div>
-        <ButtonSmall content={"+ Add"} type={"primary"} />
-      </div>
-      <div className="flex flex-col items-center">
-        <h1 className="py-2 text-4xl">0.00 $</h1>
-        <h4 className="text-medium-grey">
-          {selectedInterval} {selectedMetric}
-        </h4>
-      </div>
-      <div className="mt-6 mb-6 border"></div>
-      <Filters />
+        <div className="flex flex-col items-center">
+          <h1 className="py-2 text-4xl">0.00 $</h1>
+          <h4 className="text-medium-grey">
+            {selectedInterval} {selectedMetric}
+          </h4>
+        </div>
+        <div className="mt-6 mb-6 border"></div>
+        <Filters />
+      </section>
+
       <NoSubs />
       <Footer />
     </main>
