@@ -18,6 +18,14 @@ h2 {
     @apply text-base font-bold;
 }
 
+h3 {
+    @apply text-base font-semibold;
+}
+
+h4 {
+    @apply text-sm font-semibold;
+}
+
 input, select, textarea {
     @apply transition-all border rounded border-border focus:outline-none focus:border-primary;
 

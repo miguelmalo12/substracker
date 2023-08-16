@@ -1,14 +1,12 @@
 import { ReactComponent as BurgerMenu } from "../assets/icons/burger_menu.svg";
 
-
-
-function Navbar({ content }) {
+function NavbarMobile({ content, toggleMenu }) {
   return (
     <header className="mb-4">
       {/* Mobile View Navbar */}
       <div className="md:hidden">
         <nav className="flex items-center justify-between w-full">
-          <BurgerMenu className="cursor-pointer"/>
+          <BurgerMenu className="cursor-pointer" onClick={toggleMenu} />
           <h1 className="content-center">{content}</h1>
           <div></div>
         </nav>
@@ -30,4 +28,4 @@ function Navbar({ content }) {
   );
 }
 
-export default Navbar;
+export default NavbarMobile;
