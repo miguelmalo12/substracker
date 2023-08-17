@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import NavbarMobile from "../components/NavbarMobile";
 import MenuMobile from "../components/MenuMobile";
@@ -13,6 +14,12 @@ import NavSubsDesktop from "../components/NavSubsDesktop";
 function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
   const [selectedMetric, setSelectedMetric] = useState("Average");
+
+  const navigate = useNavigate();
+
+  const handleAddClick = () => {
+    navigate("/add-subscription");
+  };
 
   return (
     <main className="responsive-padding md:pl-28">
@@ -52,7 +59,11 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
               onChange={setSelectedMetric}
             />
           </div>
-          <ButtonSmall content={"+ Add"} type={"primary"} />
+          <ButtonSmall
+            content={"+ Add"}
+            type={"primary"}
+            onClick={handleAddClick}
+          />
         </div>
         <div className="flex flex-col items-center">
           <h1 className="py-2 text-4xl">0.00 $</h1>

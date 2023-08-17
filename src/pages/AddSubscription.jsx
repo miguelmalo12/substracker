@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import NavbarMobile from "../components/NavbarMobile";
 import MenuMobile from "../components/MenuMobile";
@@ -15,12 +16,17 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
 
   const baseURL = process.env.REACT_APP_BASE_URL;
 
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    navigate("/subscriptions");
+  };
+
   useEffect(() => {
     // GET Services
     axios
       .get(`${baseURL}/api/services/`)
       .then((response) => {
-        console.log(response.data);
         setServices(response.data);
       })
       .catch((error) => {
@@ -53,8 +59,8 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
         {isMenuVisible && <MenuMobile activePage="subscriptions" />}
       </div>
 
-      <div className="flex items-center justify-between pt-4 mb-3">
-        <div className="flex gap-2.5 mb-4 items-center">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex gap-2.5 mb-4 items-center" onClick={handleGoBack}>
           <LeftArrow />
           <h3>Go Back</h3>
         </div>
@@ -68,9 +74,6 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
             )
         })}
       </div>
-      {/* <div>
-        <ExistingSubsCard />
-      </div> */}
     </main>
   );
 }

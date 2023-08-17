@@ -5,6 +5,7 @@ import { ReactComponent as LogoutIcon } from "../assets/icons/logout.svg";
 import { ReactComponent as ActiveMenuIcon } from "../assets/icons/active_menu.svg";
 
 import logo from "../assets/logos/SubsTracker-logo-wide.svg";
+import Switch from "./Switch";
 
 function MenuMobile({ activePage }) {
   const isActive = (page) => (activePage === page ? "text-primary" : "");
@@ -44,7 +45,8 @@ function MenuMobile({ activePage }) {
         <div className="p-4 pl-6">
           <div className="flex items-center pb-5 mb-2 cursor-pointer">
             <DarkModeIcon className="w-6 h-6 mr-6" />
-            <h4 className="text-base">Darkmode</h4>
+            <h4 className="pr-3 text-base">Darkmode</h4>
+            <Switch />
           </div>
           <div className="flex items-center pb-5 cursor-pointer">
             <LogoutIcon className="w-5 h-6 mr-6" />
