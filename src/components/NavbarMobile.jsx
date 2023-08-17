@@ -2,8 +2,8 @@ import { ReactComponent as BurgerMenu } from "../assets/icons/burger_menu.svg";
 
 function NavbarMobile({ content, toggleMenu }) {
   return (
-    <header className="mb-4">
-      <div className="md:hidden">
+    <header className="mb-4 md:hidden">
+      <div>
         <nav className="flex items-center justify-between w-full">
           <BurgerMenu className="cursor-pointer" onClick={toggleMenu} />
           <h1 className="content-center">{content}</h1>

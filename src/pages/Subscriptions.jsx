@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 import NavbarMobile from "../components/NavbarMobile";
 import MenuMobile from "../components/MenuMobile";
@@ -10,28 +10,12 @@ import NoSubs from "../components/NoSubs";
 import Footer from "../components/Footer";
 import NavSubsDesktop from "../components/NavSubsDesktop";
 
-function Subscriptions() {
+function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
   const [selectedMetric, setSelectedMetric] = useState("Average");
 
-  const menuRef = useRef(null);
-  const [isMenuVisible, setMenuVisible] = useState(false);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuVisible(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [menuRef]);
-
   return (
-    <main className="responsive-padding">
+    <main className="responsive-padding md:pl-28">
       {/* Nav on Mobile */}
       <NavbarMobile
         content={"Subscriptions"}
@@ -39,7 +23,13 @@ function Subscriptions() {
       />
 
       {/* Nav on Desktop */}
-      <NavSubsDesktop content={"Subscriptions"} />
+      <NavSubsDesktop
+        content={"Subscriptions"}
+        selectedInterval={selectedInterval}
+        selectedMetric={selectedMetric}
+        setSelectedInterval={setSelectedInterval}
+        setSelectedMetric={setSelectedMetric}
+      />
 
       {/* Menu on Mobile */}
       <div ref={menuRef}>
@@ -52,7 +42,7 @@ function Subscriptions() {
 
       <section className="md:hidden">
         <div className="flex gap-2.5 justify-between flex-wrap-reverse">
-          <div className="flex gap-2.5">
+          <div className="flex gap-2.5 mb-4">
             <DropdownFilter
               options={["Monthly", "Yearly", "Weekly"]}
               onChange={setSelectedInterval}

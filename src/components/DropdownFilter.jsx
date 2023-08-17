@@ -8,7 +8,7 @@ function DropdownFilter({ options, onChange }) {
   };
   
   return (
-    <div className="relative w-32 mb-4">
+    <div className="relative w-32">
       <select onChange={handleDropdownChange} className="relative w-full h-10 px-2 font-semibold double-arrow-dropdown">
         {options.map((option, index) => (
           <option key={index} value={option}>

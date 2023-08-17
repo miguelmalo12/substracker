@@ -4,7 +4,7 @@ import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 
 function Filters() {
   return (
-    <div className="flex justify-between pb-6">
+    <div className="flex justify-between pb-6 md:pb-0">
       <div className="flex gap-6">
         <div className="flex cursor-pointer">
           <FilterIcon className="mr-3" />
