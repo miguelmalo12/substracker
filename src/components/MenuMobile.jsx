@@ -8,7 +8,7 @@ import Switch from "./Switch";
 
 function MenuMobile({ activePage }) {
   return (
-    <div className="absolute z-10 -mt-3 bg-white border rounded w-52 drop-shadow">
+    <div className="absolute z-10 -mt-3 w-52 card">
       <div className="p-4 mb-3 border-b border-border">
         <p className="text-sm font-semibold text-medium-grey">
           john.doe@gmail.com

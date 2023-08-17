@@ -23,7 +23,7 @@ function NavSubsDesktop({
       </div>
 
       {/* Right Card */}
-      <div className="w-1/3 flex h-34 gap-2.5 p-5 justify-between bg-white border drop-shadow min-w-max">
+      <div className="w-1/3 flex h-34 gap-2.5 p-5 justify-between card min-w-max">
 
         <div className="flex flex-col">
           <h1 className="py-2 text-4xl">0.00 $</h1>

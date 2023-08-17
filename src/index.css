@@ -23,12 +23,16 @@ h3 {
 }
 
 h4 {
-    @apply text-sm font-semibold;
+    @apply text-sm font-semibold md:text-base;
 }
 
 input, select, textarea {
     @apply transition-all border rounded border-border focus:outline-none focus:border-primary;
 
+}
+
+.card {
+    @apply bg-white border rounded drop-shadow;
 }
 
 .responsive-padding {
