@@ -1,12 +1,46 @@
+import axios from "axios";
+import { useState, useEffect, useRef } from "react";
+
 import NavbarMobile from "../components/NavbarMobile";
 import MenuMobile from "../components/MenuMobile";
 import ButtonSmall from "../components/ButtonSmall";
 import SearchField from "../components/SearchField";
+import ExistingSubsCard from "../components/ExistingSubsCard";
 
 import { ReactComponent as LeftArrow } from "../assets/icons/left_arrow.svg";
 
-
 function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
+  const [services, setServices] = useState([]);
+  const [categories, setCategories] = useState({});
+
+  const baseURL = process.env.REACT_APP_BASE_URL;
+
+  useEffect(() => {
+    // GET Services
+    axios
+      .get(`${baseURL}/api/services/`)
+      .then((response) => {
+        console.log(response.data);
+        setServices(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    //GET Categories
+    axios
+      .get(`${baseURL}/api/categories/`)
+      .then((response) => {
+        // Transform the array to an object for easier access
+        const categoryObj = response.data.reduce((acc, category) => {
+          acc[category.category_id] = category.category_name;
+          return acc;
+        }, {});
+        setCategories(categoryObj);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
   return (
     <main className="responsive-padding md:pl-28">
       {/* Nav on Mobile */}
@@ -19,14 +53,24 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
         {isMenuVisible && <MenuMobile activePage="subscriptions" />}
       </div>
 
-      <div className="flex items-center justify-between pt-4">
-          <div className="flex gap-2.5 mb-4 items-center">
-           <LeftArrow />
-           <h3>Go Back</h3>
-          </div>
-          <ButtonSmall content={"+ New"} type={"primary"} />
+      <div className="flex items-center justify-between pt-4 mb-3">
+        <div className="flex gap-2.5 mb-4 items-center">
+          <LeftArrow />
+          <h3>Go Back</h3>
         </div>
-        <SearchField placeholder={"Search Service..."} />
+        <ButtonSmall content={"+ New"} type={"primary"} />
+      </div>
+      <SearchField placeholder={"Search Service..."} />
+      <div>
+        {services.map((service) => {
+            return (
+                <ExistingSubsCard key={service.service_id} service={service} categories={categories} />
+            )
+        })}
+      </div>
+      {/* <div>
+        <ExistingSubsCard />
+      </div> */}
     </main>
   );
 }
