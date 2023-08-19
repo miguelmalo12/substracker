@@ -9,6 +9,7 @@ import MenuDesktop from "../components/MenuDesktop";
 import ButtonSmall from "../components/ButtonSmall";
 import SearchField from "../components/SearchField";
 import ExistingSubsCard from "../components/ExistingSubsCard";
+import Footer from "../components/Footer";
 
 function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
   const [services, setServices] = useState([]);
@@ -20,6 +21,10 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
 
   const handleGoBack = () => {
     navigate("/subscriptions");
+  };
+
+  const handleAddNewClick = () => {
+    navigate('/new-subscription');
   };
 
   useEffect(() => {
@@ -68,7 +73,7 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
             {/* Nav on Desktop */}
             <NavbarDesktop content={"Add Subscription"} goBack={handleGoBack} />
           </div>
-          <ButtonSmall content={"+ New"} type={"primary"} />
+          <ButtonSmall content={"+ New"} type={"primary"} onClick={handleAddNewClick} />
         </div>
         <SearchField placeholder={"Search Service..."} />
       </div>
@@ -83,6 +88,8 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
           );
         })}
       </div>
+      <Footer />
+
     </main>
   );
 }

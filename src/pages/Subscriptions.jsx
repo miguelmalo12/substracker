@@ -22,61 +22,63 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   };
 
   return (
-    <main className="responsive-padding md:pl-28">
-      {/* Nav on Mobile */}
-      <NavbarMobile
-        content={"Subscriptions"}
-        toggleMenu={() => setMenuVisible(!isMenuVisible)}
-      />
+    <main className="responsive-padding md:pl-28 md:min-h-screen md:flex md:flex-col">
+      <div className="flex-grow">
+        {/* Nav on Mobile */}
+        <NavbarMobile
+          content={"Subscriptions"}
+          toggleMenu={() => setMenuVisible(!isMenuVisible)}
+        />
 
-      {/* Nav on Desktop */}
-      <NavSubsDesktop
-        content={"Subscriptions"}
-        selectedInterval={selectedInterval}
-        selectedMetric={selectedMetric}
-        setSelectedInterval={setSelectedInterval}
-        setSelectedMetric={setSelectedMetric}
-        handleAddClick={handleAddClick}
-      />
+        {/* Nav on Desktop */}
+        <NavSubsDesktop
+          content={"Subscriptions"}
+          selectedInterval={selectedInterval}
+          selectedMetric={selectedMetric}
+          setSelectedInterval={setSelectedInterval}
+          setSelectedMetric={setSelectedMetric}
+          handleAddClick={handleAddClick}
+        />
 
-      {/* Menu on Mobile */}
-      <div ref={menuRef}>
-        {isMenuVisible && <MenuMobile activePage="subscriptions" />}
-      </div>
-      {/* Menu on Desktop */}
-      <div className="hidden md:block">
-        <MenuDesktop activePage="subscriptions" />
-      </div>
+        {/* Menu on Mobile */}
+        <div ref={menuRef}>
+          {isMenuVisible && <MenuMobile activePage="subscriptions" />}
+        </div>
+        {/* Menu on Desktop */}
+        <div className="hidden md:block">
+          <MenuDesktop activePage="subscriptions" />
+        </div>
 
-      <section className="md:hidden">
-        <div className="flex gap-2.5 justify-between flex-wrap-reverse">
-          <div className="flex gap-2.5 mb-4">
-            <DropdownFilter
-              options={["Monthly", "Yearly", "Weekly"]}
-              onChange={setSelectedInterval}
-            />
-            <DropdownFilter
-              options={["Average", "Total"]}
-              onChange={setSelectedMetric}
+        <section className="md:hidden">
+          <div className="flex gap-2.5 justify-between flex-wrap-reverse">
+            <div className="flex gap-2.5 mb-4">
+              <DropdownFilter
+                options={["Monthly", "Yearly", "Weekly"]}
+                onChange={setSelectedInterval}
+              />
+              <DropdownFilter
+                options={["Average", "Total"]}
+                onChange={setSelectedMetric}
+              />
+            </div>
+            <ButtonSmall
+              content={"+ Add"}
+              type={"primary"}
+              onClick={handleAddClick}
             />
           </div>
-          <ButtonSmall
-            content={"+ Add"}
-            type={"primary"}
-            onClick={handleAddClick}
-          />
-        </div>
-        <div className="flex flex-col items-center">
-          <h1 className="py-2 text-4xl">0.00 $</h1>
-          <h4 className="text-medium-grey">
-            {selectedInterval} {selectedMetric}
-          </h4>
-        </div>
-        <div className="mt-6 mb-6 border"></div>
-        <Filters />
-      </section>
+          <div className="flex flex-col items-center">
+            <h1 className="py-2 text-4xl">0.00 $</h1>
+            <h4 className="text-medium-grey">
+              {selectedInterval} {selectedMetric}
+            </h4>
+          </div>
+          <div className="mt-6 mb-6 border"></div>
+          <Filters />
+        </section>
 
-      <NoSubs />
+        <NoSubs />
+      </div>
       <Footer />
     </main>
   );
