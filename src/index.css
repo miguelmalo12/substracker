@@ -35,6 +35,12 @@ input, select, textarea {
     @apply bg-white border rounded drop-shadow;
 }
 
+@media (min-width: 768px) {
+    .md\:card {
+        @apply bg-white border rounded drop-shadow;
+    }
+}
+
 .responsive-padding {
     @apply px-6 py-4 md:px-10;
 }

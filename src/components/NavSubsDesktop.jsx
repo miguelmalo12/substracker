@@ -8,6 +8,7 @@ function NavSubsDesktop({
   selectedMetric,
   setSelectedInterval,
   setSelectedMetric,
+  handleAddClick,
 }) {
   return (
     <header className="hidden w-full gap-5 pt-3 mb-4 md:flex">
@@ -15,7 +16,7 @@ function NavSubsDesktop({
       <div className="flex flex-col justify-between w-2/3 h-34">
         <nav className="flex items-center justify-between w-full pb-5 pl-0">
           <h1 className="content-center text-3xl">{content}</h1>
-          <ButtonSmall content={"+ Add"} type={"primary"} />
+          <ButtonSmall content={"+ Add"} type={"primary"} onClick={handleAddClick}/>
         </nav>
 
         <Filters />

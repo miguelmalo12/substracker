@@ -11,7 +11,7 @@ function MenuMobile({ activePage }) {
   const isActive = (page) => (activePage === page ? "text-primary" : "");
 
   return (
-    <div className="absolute top-0 left-0 z-10 h-screen pt-6 overflow-hidden duration-300 ease-out bg-white border rounded w-18 transition-width hover:w-60 drop-shadow">
+    <div className="absolute top-0 left-0 z-10 h-screen pt-6 overflow-hidden duration-300 ease-out bg-white border border-t-0 border-b-0 rounded w-18 transition-width hover:w-60 drop-shadow">
       <div className="w-60">
         <div className="p-4 pl-6 mb-6 border-b border-border">
           <img className="pb-5" src={logo} alt="" />

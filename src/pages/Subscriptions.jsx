@@ -36,6 +36,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
         selectedMetric={selectedMetric}
         setSelectedInterval={setSelectedInterval}
         setSelectedMetric={setSelectedMetric}
+        handleAddClick={handleAddClick}
       />
 
       {/* Menu on Mobile */}

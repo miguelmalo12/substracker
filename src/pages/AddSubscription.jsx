@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import NavbarMobile from "../components/NavbarMobile";
+import NavbarDesktop from "../components/NavbarDesktop";
 import MenuMobile from "../components/MenuMobile";
+import MenuDesktop from "../components/MenuDesktop";
 import ButtonSmall from "../components/ButtonSmall";
 import SearchField from "../components/SearchField";
 import ExistingSubsCard from "../components/ExistingSubsCard";
-
-import { ReactComponent as LeftArrow } from "../assets/icons/left_arrow.svg";
 
 function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
   const [services, setServices] = useState([]);
@@ -48,30 +48,39 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
   }, []);
 
   return (
-    <main className="responsive-padding md:pl-28">
+    <main className="max-w-7xl responsive-padding md:pl-28">
       {/* Nav on Mobile */}
-      <NavbarMobile
-        content={"Add Subscription"}
-        toggleMenu={() => setMenuVisible(!isMenuVisible)}
-      />
+      <NavbarMobile content={"Add Subscription"} goBack={handleGoBack} />
+
       {/* Menu on Mobile */}
       <div ref={menuRef}>
         {isMenuVisible && <MenuMobile activePage="subscriptions" />}
       </div>
 
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex gap-2.5 mb-4 items-center" onClick={handleGoBack}>
-          <LeftArrow />
-          <h3>Go Back</h3>
-        </div>
-        <ButtonSmall content={"+ New"} type={"primary"} />
+      {/* Menu on Desktop */}
+      <div className="hidden md:block">
+        <MenuDesktop activePage="subscriptions" />
       </div>
-      <SearchField placeholder={"Search Service..."} />
-      <div>
+
+      <div className="pt-3 md:flex md:justify-between">
+        <div className="flex items-center justify-between mb-3 md:w-full md:mr-6">
+          <div>
+            {/* Nav on Desktop */}
+            <NavbarDesktop content={"Add Subscription"} goBack={handleGoBack} />
+          </div>
+          <ButtonSmall content={"+ New"} type={"primary"} />
+        </div>
+        <SearchField placeholder={"Search Service..."} />
+      </div>
+      <div className="md:flex md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
         {services.map((service) => {
-            return (
-                <ExistingSubsCard key={service.service_id} service={service} categories={categories} />
-            )
+          return (
+            <ExistingSubsCard
+              key={service.service_id}
+              service={service}
+              categories={categories}
+            />
+          );
         })}
       </div>
     </main>
