@@ -5,8 +5,14 @@ import {
   ChevronUpIcon,
 } from "@radix-ui/react-icons";
 
-function FieldBorder({ title, type, options, defaultValue, placeholder }) {
+function FieldBorder({ title, type, options, defaultValue, placeholder, onChange }) {
   if (type === "select" && (!options || options.length === 0)) return null;
+
+  const handleValueChange = (e) => {
+    if (onChange) {
+      onChange(e);
+    }
+  };
 
   return (
     <div className="flex items-center justify-between pt-4 pb-2 border-b-2">
@@ -15,8 +21,9 @@ function FieldBorder({ title, type, options, defaultValue, placeholder }) {
         <Select.Root
           className="w-full p-2 text-right border-none"
           defaultValue={defaultValue}
+          onValueChange={handleValueChange}
         >
-          <Select.Trigger className="inline-flex items-center justify-center h-6 gap-1 leading-none rounded cursor-pointer drop-shadow focus:drop-shadow focus:px-4">
+          <Select.Trigger className="inline-flex items-center justify-center h-6 gap-1 leading-none rounded cursor-pointer drop-shadow focus:drop-shadow">
             <Select.Value placeholder={placeholder || "Select an option"} />
             {/* <Select.Icon /> */}
           </Select.Trigger>

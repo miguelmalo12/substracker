@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import axios from "axios";
 
@@ -52,6 +52,13 @@ function NewSubscription() {
   const navigate = useNavigate();
   const location = useLocation();
   const logoFromPreviousPage = location.state?.logo;
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    "Canadian Dollar (CAD)"
+  );
+  const [amount, setAmount] = useState("0.00");
+
+  const [inputWidth, setInputWidth] = useState("auto");
+  const measureRef = useRef(null);
 
   const handleGoBack = () => {
     navigate("/add-subscription");
@@ -67,6 +74,27 @@ function NewSubscription() {
         console.log(error);
       });
   }, []);
+
+  const getCurrencySymbol = (currencyString) => {
+    switch (currencyString) {
+      case "US Dollar (USD)":
+        return "$";
+      case "Canadian Dollar (CAD)":
+        return "C$";
+      case "Euro (EUR)":
+        return "€";
+      default:
+        const match = currencyString.match(/\(([^)]+)\)/); // extracts the value inside brackets
+        return match ? match[1] : currencyString;
+    }
+  };
+
+  useEffect(() => {
+    if (measureRef.current) {
+      const adjustedWidth = measureRef.current.offsetWidth + 5;
+      setInputWidth(`${adjustedWidth}px`);
+    }
+  }, [amount]);
 
   return (
     <div className="max-w-7xl responsive-padding md:pl-28">
@@ -127,6 +155,7 @@ function NewSubscription() {
               type={"select"}
               defaultValue={"Canadian Dollar (CAD)"}
               options={currencyList}
+              onChange={(newCurrency) => setSelectedCurrency(newCurrency)}
             />
             <FieldBorder
               title={"Shared with"}
@@ -162,10 +191,14 @@ function NewSubscription() {
         </section>
 
         {/* Card preview */}
-        <section className="flex items-center justify-center md:w-1/2 md:px-6">
+        <section className="flex items-center justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start">
           <div className="flex flex-col">
             {logoFromPreviousPage ? (
-              <img className="w-12 h-12 mx-auto my-0 rounded-full drop-shadow" src={logoFromPreviousPage} alt="Selected Service Logo" />
+              <img
+                className="w-12 h-12 mx-auto my-0 rounded-full md:mx-0 drop-shadow"
+                src={logoFromPreviousPage}
+                alt="Selected Service Logo"
+              />
             ) : (
               <>
                 <img
@@ -175,7 +208,39 @@ function NewSubscription() {
                 {/* You can add an image uploader here like the one in WhatsApp or other apps */}
               </>
             )}
-            <h1 className="py-3 text-3xl">0.00 C$</h1>
+            <div className="flex items-center">
+              <input
+                style={{ width: inputWidth }}
+                type="text"
+                value={amount}
+                className="py-3 text-3xl font-bold border border-transparent rounded cursor-pointer focus:border-primary"
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^\d.]/g, "");
+                  setAmount(value);
+                }}
+                onBlur={(e) => {
+                  const parsedValue = parseFloat(e.target.value);
+                  const formattedAmount = !isNaN(parsedValue)
+                    ? parsedValue.toFixed(2)
+                    : "0.00";
+                  setAmount(formattedAmount);
+                }}
+              />
+              <span
+                ref={measureRef}
+                style={{
+                  visibility: "hidden",
+                  position: "absolute",
+                  whiteSpace: "pre",
+                }}
+                className="text-3xl font-bold"
+              >
+                {amount}
+              </span>
+              <span className="ml-1 text-3xl font-bold">
+                {getCurrencySymbol(selectedCurrency)}
+              </span>
+            </div>
           </div>
         </section>
       </main>
