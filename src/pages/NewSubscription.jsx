@@ -1,5 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import Picker from "@emoji-mart/react";
+import data from '@emoji-mart/data';
 
 import axios from "axios";
 
@@ -60,6 +62,16 @@ function NewSubscription() {
   const [inputWidth, setInputWidth] = useState("auto");
   const measureRef = useRef(null);
 
+  //Emojis
+  const [selectedEmoji, setSelectedEmoji] = useState(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const handleEmojiClick = (emoji, event) => {
+    event.stopPropagation();
+    setSelectedEmoji(emoji.native);
+    setShowEmojiPicker(false);
+  };
+
   const handleGoBack = () => {
     navigate("/add-subscription");
   };
@@ -97,153 +109,160 @@ function NewSubscription() {
   }, [amount]);
 
   return (
-    <div className="max-w-7xl responsive-padding md:pl-28">
-      <div className="md:flex-grow">
-        {/* Nav on Mobile */}
-        <NavbarMobile content={"New Subscription"} goBack={handleGoBack} />
-        {/* Menu on Desktop */}
-        <div className="hidden md:block">
-          <MenuDesktop activePage="subscriptions" />
-        </div>
-        <div className="pt-3 md:flex md:justify-between">
-          <div className="flex items-center justify-between mb-3 md:w-full md:mr-6">
-            <div>
-              {/* Nav on Desktop */}
-              <NavbarDesktop
-                content={"New Subscription"}
-                goBack={handleGoBack}
-              />
-            </div>
+    <div className="max-w-7xl md:min-h-screen md:flex md:flex-col responsive-padding md:pl-28">
+      <div className="flex-grow">
+        <div className="md:flex-grow">
+          {/* Nav on Mobile */}
+          <NavbarMobile content={"New Subscription"} goBack={handleGoBack} />
+          {/* Menu on Desktop */}
+          <div className="hidden md:block">
+            <MenuDesktop activePage="subscriptions" />
           </div>
-        </div>
-      </div>
-
-      <main className="flex flex-col-reverse md:flex-row">
-        {/* Form fields */}
-        <section className="md:card md:py-3 md:px-6 md:w-1/2">
-          <div className="pb-6">
-            <FieldBorder
-              title={"Name"}
-              type={"text"}
-              placeholder={"Enter Name"}
-            />
-            <FieldBorder
-              title={"Description"}
-              type={"text"}
-              placeholder={"Enter Description"}
-            />
-            <FieldBorder
-              title={"Category"}
-              type={"select"}
-              placeholder={"Select Category"}
-              options={[
-                "Banking & Finance",
-                "Education & Learning",
-                "Entertainment",
-                "Food & Beverages",
-                "Health & Fitness",
-                "Insurance",
-                "Miscellaneous",
-                "Software & Apps",
-                "Telecommunications",
-                "Transportation",
-                "Utilities & Home Expenses",
-              ]}
-            />
-            <FieldBorder
-              title={"Currency"}
-              type={"select"}
-              defaultValue={"Canadian Dollar (CAD)"}
-              options={currencyList}
-              onChange={(newCurrency) => setSelectedCurrency(newCurrency)}
-            />
-            <FieldBorder
-              title={"Shared with"}
-              type={"select"}
-              defaultValue={"0"}
-              options={["0", "1", "2", "3", "4", "5", "6"]}
-            />
-            <FieldBorder
-              title={"Next payment"}
-              type={"date"}
-              placeholder={"Select Date"}
-            />
-            <FieldBorder
-              title={"Recurrence"}
-              type={"select"}
-              placeholder={"Select Cicle"}
-              defaultValue={"Monthly"}
-              options={["Weekly", "Monthly", "Yearly"]}
-            />
-            <FieldBorder
-              title={"Payment Method"}
-              type={"select"}
-              placeholder={"Select an Option"}
-              options={paymentMethods.map((method) => method.method_name)}
-            />
-            <FieldBorder
-              title={"Website"}
-              type={"url"}
-              placeholder={"Enter Website"}
-            />
-          </div>
-          <Button content={"Add Subscription"} />
-        </section>
-
-        {/* Card preview */}
-        <section className="flex items-center justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start">
-          <div className="flex flex-col">
-            {logoFromPreviousPage ? (
-              <img
-                className="w-12 h-12 mx-auto my-0 rounded-full md:mx-0 drop-shadow"
-                src={logoFromPreviousPage}
-                alt="Selected Service Logo"
-              />
-            ) : (
-              <>
-                <img
-                  src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png"
-                  alt="Placeholder"
+          <div className="pt-3 md:flex md:justify-between">
+            <div className="flex items-center justify-between mb-3 md:w-full md:mr-6">
+              <div>
+                {/* Nav on Desktop */}
+                <NavbarDesktop
+                  content={"New Subscription"}
+                  goBack={handleGoBack}
                 />
-                {/* You can add an image uploader here like the one in WhatsApp or other apps */}
-              </>
-            )}
-            <div className="flex items-center">
-              <input
-                style={{ width: inputWidth }}
-                type="text"
-                value={amount}
-                className="py-3 text-3xl font-bold border border-transparent rounded cursor-pointer focus:border-primary"
-                onChange={(e) => {
-                  const value = e.target.value.replace(/[^\d.]/g, "");
-                  setAmount(value);
-                }}
-                onBlur={(e) => {
-                  const parsedValue = parseFloat(e.target.value);
-                  const formattedAmount = !isNaN(parsedValue)
-                    ? parsedValue.toFixed(2)
-                    : "0.00";
-                  setAmount(formattedAmount);
-                }}
-              />
-              <span
-                ref={measureRef}
-                style={{
-                  visibility: "hidden",
-                  position: "absolute",
-                  whiteSpace: "pre",
-                }}
-                className="text-3xl font-bold"
-              >
-                {amount}
-              </span>
-              <span className="ml-1 text-3xl font-bold">
-                {getCurrencySymbol(selectedCurrency)}
-              </span>
+              </div>
             </div>
           </div>
-        </section>
-      </main>
+        </div>
+
+        <main className="flex flex-col-reverse md:flex-row">
+          {/* Form fields */}
+          <section className="md:card md:py-3 md:px-6 md:w-1/2">
+            <div className="pb-6">
+              <FieldBorder
+                title={"Name"}
+                type={"text"}
+                placeholder={"Enter Name"}
+              />
+              <FieldBorder
+                title={"Description"}
+                type={"text"}
+                placeholder={"Enter Description"}
+              />
+              <FieldBorder
+                title={"Category"}
+                type={"select"}
+                placeholder={"Select Category"}
+                options={[
+                  "Banking & Finance",
+                  "Education & Learning",
+                  "Entertainment",
+                  "Food & Beverages",
+                  "Health & Fitness",
+                  "Insurance",
+                  "Miscellaneous",
+                  "Software & Apps",
+                  "Telecommunications",
+                  "Transportation",
+                  "Utilities & Home Expenses",
+                ]}
+              />
+              <FieldBorder
+                title={"Currency"}
+                type={"select"}
+                defaultValue={"Canadian Dollar (CAD)"}
+                options={currencyList}
+                onChange={(newCurrency) => setSelectedCurrency(newCurrency)}
+              />
+              <FieldBorder
+                title={"Shared with"}
+                type={"select"}
+                defaultValue={"0"}
+                options={["0", "1", "2", "3", "4", "5", "6"]}
+              />
+              <FieldBorder
+                title={"Next payment"}
+                type={"date"}
+                placeholder={"Select Date"}
+              />
+              <FieldBorder
+                title={"Recurrence"}
+                type={"select"}
+                placeholder={"Select Cicle"}
+                defaultValue={"Monthly"}
+                options={["Weekly", "Monthly", "Yearly"]}
+              />
+              <FieldBorder
+                title={"Payment Method"}
+                type={"select"}
+                placeholder={"Select an Option"}
+                options={paymentMethods.map((method) => method.method_name)}
+              />
+              <FieldBorder
+                title={"Website"}
+                type={"url"}
+                placeholder={"Enter Website"}
+              />
+            </div>
+            <Button content={"Add Subscription"} />
+          </section>
+
+          {/* Card preview */}
+          <section className="flex items-center justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start">
+            <div className="flex flex-col">
+              {logoFromPreviousPage ? (
+                <img
+                  className="w-12 h-12 mx-auto my-0 rounded-full md:mx-0 drop-shadow"
+                  src={logoFromPreviousPage}
+                  alt="Selected Service Logo"
+                />
+              ) : (
+                // Emoji selector in case there is no logo
+                <> 
+                  <div
+                    className="text-3xl cursor-pointer emoji-placeholder"
+                    onClick={() => setShowEmojiPicker(true)}
+                  >
+                    {selectedEmoji || "✏️"}{" "}
+                  </div>
+                  {showEmojiPicker && (
+                    <Picker data={data} previewPosition="none" onEmojiSelect={handleEmojiClick} />
+                  )}
+                </>
+              )}
+              <div className="flex items-center">
+                <input
+                  style={{ width: inputWidth }}
+                  type="text"
+                  value={amount}
+                  className="py-3 text-3xl font-bold border border-transparent rounded cursor-pointer focus:border-primary"
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/[^\d.]/g, "");
+                    setAmount(value);
+                  }}
+                  onBlur={(e) => {
+                    const parsedValue = parseFloat(e.target.value);
+                    const formattedAmount = !isNaN(parsedValue)
+                      ? parsedValue.toFixed(2)
+                      : "0.00";
+                    setAmount(formattedAmount);
+                  }}
+                />
+                <span
+                  ref={measureRef}
+                  style={{
+                    visibility: "hidden",
+                    position: "absolute",
+                    whiteSpace: "pre",
+                  }}
+                  className="text-3xl font-bold"
+                >
+                  {amount}
+                </span>
+                <span className="ml-1 text-3xl font-bold">
+                  {getCurrencySymbol(selectedCurrency)}
+                </span>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
 
       <Footer />
     </div>
