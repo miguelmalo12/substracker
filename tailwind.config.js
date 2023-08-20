@@ -26,6 +26,7 @@ module.exports = {
         '22': '5.5rem', // 88px
       },
       height: {
+        '18': '4.5rem', // 72px
         '34': '8.5rem', // 136px
       },
     },

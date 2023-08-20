@@ -1,7 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import Picker from "@emoji-mart/react";
-import data from '@emoji-mart/data';
+import data from "@emoji-mart/data";
+import * as Popover from "@radix-ui/react-popover";
+import { Cross2Icon } from "@radix-ui/react-icons";
 
 import axios from "axios";
 
@@ -10,6 +12,7 @@ import NavbarDesktop from "../components/NavbarDesktop";
 import MenuDesktop from "../components/MenuDesktop";
 import FieldBorder from "../components/FieldBorder";
 import Button from "../components/Button";
+import Card from "../components/Card";
 import Footer from "../components/Footer";
 
 const currencyList = [
@@ -58,6 +61,10 @@ function NewSubscription() {
     "Canadian Dollar (CAD)"
   );
   const [amount, setAmount] = useState("0.00");
+  const [name, setName] = useState("");
+  const [recurrence, setRecurrence] = useState("Monthly");
+  const [nextPaymentDate, setNextPaymentDate] = useState("");
+  const [color, setColor] = useState("bg-primary");
 
   const [inputWidth, setInputWidth] = useState("auto");
   const measureRef = useRef(null);
@@ -139,6 +146,7 @@ function NewSubscription() {
                 title={"Name"}
                 type={"text"}
                 placeholder={"Enter Name"}
+                onChange={(e) => setName(e.target.value)}
               />
               <FieldBorder
                 title={"Description"}
@@ -180,6 +188,7 @@ function NewSubscription() {
                 title={"Next payment"}
                 type={"date"}
                 placeholder={"Select Date"}
+                onChange={(e) => setNextPaymentDate(e.target.value)}
               />
               <FieldBorder
                 title={"Recurrence"}
@@ -187,6 +196,7 @@ function NewSubscription() {
                 placeholder={"Select Cicle"}
                 defaultValue={"Monthly"}
                 options={["Weekly", "Monthly", "Yearly"]}
+                onChange={(newRecurrence) => setRecurrence(newRecurrence)}
               />
               <FieldBorder
                 title={"Payment Method"}
@@ -204,7 +214,7 @@ function NewSubscription() {
           </section>
 
           {/* Card preview */}
-          <section className="flex items-center justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start">
+          <section className="flex items-center justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
             <div className="flex flex-col">
               {logoFromPreviousPage ? (
                 <img
@@ -214,15 +224,19 @@ function NewSubscription() {
                 />
               ) : (
                 // Emoji selector in case there is no logo
-                <> 
+                <>
                   <div
-                    className="text-3xl cursor-pointer emoji-placeholder"
+                    className="mx-auto my-0 text-3xl cursor-pointer md:mx-0 emoji-placeholder"
                     onClick={() => setShowEmojiPicker(true)}
                   >
                     {selectedEmoji || "✏️"}{" "}
                   </div>
                   {showEmojiPicker && (
-                    <Picker data={data} previewPosition="none" onEmojiSelect={handleEmojiClick} />
+                    <Picker
+                      data={data}
+                      previewPosition="none"
+                      onEmojiSelect={handleEmojiClick}
+                    />
                   )}
                 </>
               )}
@@ -259,6 +273,86 @@ function NewSubscription() {
                   {getCurrencySymbol(selectedCurrency)}
                 </span>
               </div>
+            </div>
+            <div className="flex flex-col w-full gap-2 pt-4 border-t">
+              <h3>Card Preview</h3>
+              <Card
+                imageContent={logoFromPreviousPage || selectedEmoji}
+                name={name}
+                selectedCurrency={selectedCurrency}
+                amount={amount}
+                recurrence={recurrence}
+                nextPaymentDate={nextPaymentDate}
+                color={color}
+              />
+            </div>
+            <div className="flex pt-8 cursor-pointer">
+              {/* Color choose popover */}
+              <Popover.Root>
+                <Popover.Trigger className={`w-6 h-6 mr-3 rounded border ${color}`}>
+                  <Popover.Anchor />
+                </Popover.Trigger>
+                <Popover.Content className="relative flex flex-col p-4 mt-4 bg-white rounded drop-shadow">
+                  <Popover.Arrow />
+                  <h5 className="mb-2">Choose Color</h5>
+                  <Popover.Close className="absolute p-2 rounded-full top-1 right-1 PopoverClose hover:bg-primary-bg" aria-label="Close">
+                    <Cross2Icon />
+                  </Popover.Close>
+                  <div className="flex gap-3">
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 rounded-full bg-primary"
+                      onClick={() => setColor("bg-primary")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-gray-900 rounded-full"
+                      onClick={() => setColor("bg-gray-900")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-white border-2 rounded-full"
+                      onClick={() => setColor("bg-white")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-gray-500 rounded-full"
+                      onClick={() => setColor("bg-gray-500")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-red-600 rounded-full"
+                      onClick={() => setColor("bg-red-600")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-orange-500 rounded-full"
+                      onClick={() => setColor("bg-orange-500")}
+                    ></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-yellow-500 rounded-full"
+                      onClick={() => setColor("bg-yellow-500")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-green-600 rounded-full"
+                      onClick={() => setColor("bg-green-600")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-pink-600 rounded-full"
+                      onClick={() => setColor("bg-pink-600")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 rounded-full bg-sky-600"
+                      onClick={() => setColor("bg-sky-600")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-teal-600 rounded-full"
+                      onClick={() => setColor("bg-teal-600")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-indigo-600 rounded-full"
+                      onClick={() => setColor("bg-indigo-600")}
+                    ></div>
+                  </div>
+                </Popover.Content>
+              </Popover.Root>
+              <h3>Color</h3>
             </div>
           </section>
         </main>

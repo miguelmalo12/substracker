@@ -16,7 +16,7 @@ function FieldBorder({ title, type, options, defaultValue, placeholder, onChange
 
   return (
     <div className="flex items-center justify-between pt-4 pb-2 border-b-2">
-      <h2 className="">{title}</h2>
+      <h2 className="mr-3">{title}</h2>
       {type === "select" ? (
         <Select.Root
           className="w-full p-2 text-right border-none"
@@ -56,9 +56,10 @@ function FieldBorder({ title, type, options, defaultValue, placeholder, onChange
         </Select.Root>
       ) : (
         <input
-          className="text-right border-none"
+          className="flex-grow text-right border-none"
           type={type}
           placeholder={placeholder}
+          onChange={handleValueChange}
         />
       )}
     </div>
