@@ -1,6 +1,6 @@
 import ButtonSmall from "./ButtonSmall";
 
-function ExistingSubsCard({ service, categories }) {
+function ExistingSubsCard({ service, categories, onClick }) {
   const { logo_url, service_name, category_id } = service;
 
   return (
@@ -20,7 +20,7 @@ function ExistingSubsCard({ service, categories }) {
       </div>
 
       <div>
-        <ButtonSmall content={"+ Add"} type={"secondary"} />
+        <ButtonSmall content={"+ Add"} type={"secondary"} onClick={onClick} />
       </div>
     </div>
   );

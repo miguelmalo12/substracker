@@ -28,7 +28,15 @@ h4 {
 
 input, select, textarea {
     @apply transition-all border rounded border-border focus:outline-none focus:border-primary;
+}
 
+input::placeholder,
+textarea::placeholder {
+    @apply text-medium-grey;
+}
+
+select option:disabled {
+    @apply text-medium-grey;
 }
 
 .card {
