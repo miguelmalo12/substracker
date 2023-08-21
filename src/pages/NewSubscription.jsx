@@ -53,21 +53,36 @@ const currencyList = [
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function NewSubscription() {
-  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
+  const idToCategoryMapping = {
+    1: "Entertainment",
+    2: "Software & Apps",
+    3: "Telecommunications",
+    4: "Health & Fitness",
+    5: "Food & Beverages",
+    6: "Banking & Finance",
+    7: "Insurance",
+    8: "Transportation",
+    9: "Education & Learning",
+    10: "Utilities & Home Expenses",
+    11: "Miscellaneous",
+  };
 
   // Info coming from the previous page about Service chosen (if any)
   const logoFromPreviousPage = location.state?.logo;
   const nameFromPreviousPage = location.state?.name;
   const categoryIdFromPreviousPage = location.state?.categoryId;
+  const initialCategory = idToCategoryMapping[categoryIdFromPreviousPage] || "Select Category";
+
   const websiteFromPreviousPage = location.state?.website;
 
   // Info that will be passed to the Card and needed to store on the database
   const [amount, setAmount] = useState("0.00");
   const [name, setName] = useState(nameFromPreviousPage || "");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState(categoryIdFromPreviousPage || 13); // This is an ID!
+  const [category, setCategory] = useState(initialCategory);
   const [selectedCurrency, setSelectedCurrency] = useState(
     "Canadian Dollar (CAD)"
   );
@@ -158,6 +173,8 @@ function NewSubscription() {
         console.log(error);
       });
   };
+
+  console.log(category)
 
   return (
     <div className="max-w-7xl md:min-h-screen md:flex md:flex-col responsive-padding md:pl-28">
