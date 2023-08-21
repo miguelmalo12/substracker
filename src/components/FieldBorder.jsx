@@ -6,28 +6,37 @@ import {
 } from "@radix-ui/react-icons";
 
 const categoriesMapping = {
-  "1": "Entertainment",
-  "2": "Software & Apps",
-  "3": "Telecommunications",
-  "4": "Health & Fitness",
-  "5": "Food & Beverages",
-  "6": "Banking & Finance",
-  "7": "Insurance",
-  "8": "Transportation",
-  "9": "Education & Learning",
-  "10": "Utilities & Home Expenses",
-  "11": "Miscellaneous"
+  1: "Entertainment",
+  2: "Software & Apps",
+  3: "Telecommunications",
+  4: "Health & Fitness",
+  5: "Food & Beverages",
+  6: "Banking & Finance",
+  7: "Insurance",
+  8: "Transportation",
+  9: "Education & Learning",
+  10: "Utilities & Home Expenses",
+  11: "Miscellaneous",
+  12: "Select Category",
+  13: "Select Category",
 };
 
 function FieldBorder({ title, type, options, value, placeholder, onChange }) {
   if (type === "select" && (!options || options.length === 0)) return null;
 
   // If title is "Category", map the value using categoriesMapping
-  const displayedValue = title === "Category" && categoriesMapping[value] ? categoriesMapping[value] : value;
-  
-  const handleValueChange = (e) => {
+  const displayedValue =
+    title === "Category" ? categoriesMapping[value] : value;
+
+  const handleValueChange = (eventOrValue) => {
     if (onChange) {
-      onChange(e);
+      // If it's an event (ex: a standard input like 'date' has triggered the change)
+      if (eventOrValue && eventOrValue.target) {
+        onChange(eventOrValue);
+      } else {
+        // Otherwise, it's a value from the custom select component
+        onChange({ target: { value: eventOrValue } });
+      }
     }
   };
 
@@ -37,12 +46,13 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
       {type === "select" ? (
         <Select.Root
           className="w-full p-2 text-right border-none"
-          value={displayedValue}
+          value={value}
           onValueChange={handleValueChange}
         >
           <Select.Trigger className="inline-flex items-center justify-center h-6 gap-1 leading-none rounded cursor-pointer drop-shadow focus:drop-shadow">
-            <Select.Value placeholder={placeholder || "Select an option"} />
-            {/* <Select.Icon /> */}
+            <Select.Value>
+              {displayedValue || placeholder || "Select an Option"}
+            </Select.Value>{" "}
           </Select.Trigger>
 
           <Select.Portal>

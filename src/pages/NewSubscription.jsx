@@ -53,7 +53,7 @@ const currencyList = [
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function NewSubscription() {
-  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -63,17 +63,20 @@ function NewSubscription() {
   const categoryIdFromPreviousPage = location.state?.categoryId;
   const websiteFromPreviousPage = location.state?.website;
 
-  // Info that will be passed to the Card
+  // Info that will be passed to the Card and needed to store on the database
   const [amount, setAmount] = useState("0.00");
   const [name, setName] = useState(nameFromPreviousPage || "");
-  const [website, setWebsite] = useState(websiteFromPreviousPage || "");
-  const [category, setCategory] = useState(categoryIdFromPreviousPage || ""); // This is an ID!
-  const [recurrence, setRecurrence] = useState("Monthly");
-  const [nextPaymentDate, setNextPaymentDate] = useState("");
-  const [color, setColor] = useState("bg-primary");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState(categoryIdFromPreviousPage || 13); // This is an ID!
   const [selectedCurrency, setSelectedCurrency] = useState(
     "Canadian Dollar (CAD)"
   );
+  const [sharedNumber, setSharedNumber] = useState("0");
+  const [nextPaymentDate, setNextPaymentDate] = useState("");
+  const [recurrence, setRecurrence] = useState("Monthly");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [website, setWebsite] = useState(websiteFromPreviousPage || "");
+  const [color, setColor] = useState("bg-primary");
 
   const [inputWidth, setInputWidth] = useState("auto");
   const measureRef = useRef(null);
@@ -81,7 +84,6 @@ function NewSubscription() {
   //Emojis
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  
 
   const handleEmojiClick = (emoji, event) => {
     event.stopPropagation();
@@ -97,7 +99,7 @@ function NewSubscription() {
     axios
       .get(`${baseURL}/api/methods/`)
       .then((response) => {
-        setPaymentMethods(response.data);
+        setPaymentMethodsList(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -105,6 +107,10 @@ function NewSubscription() {
   }, []);
 
   const getCurrencySymbol = (currencyString) => {
+    if (typeof currencyString !== "string") {
+      console.error("Invalid currencyString:", currencyString);
+      return "";
+    }
     switch (currencyString) {
       case "US Dollar (USD)":
         return "$";
@@ -124,6 +130,34 @@ function NewSubscription() {
       setInputWidth(`${adjustedWidth}px`);
     }
   }, [amount]);
+
+  // Function to POST new Subscription to database, needs to include subscription_id, user_id, service_id, name, description, amount, currency, recurrence, payment_date, category_id, payment_method_id, is_active, website
+  const handleAddSubscription = () => {
+    const newSubscription = {
+      user_id: 1,
+      service_id: location.state?.id,
+      name: name,
+      description: description,
+      amount: amount,
+      currency: selectedCurrency,
+      recurrence: recurrence,
+      payment_date: nextPaymentDate,
+      category_id: category,
+      payment_method_id: paymentMethod,
+      is_active: true,
+      website: website,
+    };
+
+    axios
+      .post(`${baseURL}/api/subscriptions/`, newSubscription)
+      .then((response) => {
+        console.log(response);
+        navigate("/subscriptions");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div className="max-w-7xl md:min-h-screen md:flex md:flex-col responsive-padding md:pl-28">
@@ -163,6 +197,7 @@ function NewSubscription() {
                 title={"Description"}
                 type={"text"}
                 placeholder={"Enter Description"}
+                onChange={(e) => setDescription(e.target.value)}
               />
               <FieldBorder
                 title={"Category"}
@@ -182,39 +217,46 @@ function NewSubscription() {
                   "Transportation",
                   "Utilities & Home Expenses",
                 ]}
+                onChange={(e) => setCategory(e.target.value)}
               />
               <FieldBorder
                 title={"Currency"}
                 type={"select"}
-                value={"Canadian Dollar (CAD)"}
+                value={selectedCurrency}
+                placeholder={"Canadian Dollar (CAD)"}
                 options={currencyList}
-                onChange={(newCurrency) => setSelectedCurrency(newCurrency)}
+                onChange={(e) => setSelectedCurrency(e.target.value)}
               />
               <FieldBorder
                 title={"Shared with"}
                 type={"select"}
-                value={"0"}
+                value={sharedNumber}
+                placeholder={"Select Number"}
                 options={["0", "1", "2", "3", "4", "5", "6"]}
+                onChange={(e) => setSharedNumber(e.target.value)}
               />
               <FieldBorder
                 title={"Next payment"}
                 type={"date"}
                 placeholder={"Select Date"}
+                value={nextPaymentDate}
                 onChange={(e) => setNextPaymentDate(e.target.value)}
               />
               <FieldBorder
                 title={"Recurrence"}
                 type={"select"}
                 placeholder={"Select Cicle"}
-                value={"Monthly"}
+                value={recurrence}
                 options={["Weekly", "Monthly", "Yearly"]}
-                onChange={(newRecurrence) => setRecurrence(newRecurrence)}
+                onChange={(e) => setRecurrence(e.target.value)}
               />
               <FieldBorder
                 title={"Payment Method"}
                 type={"select"}
-                placeholder={"Select an Option"}
-                options={paymentMethods.map((method) => method.method_name)}
+                value={paymentMethod}
+                placeholder={"Select Payment Method"}
+                options={paymentMethodsList.map((method) => method.method_name)}
+                onChange={(e) => setPaymentMethod(e.target.value)}
               />
               <FieldBorder
                 title={"Website"}
@@ -224,7 +266,7 @@ function NewSubscription() {
                 onChange={(e) => setWebsite(e.target.value)}
               />
             </div>
-            <Button content={"Add Subscription"} />
+            <Button content={"Add Subscription"} onClick={handleAddSubscription} />
           </section>
 
           {/* Card preview */}
