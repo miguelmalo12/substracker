@@ -84,7 +84,7 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
               key={service.service_id}
               service={service}
               categories={categories}
-              onClick={() => navigate('/new-subscription/', { state: {logo: service.logo_url, name: service.service_name, id: service.service_id} })}
+              onClick={() => navigate('/new-subscription/', { state: {logo: service.logo_url, name: service.service_name, id: service.service_id, categoryId: service.category_id, website: service.website} })}
             />
           );
         })}

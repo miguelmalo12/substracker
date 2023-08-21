@@ -56,15 +56,24 @@ function NewSubscription() {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Info coming from the previous page about Service chosen (if any)
   const logoFromPreviousPage = location.state?.logo;
-  const [selectedCurrency, setSelectedCurrency] = useState(
-    "Canadian Dollar (CAD)"
-  );
+  const nameFromPreviousPage = location.state?.name;
+  const categoryIdFromPreviousPage = location.state?.categoryId;
+  const websiteFromPreviousPage = location.state?.website;
+
+  // Info that will be passed to the Card
   const [amount, setAmount] = useState("0.00");
-  const [name, setName] = useState("");
+  const [name, setName] = useState(nameFromPreviousPage || "");
+  const [website, setWebsite] = useState(websiteFromPreviousPage || "");
+  const [category, setCategory] = useState(categoryIdFromPreviousPage || ""); // This is an ID!
   const [recurrence, setRecurrence] = useState("Monthly");
   const [nextPaymentDate, setNextPaymentDate] = useState("");
   const [color, setColor] = useState("bg-primary");
+  const [selectedCurrency, setSelectedCurrency] = useState(
+    "Canadian Dollar (CAD)"
+  );
 
   const [inputWidth, setInputWidth] = useState("auto");
   const measureRef = useRef(null);
@@ -72,6 +81,7 @@ function NewSubscription() {
   //Emojis
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  
 
   const handleEmojiClick = (emoji, event) => {
     event.stopPropagation();
@@ -146,6 +156,7 @@ function NewSubscription() {
                 title={"Name"}
                 type={"text"}
                 placeholder={"Enter Name"}
+                value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <FieldBorder
@@ -156,6 +167,7 @@ function NewSubscription() {
               <FieldBorder
                 title={"Category"}
                 type={"select"}
+                value={category}
                 placeholder={"Select Category"}
                 options={[
                   "Banking & Finance",
@@ -174,14 +186,14 @@ function NewSubscription() {
               <FieldBorder
                 title={"Currency"}
                 type={"select"}
-                defaultValue={"Canadian Dollar (CAD)"}
+                value={"Canadian Dollar (CAD)"}
                 options={currencyList}
                 onChange={(newCurrency) => setSelectedCurrency(newCurrency)}
               />
               <FieldBorder
                 title={"Shared with"}
                 type={"select"}
-                defaultValue={"0"}
+                value={"0"}
                 options={["0", "1", "2", "3", "4", "5", "6"]}
               />
               <FieldBorder
@@ -194,7 +206,7 @@ function NewSubscription() {
                 title={"Recurrence"}
                 type={"select"}
                 placeholder={"Select Cicle"}
-                defaultValue={"Monthly"}
+                value={"Monthly"}
                 options={["Weekly", "Monthly", "Yearly"]}
                 onChange={(newRecurrence) => setRecurrence(newRecurrence)}
               />
@@ -208,13 +220,15 @@ function NewSubscription() {
                 title={"Website"}
                 type={"url"}
                 placeholder={"Enter Website"}
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
               />
             </div>
             <Button content={"Add Subscription"} />
           </section>
 
           {/* Card preview */}
-          <section className="flex items-center justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
+          <section className="flex flex-col justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
             <div className="flex flex-col">
               {logoFromPreviousPage ? (
                 <img
@@ -240,7 +254,7 @@ function NewSubscription() {
                   )}
                 </>
               )}
-              <div className="flex items-center">
+              <div className="flex items-center justify-center">
                 <input
                   style={{ width: inputWidth }}
                   type="text"
@@ -286,7 +300,7 @@ function NewSubscription() {
                 color={color}
               />
             </div>
-            <div className="flex pt-8 cursor-pointer">
+            <div className="flex pt-5 mb-5 cursor-pointer md:pt-8">
               {/* Color choose popover */}
               <Popover.Root>
                 <Popover.Trigger className={`w-6 h-6 mr-3 rounded border ${color}`}>
