@@ -54,7 +54,7 @@ function Card({
   };
 
   // Checks if the color is white and changes the text color to black
-  const textColor = color === "bg-white" ? "text-dark-grey" : "text-white";
+  const textColor = (color === "bg-white" || color === "bg-gray-200" || color === "bg-primary-bg") ? "text-dark-grey" : "text-white";
 
   return (
     <div className={`flex items-center justify-between w-full max-w-sm p-3 rounded drop-shadow h-18 ${color}`}>

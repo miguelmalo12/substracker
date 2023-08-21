@@ -70,11 +70,15 @@ function NewSubscription() {
     11: "Miscellaneous",
   };
 
+  const [inputWidth, setInputWidth] = useState("auto");
+  const measureRef = useRef(null);
+
   // Info coming from the previous page about Service chosen (if any)
   const logoFromPreviousPage = location.state?.logo;
   const nameFromPreviousPage = location.state?.name;
   const categoryIdFromPreviousPage = location.state?.categoryId;
-  const initialCategory = idToCategoryMapping[categoryIdFromPreviousPage] || "Select Category";
+  const initialCategory =
+    idToCategoryMapping[categoryIdFromPreviousPage] || "Select Category";
 
   const websiteFromPreviousPage = location.state?.website;
 
@@ -92,10 +96,6 @@ function NewSubscription() {
   const [paymentMethod, setPaymentMethod] = useState("");
   const [website, setWebsite] = useState(websiteFromPreviousPage || "");
   const [color, setColor] = useState("bg-primary");
-
-  const [inputWidth, setInputWidth] = useState("auto");
-  const measureRef = useRef(null);
-
   //Emojis
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -146,7 +146,7 @@ function NewSubscription() {
     }
   }, [amount]);
 
-  // Function to POST new Subscription to database, needs to include subscription_id, user_id, service_id, name, description, amount, currency, recurrence, payment_date, category_id, payment_method_id, is_active, website
+  // Function to POST new Subscription to database
   const handleAddSubscription = () => {
     const newSubscription = {
       user_id: 1,
@@ -157,10 +157,13 @@ function NewSubscription() {
       currency: selectedCurrency,
       recurrence: recurrence,
       payment_date: nextPaymentDate,
-      category_id: category,
-      payment_method_id: paymentMethod,
+      category_name: category,
+      payment_method: paymentMethod,
       is_active: true,
       website: website,
+      color: color,
+      shared_with: sharedNumber,
+      logo: logoFromPreviousPage || selectedEmoji,
     };
 
     axios
@@ -173,8 +176,6 @@ function NewSubscription() {
         console.log(error);
       });
   };
-
-  console.log(category)
 
   return (
     <div className="max-w-7xl md:min-h-screen md:flex md:flex-col responsive-padding md:pl-28">
@@ -283,7 +284,10 @@ function NewSubscription() {
                 onChange={(e) => setWebsite(e.target.value)}
               />
             </div>
-            <Button content={"Add Subscription"} onClick={handleAddSubscription} />
+            <Button
+              content={"Add Subscription"}
+              onClick={handleAddSubscription}
+            />
           </section>
 
           {/* Card preview */}
@@ -362,13 +366,18 @@ function NewSubscription() {
             <div className="flex pt-5 mb-5 cursor-pointer md:pt-8">
               {/* Color choose popover */}
               <Popover.Root>
-                <Popover.Trigger className={`w-6 h-6 mr-3 rounded border ${color}`}>
+                <Popover.Trigger
+                  className={`w-6 h-6 mr-3 rounded border ${color}`}
+                >
                   <Popover.Anchor />
                 </Popover.Trigger>
                 <Popover.Content className="relative flex flex-col p-4 mt-4 bg-white rounded drop-shadow">
                   <Popover.Arrow />
                   <h5 className="mb-2">Choose Color</h5>
-                  <Popover.Close className="absolute p-2 rounded-full top-1 right-1 PopoverClose hover:bg-primary-bg" aria-label="Close">
+                  <Popover.Close
+                    className="absolute p-2 rounded-full top-1 right-1 PopoverClose hover:bg-primary-bg"
+                    aria-label="Close"
+                  >
                     <Cross2Icon />
                   </Popover.Close>
                   <div className="flex gap-3">
@@ -381,12 +390,26 @@ function NewSubscription() {
                       onClick={() => setColor("bg-gray-900")}
                     ></div>
                     <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 rounded-full bg-primary-bg"
+                      onClick={() => setColor("bg-primary-bg")}
+                    ></div>
+                    <div
                       className="flex items-center justify-center w-6 h-6 mt-2 bg-white border-2 rounded-full"
                       onClick={() => setColor("bg-white")}
                     ></div>
                     <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 bg-gray-200 border-2 rounded-full"
+                      onClick={() => setColor("bg-gray-200")}
+                    ></div>
+                  </div>
+                  <div className="flex gap-3">
+                    <div
                       className="flex items-center justify-center w-6 h-6 mt-2 bg-gray-500 rounded-full"
                       onClick={() => setColor("bg-gray-500")}
+                    ></div>
+                    <div
+                      className="flex items-center justify-center w-6 h-6 mt-2 rounded-full bg-slate-700"
+                      onClick={() => setColor("bg-slate-700")}
                     ></div>
                     <div
                       className="flex items-center justify-center w-6 h-6 mt-2 bg-red-600 rounded-full"
@@ -396,12 +419,12 @@ function NewSubscription() {
                       className="flex items-center justify-center w-6 h-6 mt-2 bg-orange-500 rounded-full"
                       onClick={() => setColor("bg-orange-500")}
                     ></div>
-                  </div>
-                  <div className="flex gap-3">
                     <div
                       className="flex items-center justify-center w-6 h-6 mt-2 bg-yellow-500 rounded-full"
                       onClick={() => setColor("bg-yellow-500")}
                     ></div>
+                  </div>
+                  <div className="flex gap-3">
                     <div
                       className="flex items-center justify-center w-6 h-6 mt-2 bg-green-600 rounded-full"
                       onClick={() => setColor("bg-green-600")}
