@@ -70,6 +70,64 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
       });
   }, []);
 
+  // Converts currency using API, used inside calculateTotalAmount function
+  const convertCurrency = async (fromCurrency, toCurrency, amount) => {
+    const url = `${baseURL}/api/currencies/convert?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&amount=${amount}`;
+    try {
+      const response = await axios.get(url);
+      return parseFloat(response.data.convertedAmount);
+    } catch (error) {
+      console.error("Error converting currency:", error);
+      return amount; // In case converson fails, it will return the original amount
+    }
+  };
+
+  // Used inside calculateTotalAmount function to adjust amount based on recurrence
+  const adjustAmountToRecurrence = (amount, recurrence) => {
+    switch (recurrence.toLowerCase()) {
+      case "weekly":
+        return amount * 4;
+      case "yearly":
+        return amount / 12;
+      case "monthly":
+      default:
+        return amount;
+    }
+  };
+
+  // Calculates total amount in preferred currency
+  const calculateTotalAmount = async () => {
+    let total = 0;
+
+    for (let subscription of subscriptions) {
+      const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
+      if (!currencyMatch) {
+        console.error("Unexpected currency format:", subscription.currency);
+        continue;
+      }
+
+      const subscriptionCurrency = currencyMatch[1];
+      let adjustedAmount = adjustAmountToRecurrence(parseFloat(subscription.amount), subscription.recurrence);
+
+      if (subscriptionCurrency !== preferredCurrency) {
+        adjustedAmount = await convertCurrency(
+          subscriptionCurrency,
+          preferredCurrency,
+          adjustedAmount
+        );
+      }
+
+      total += adjustedAmount;
+    }
+
+    setTotalAmount(total);
+  };
+
+  // Recalculate total amount when subscriptions or preferred currency changes
+  useEffect(() => {
+    calculateTotalAmount();
+  }, [subscriptions, preferredCurrency]);
+
   return (
     <main className="responsive-padding md:pl-28 md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
