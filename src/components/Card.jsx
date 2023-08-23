@@ -12,12 +12,13 @@ function Card({
     
   // Converts recurrence to short form
   const formatRecurrence = (recurrence) => {
-    switch (recurrence) {
-      case "Monthly":
+    const normalizedRecurrence = recurrence.toLowerCase();
+    switch (normalizedRecurrence) {
+      case "monthly":
         return "/mo";
-      case "Weekly":
+      case "weekly":
         return "/wk";
-      case "Yearly":
+      case "yearly":
         return "/yr";
       default:
         return recurrence;
@@ -44,14 +45,19 @@ function Card({
   // Formats the next payment date or use default if not chosen
   const formatDate = (date) => {
     if (!date) return "01 Jan";
-
-    const dateObj = new Date(date);
-    const formattedDate = `${dateObj.getDate()} ${dateObj.toLocaleString(
-      "en-US",
-      { month: "short" }
-    )}`;
-    return formattedDate;
+  
+    const dateObj = new Date(date);  // No need to append 'T00:00:00Z'
+    
+    if (isNaN(dateObj.getTime())) return "Invalid Date"; // Return 'Invalid Date' or handle it however you want
+  
+    const day = dateObj.getUTCDate();
+    const month = dateObj.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+    
+    return `${day} ${month}`;
   };
+
+  console.log("Next Payment Date:", nextPaymentDate);
+  console.log("Formatted Date:", formatDate(nextPaymentDate));
 
   // Checks if the color is white and changes the text color to black
   const textColor = (color === "bg-white" || color === "bg-gray-200" || color === "bg-primary-bg") ? "text-dark-grey" : "text-white";

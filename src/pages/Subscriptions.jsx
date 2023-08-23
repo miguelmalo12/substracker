@@ -138,6 +138,85 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
     }
   };
 
+  // Gets the start date and end date of the current interval
+  const getCurrentIntervalDates = (interval) => {
+    const now = new Date();
+    let startDate, endDate;
+
+    switch (interval.toLowerCase()) {
+      case 'monthly':
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        break;
+      case 'yearly':
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = new Date(now.getFullYear(), 11, 31);
+        break;
+      case 'weekly':
+        const day = now.getDay();
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - day);
+        endDate = new Date(now);
+        endDate.setDate(now.getDate() + (6 - day));
+        break;
+      default:
+        throw new Error('Invalid interval');
+    }
+
+    return { startDate, endDate };
+  };
+
+  // Filters the subscriptions based on the current interval
+  const calculateTotalForCurrentInterval = async (interval) => {
+    const { startDate, endDate } = getCurrentIntervalDates(interval);
+
+    const relevantSubscriptions = subscriptions.filter(subscription => {
+      const nextPaymentDate = new Date(subscription.payment_date);
+      return nextPaymentDate >= startDate && nextPaymentDate <= endDate;
+    });
+
+    let total = 0;
+
+    for (let subscription of relevantSubscriptions) {
+      const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
+      if (!currencyMatch) {
+        console.error("Unexpected currency format:", subscription.currency);
+        continue;
+      }
+
+      const subscriptionCurrency = currencyMatch[1];
+      let adjustedAmount = adjustAmountToRecurrence(
+        parseFloat(subscription.amount),
+        subscription.recurrence
+      );
+
+      if (subscriptionCurrency !== preferredCurrency) {
+        adjustedAmount = await convertCurrency(
+          subscriptionCurrency,
+          preferredCurrency,
+          adjustedAmount
+        );
+      }
+
+      total += adjustedAmount;
+    }
+
+    return total;
+  };
+
+  // Recalculate total amount when interval changes
+  useEffect(() => {
+    if (selectedMetric.toLowerCase() === "total") {
+      calculateTotalForCurrentInterval(selectedInterval)
+        .then(total => {
+          setTotalAmount(total);
+        });
+    } else if (selectedMetric.toLowerCase() === "average") {
+      // The logic you already have for average
+      calculateTotalAmount();
+    }
+  }, [subscriptions, preferredCurrency, selectedMetric, selectedInterval]);
+
   // Recalculate total amount when subscriptions or preferred currency changes
   useEffect(() => {
     calculateTotalAmount();
