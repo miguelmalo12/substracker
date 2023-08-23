@@ -361,6 +361,7 @@ function NewSubscription() {
                 recurrence={recurrence}
                 nextPaymentDate={nextPaymentDate}
                 color={color}
+                notFunctional={true}
               />
             </div>
             <div className="flex pt-5 mb-5 cursor-pointer md:pt-8">

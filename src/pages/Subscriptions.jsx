@@ -39,7 +39,6 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
       .then((response) => {
         if (response.data && Array.isArray(response.data.subscriptions)) {
           setSubscriptions(response.data.subscriptions);
-          console.log(response.data.subscriptions);
         } else {
           console.error("Unexpected data format:", response.data);
         }
@@ -288,6 +287,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
             subscriptions.map((subscription) => (
               <Card
                 key={subscription.subscription_id}
+                id={subscription.subscription_id}
                 imageContent={subscription.logo}
                 name={subscription.name}
                 selectedCurrency={subscription.currency}
@@ -298,6 +298,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
               />
             ))
           )}
+          {/* <MenuSubsDetails /> */}
         </div>
       </div>
       <Footer />
