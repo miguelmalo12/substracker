@@ -67,9 +67,9 @@ select option:disabled {
     }
 }
 
-.double-arrow-dropdown {
+/* .double-arrow-dropdown {
     appearance: none; 
-}
+} */
 
 .text-primary svg {
     color: #9145B6; /* replace with your actual primary color code */

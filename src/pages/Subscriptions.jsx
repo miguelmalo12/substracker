@@ -26,7 +26,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   const [loading, setLoading] = useState(true);
 
   const [preferredCurrency, setPreferredCurrency] = useState("CAD");
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0); // This will show the monthly average by default
 
   const handleAddClick = () => {
     navigate("/add-subscription");
@@ -54,7 +54,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   //GET user's preferred currency
   useEffect(() => {
     // Using hardcoded user_id for now, needs to come from AUTH
-    const userId = 'test-uuid';
+    const userId = "test-uuid";
 
     axios
       .get(`${baseURL}/api/users/${userId}`)
@@ -107,7 +107,10 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
       }
 
       const subscriptionCurrency = currencyMatch[1];
-      let adjustedAmount = adjustAmountToRecurrence(parseFloat(subscription.amount), subscription.recurrence);
+      let adjustedAmount = adjustAmountToRecurrence(
+        parseFloat(subscription.amount),
+        subscription.recurrence
+      );
 
       if (subscriptionCurrency !== preferredCurrency) {
         adjustedAmount = await convertCurrency(
@@ -119,8 +122,20 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
 
       total += adjustedAmount;
     }
-
     setTotalAmount(total);
+  };
+
+  // This will be used in the interval dropdown to display the amount depending on interval
+  const adjustTotalsToInterval = (monthlyTotal, interval) => {
+    switch (interval.toLowerCase()) {
+      case "weekly":
+        return monthlyTotal / 4;
+      case "yearly":
+        return monthlyTotal * 12;
+      case "monthly":
+      default:
+        return monthlyTotal;
+    }
   };
 
   // Recalculate total amount when subscriptions or preferred currency changes
@@ -145,6 +160,9 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           setSelectedInterval={setSelectedInterval}
           setSelectedMetric={setSelectedMetric}
           handleAddClick={handleAddClick}
+          totalAmount={totalAmount}
+          adjustTotalsToInterval={adjustTotalsToInterval}
+          preferredCurrency={preferredCurrency}
         />
 
         {/* Menu on Mobile */}
@@ -175,7 +193,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
             />
           </div>
           <div className="flex flex-col items-center">
-            <h1 className="py-2 text-4xl">{totalAmount.toFixed(2)} {preferredCurrency}</h1>
+          <h1 className="py-2 text-4xl">{adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)} {preferredCurrency}</h1>
             <h4 className="text-medium-grey">
               {selectedInterval} {selectedMetric}
             </h4>

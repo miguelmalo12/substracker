@@ -9,6 +9,9 @@ function NavSubsDesktop({
   setSelectedInterval,
   setSelectedMetric,
   handleAddClick,
+  totalAmount,
+  adjustTotalsToInterval,
+  preferredCurrency,
 }) {
   return (
     <header className="hidden w-full gap-5 pt-3 mb-4 md:flex">
@@ -27,7 +30,7 @@ function NavSubsDesktop({
       <div className="w-1/3 flex h-34 gap-2.5 p-5 justify-between card min-w-max">
 
         <div className="flex flex-col">
-          <h1 className="py-2 text-4xl">0.00 $</h1>
+          <h1 className="py-2 text-4xl">{adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)} {preferredCurrency}</h1>
           <h4 className="text-xl text-medium-grey">
             {selectedInterval} {selectedMetric}
           </h4>
