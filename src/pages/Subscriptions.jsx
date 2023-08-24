@@ -143,15 +143,15 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
     let startDate, endDate;
 
     switch (interval.toLowerCase()) {
-      case 'monthly':
+      case "monthly":
         startDate = new Date(now.getFullYear(), now.getMonth(), 1);
         endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
         break;
-      case 'yearly':
+      case "yearly":
         startDate = new Date(now.getFullYear(), 0, 1);
         endDate = new Date(now.getFullYear(), 11, 31);
         break;
-      case 'weekly':
+      case "weekly":
         const day = now.getDay();
         startDate = new Date(now);
         startDate.setDate(now.getDate() - day);
@@ -159,7 +159,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
         endDate.setDate(now.getDate() + (6 - day));
         break;
       default:
-        throw new Error('Invalid interval');
+        throw new Error("Invalid interval");
     }
 
     return { startDate, endDate };
@@ -169,7 +169,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   const calculateTotalForCurrentInterval = async (interval) => {
     const { startDate, endDate } = getCurrentIntervalDates(interval);
 
-    const relevantSubscriptions = subscriptions.filter(subscription => {
+    const relevantSubscriptions = subscriptions.filter((subscription) => {
       const nextPaymentDate = new Date(subscription.payment_date);
       return nextPaymentDate >= startDate && nextPaymentDate <= endDate;
     });
@@ -206,15 +206,19 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   // Recalculate total amount when interval changes
   useEffect(() => {
     if (selectedMetric.toLowerCase() === "total") {
-      calculateTotalForCurrentInterval(selectedInterval)
-        .then(total => {
-          setTotalAmount(total);
-        });
+      calculateTotalForCurrentInterval(selectedInterval).then((total) => {
+        setTotalAmount(total);
+      });
     } else if (selectedMetric.toLowerCase() === "average") {
       // The logic you already have for average
       calculateTotalAmount();
     }
   }, [subscriptions, preferredCurrency, selectedMetric, selectedInterval]);
+
+  // Rerenders subscription list when one is deleted
+  const removeSubscriptionById = (id) => {
+    setSubscriptions(subscriptions.filter(sub => sub.subscription_id !== id));
+  };
 
   // Recalculate total amount when subscriptions or preferred currency changes
   useEffect(() => {
@@ -271,7 +275,10 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
             />
           </div>
           <div className="flex flex-col items-center">
-          <h1 className="py-2 text-4xl">{adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)} {preferredCurrency}</h1>
+            <h1 className="py-2 text-4xl">
+              {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
+              {preferredCurrency}
+            </h1>
             <h4 className="text-medium-grey">
               {selectedInterval} {selectedMetric}
             </h4>
@@ -295,10 +302,12 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
                 recurrence={subscription.recurrence}
                 nextPaymentDate={subscription.payment_date}
                 color={subscription.color}
+                removeSubscriptionById={removeSubscriptionById}
               />
             ))
           )}
-          {/* <MenuSubsDetails /> */}
+
+          
         </div>
       </div>
       <Footer />

@@ -368,7 +368,7 @@ function NewSubscription() {
               {/* Color choose popover */}
               <Popover.Root>
                 <Popover.Trigger
-                  className={`w-6 h-6 mr-3 rounded border ${color}`}
+                  className={`w-6 h-6 mr-3 rounded border border-border ${color}`}
                 >
                   <Popover.Anchor />
                 </Popover.Trigger>
