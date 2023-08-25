@@ -77,8 +77,7 @@ function NewSubscription() {
   const logoFromPreviousPage = location.state?.logo;
   const nameFromPreviousPage = location.state?.name;
   const categoryIdFromPreviousPage = location.state?.categoryId;
-  const initialCategory =
-    idToCategoryMapping[categoryIdFromPreviousPage] || "";
+  const initialCategory = idToCategoryMapping[categoryIdFromPreviousPage] || "";
 
   const websiteFromPreviousPage = location.state?.website;
 
@@ -99,6 +98,11 @@ function NewSubscription() {
   //Emojis
   const [selectedEmoji, setSelectedEmoji] = useState(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  // Form validation
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [buttonClicked, setButtonClicked] = useState(false);
 
   const handleEmojiClick = (emoji, event) => {
     event.stopPropagation();
@@ -148,6 +152,12 @@ function NewSubscription() {
 
   // Function to POST new Subscription to database
   const handleAddSubscription = () => {
+    setButtonClicked(true);
+
+    if (!name || !category || !nextPaymentDate || !paymentMethod) {
+      return;
+    }
+
     const newSubscription = {
       user_id: 1,
       service_id: location.state?.id,
@@ -176,6 +186,21 @@ function NewSubscription() {
         console.log(error);
       });
   };
+
+  // Form validation
+  const validateForm = () => {
+    if (!name || !category || !nextPaymentDate || !paymentMethod) {
+      setErrorMessage("Please fill in all required fields.");
+      setIsFormValid(false);
+    } else {
+      setErrorMessage("");
+      setIsFormValid(true);
+    }
+  };
+
+  useEffect(() => {
+    validateForm();
+  }, [name, category, nextPaymentDate, paymentMethod]);
 
   return (
     <div className="max-w-7xl md:min-h-screen md:flex md:flex-col responsive-padding md:pl-28">
@@ -284,6 +309,15 @@ function NewSubscription() {
                 onChange={(e) => setWebsite(e.target.value)}
               />
             </div>
+            {/* Error messages */}
+            {buttonClicked && (
+              <div className="pb-3 text-sm">
+                {!name && <p className="text-red-500">Name is required.</p>}
+                {!category && <p className="text-red-500">Category is required.</p>}
+                {!nextPaymentDate && <p className="text-red-500">Next payment date is required.</p>}
+                {!paymentMethod && <p className="text-red-500">Payment Method is required.</p>}
+              </div>
+            )}
             <Button
               content={"Add Subscription"}
               onClick={handleAddSubscription}
@@ -358,8 +392,9 @@ function NewSubscription() {
                 name={name}
                 selectedCurrency={selectedCurrency}
                 amount={amount}
-                recurrence={recurrence}
+                sharedNumber={sharedNumber}
                 nextPaymentDate={nextPaymentDate}
+                recurrence={recurrence}
                 color={color}
                 notFunctional={true}
               />

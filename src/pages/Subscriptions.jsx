@@ -299,6 +299,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
                 name={subscription.name}
                 selectedCurrency={subscription.currency}
                 amount={subscription.amount}
+                sharedNumber={subscription.shared_with}
                 recurrence={subscription.recurrence}
                 nextPaymentDate={subscription.payment_date}
                 website={subscription.website}

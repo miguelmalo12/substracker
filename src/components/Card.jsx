@@ -8,6 +8,8 @@ import { ReactComponent as ChevronDown } from "../assets/icons/chevron_down.svg"
 import { ReactComponent as EditIcon } from "../assets/icons/edit.svg";
 import { ReactComponent as WebsiteIcon } from "../assets/icons/website.svg";
 import { ReactComponent as DeleteIcon } from "../assets/icons/delete.svg";
+import { ReactComponent as Shared } from "../assets/icons/users_shared.svg";
+
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
@@ -20,6 +22,7 @@ function Card({
   name,
   selectedCurrency,
   amount,
+  sharedNumber,
   recurrence,
   nextPaymentDate,
   website,
@@ -130,7 +133,10 @@ function Card({
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="relative flex items-center gap-2">
+          {sharedNumber > 0 && (
+            <Shared className={`absolute w-6 h-6 -left-8 ${textColor}`} />
+          )}
           <div className="flex items-center p-2 px-3 bg-white rounded drop-shadow h-9">
             <p className="text-xs">{formatDate(nextPaymentDate)}</p>
           </div>
