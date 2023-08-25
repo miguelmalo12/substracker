@@ -31,6 +31,7 @@ function Card({
   removeSubscriptionById,
 }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const actualAmount = Number(sharedNumber) > 0 ? Number(amount) / (Number(sharedNumber) + 1) : Number(amount);
 
   // DELETE Method
   const deleteSubscription = async (subscriptionId) => {
@@ -126,7 +127,7 @@ function Card({
           <div className={`pl-3 ${textColor}`}>
             <h2 className={`font-extrabold ${textColor}`}>{name || "Name"}</h2>
             <span className={`text-xl font-base ${textColor}`}>
-              {formatCurrency(selectedCurrency)} {amount}
+              {formatCurrency(selectedCurrency)} {actualAmount.toFixed(2)}
             </span>
             <span className={`pl-0.5 text-xs font-base ${textColor}`}>
               {formatRecurrence(recurrence)}
@@ -145,7 +146,6 @@ function Card({
             <ChevronDown className={`w-3 h-3 ${textColor}`} />
           ) : (
             <DropdownMenu.Root
-              className="z-1000"
               onOpenChange={(isOpen) => setIsDropdownOpen(isOpen)}
             >
               <DropdownMenu.Trigger>

@@ -36,7 +36,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
           </Select.Trigger>
 
           <Select.Portal>
-            <Select.Content className="overflow-hidden bg-white rounded drop-shadow">
+            <Select.Content className="overflow-hidden bg-white rounded md:-ml-12 drop-shadow">
               <Select.ScrollUpButton className="flex items-center justify-center h-7">
                 <ChevronUpIcon />
               </Select.ScrollUpButton>

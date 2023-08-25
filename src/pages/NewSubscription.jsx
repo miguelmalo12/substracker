@@ -96,7 +96,7 @@ function NewSubscription() {
   const [website, setWebsite] = useState(websiteFromPreviousPage || "");
   const [color, setColor] = useState("bg-primary");
   //Emojis
-  const [selectedEmoji, setSelectedEmoji] = useState(null);
+  const [selectedEmoji, setSelectedEmoji] = useState("✏️");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Form validation
@@ -312,10 +312,10 @@ function NewSubscription() {
             {/* Error messages */}
             {buttonClicked && (
               <div className="pb-3 text-sm">
-                {!name && <p className="text-red-500">Name is required.</p>}
-                {!category && <p className="text-red-500">Category is required.</p>}
-                {!nextPaymentDate && <p className="text-red-500">Next payment date is required.</p>}
-                {!paymentMethod && <p className="text-red-500">Payment Method is required.</p>}
+                {!name && <p className="text-error">Name is required.</p>}
+                {!category && <p className="text-error">Category is required.</p>}
+                {!nextPaymentDate && <p className="text-error">Next payment date is required.</p>}
+                {!paymentMethod && <p className="text-error">Payment Method is required.</p>}
               </div>
             )}
             <Button

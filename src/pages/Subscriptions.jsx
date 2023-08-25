@@ -97,20 +97,20 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   // Calculates total amount in preferred currency
   const calculateTotalAmount = async () => {
     let total = 0;
-
+  
     for (let subscription of subscriptions) {
       const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
       if (!currencyMatch) {
         console.error("Unexpected currency format:", subscription.currency);
         continue;
       }
-
+  
       const subscriptionCurrency = currencyMatch[1];
       let adjustedAmount = adjustAmountToRecurrence(
         parseFloat(subscription.amount),
         subscription.recurrence
       );
-
+  
       if (subscriptionCurrency !== preferredCurrency) {
         adjustedAmount = await convertCurrency(
           subscriptionCurrency,
@@ -118,7 +118,12 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           adjustedAmount
         );
       }
-
+  
+      // If the subscription is shared, divide the amount here, after currency conversion
+      if (subscription.shared_with > 0) {
+        adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
+      }
+  
       total += adjustedAmount;
     }
     setTotalAmount(total);
@@ -168,27 +173,27 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   // Filters the subscriptions based on the current interval
   const calculateTotalForCurrentInterval = async (interval) => {
     const { startDate, endDate } = getCurrentIntervalDates(interval);
-
+  
     const relevantSubscriptions = subscriptions.filter((subscription) => {
       const nextPaymentDate = new Date(subscription.payment_date);
       return nextPaymentDate >= startDate && nextPaymentDate <= endDate;
     });
-
+  
     let total = 0;
-
+  
     for (let subscription of relevantSubscriptions) {
       const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
       if (!currencyMatch) {
         console.error("Unexpected currency format:", subscription.currency);
         continue;
       }
-
+  
       const subscriptionCurrency = currencyMatch[1];
       let adjustedAmount = adjustAmountToRecurrence(
         parseFloat(subscription.amount),
         subscription.recurrence
       );
-
+  
       if (subscriptionCurrency !== preferredCurrency) {
         adjustedAmount = await convertCurrency(
           subscriptionCurrency,
@@ -196,10 +201,15 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           adjustedAmount
         );
       }
-
+  
+      // If the subscription is shared, divide the amount here, after currency conversion
+      if (subscription.shared_with > 0) {
+        adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
+      }
+  
       total += adjustedAmount;
     }
-
+  
     return total;
   };
 
@@ -210,7 +220,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
         setTotalAmount(total);
       });
     } else if (selectedMetric.toLowerCase() === "average") {
-      // The logic you already have for average
+      // The logic I already have for average
       calculateTotalAmount();
     }
   }, [subscriptions, preferredCurrency, selectedMetric, selectedInterval]);
