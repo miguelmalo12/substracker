@@ -22,6 +22,7 @@ function Card({
   amount,
   recurrence,
   nextPaymentDate,
+  website,
   color,
   notFunctional,
   removeSubscriptionById,
@@ -149,19 +150,23 @@ function Card({
                   <EditIcon className="mt-0.5 mr-3" />
                   <h4>Edit</h4>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="flex cursor-pointer">
-                  <WebsiteIcon className="mr-3" />
-                  <h4>Visit Website</h4>
-                </DropdownMenu.Item>
+                
+                {/* WEBSITE - Shows only if there's a website added */}
+                {website && (
+                  <DropdownMenu.Item className="flex cursor-pointer">
+                    <a
+                      href={website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex"
+                    >
+                      <WebsiteIcon className="mr-3" />
+                      <h4>Visit Website</h4>
+                    </a>
+                  </DropdownMenu.Item>
+                )}
 
-                {/* <DropdownMenu.Item
-                  className="flex cursor-pointer"
-                  onClick={() => deleteSubscription(id)}
-                >
-                  <DeleteIcon className="mr-3" />
-                  <h4 className="pr-3 text-error">Delete</h4>
-                </DropdownMenu.Item> */}
-
+                {/* DELETE - Opens alert dialog */}
                 <DropdownMenu.Item className="flex cursor-pointer">
                   <AlertDialog.Trigger asChild>
                     <div className="flex items-center">
@@ -175,12 +180,8 @@ function Card({
           )}
         </div>
         <AlertDialog.Portal>
-          <AlertDialog.Overlay
-            className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm animate-fade-in"
-          />
-          <AlertDialog.Content
-            className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-screen-sm max-h-[85vh] p-6 rounded-lg bg-white shadow-xl z-50 animate-scale-in focus:outline-none"
-          >
+          <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black bg-opacity-30 backdrop-blur-sm animate-fade-in" />
+          <AlertDialog.Content className="fixed left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-screen-sm max-h-[85vh] p-6 rounded-lg bg-white shadow-xl z-50 animate-scale-in focus:outline-none">
             <AlertDialog.Title className="text-base font-semibold text-gray-900">
               Are you sure you want to delete this subscription?
             </AlertDialog.Title>
@@ -195,7 +196,10 @@ function Card({
                 </button>
               </AlertDialog.Cancel>
               <AlertDialog.Action asChild>
-                <button onClick={() => deleteSubscription(id)} className="inline-flex items-center justify-center w-auto px-4 py-2 text-base font-medium rounded bg-rose-100 text-error hover:bg-rose-200 focus:ring-2 focus:ring-error">
+                <button
+                  onClick={() => deleteSubscription(id)}
+                  className="inline-flex items-center justify-center w-auto px-4 py-2 text-base font-medium rounded bg-rose-100 text-error hover:bg-rose-200 focus:ring-2 focus:ring-error"
+                >
                   Yes, delete
                 </button>
               </AlertDialog.Action>

@@ -78,7 +78,7 @@ function NewSubscription() {
   const nameFromPreviousPage = location.state?.name;
   const categoryIdFromPreviousPage = location.state?.categoryId;
   const initialCategory =
-    idToCategoryMapping[categoryIdFromPreviousPage] || "Select Category";
+    idToCategoryMapping[categoryIdFromPreviousPage] || "";
 
   const websiteFromPreviousPage = location.state?.website;
 
@@ -272,7 +272,7 @@ function NewSubscription() {
                 title={"Payment Method"}
                 type={"select"}
                 value={paymentMethod}
-                placeholder={"Select Payment Method"}
+                placeholder={"Select Method"}
                 options={paymentMethodsList.map((method) => method.method_name)}
                 onChange={(e) => setPaymentMethod(e.target.value)}
               />
@@ -290,7 +290,7 @@ function NewSubscription() {
             />
           </section>
 
-          {/* Card preview */}
+          {/* CARD PREVIEW */}
           <section className="flex flex-col justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
             <div className="flex flex-col">
               {logoFromPreviousPage ? (

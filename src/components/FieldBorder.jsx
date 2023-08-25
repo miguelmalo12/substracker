@@ -29,7 +29,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
           value={value}
           onValueChange={handleValueChange}
         >
-          <Select.Trigger className="inline-flex items-center justify-center h-6 gap-1 leading-none rounded cursor-pointer drop-shadow focus:drop-shadow">
+          <Select.Trigger className={`inline-flex items-center justify-center h-6 gap-1 leading-none rounded cursor-pointer ${value ? '' : 'text-gray-300'}`}>
             <Select.Value>
               {value || placeholder || "Select an Option"}
             </Select.Value>{" "}
@@ -61,6 +61,16 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
             </Select.Content>
           </Select.Portal>
         </Select.Root>
+      ) : type === "date" ? (
+        <div className="flex-grow text-right">
+          <input
+            className={`border-none text-right ${!value ? 'text-gray-300' : ''}`}
+            type={type}
+            value={value}
+            placeholder={placeholder}
+            onChange={handleValueChange}
+          />
+        </div>
       ) : (
         <input
           className="flex-grow text-right border-none"

@@ -301,6 +301,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
                 amount={subscription.amount}
                 recurrence={subscription.recurrence}
                 nextPaymentDate={subscription.payment_date}
+                website={subscription.website}
                 color={subscription.color}
                 removeSubscriptionById={removeSubscriptionById}
               />

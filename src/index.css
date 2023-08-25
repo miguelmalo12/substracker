@@ -32,11 +32,7 @@ input, select, textarea {
 
 input::placeholder,
 textarea::placeholder {
-    @apply text-medium-grey;
-}
-
-select option:disabled {
-    @apply text-medium-grey;
+    @apply text-gray-300;
 }
 
 .card {
@@ -63,10 +59,10 @@ select option:disabled {
 
 @media (min-width: 768px) {
     .responsive-navbar-padding {
-        @apply p-0; /* No padding */
+        @apply p-0; 
     }
 }
 
 .text-primary svg {
-    color: #9145B6; /* replace with your actual primary color code */
+    color: #9145B6; 
 }
