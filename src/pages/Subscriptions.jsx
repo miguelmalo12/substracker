@@ -1,4 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
+import axios from "axios";
 
 import NavbarMobile from "../components/NavbarMobile";
 import MenuMobile from "../components/MenuMobile";
@@ -9,72 +12,397 @@ import Filters from "../components/Filters";
 import NoSubs from "../components/NoSubs";
 import Footer from "../components/Footer";
 import NavSubsDesktop from "../components/NavSubsDesktop";
+import Card from "../components/Card";
 
-function Subscriptions() {
+const baseURL = process.env.REACT_APP_BASE_URL;
+
+const hardcodedRates = {
+  "Australian Dollar (AUD)": 1.5392802922,
+  "Bulgarian Lev (BGN)": 1.7781102999,
+  "Brazilian Real (BRL)": 4.9004308773,
+  "Canadian Dollar (CAD)": 1.3443201767,
+  "Swiss Franc (CHF)": 0.8767301001,
+  "Chinese Yuan (CNY)": 7.2387010756,
+  "Czech Koruna (CZK)": 21.9700534089,
+  "Danish Krone (DKK)": 6.8079108152,
+  "Euro (EUR)": 0.9134801106,
+  "British Pound (GBP)": 0.7878600901,
+  "Hong Kong Dollar (HKD)": 7.8160608857,
+  "Croatian Kuna (HRK)": 7.0418712792,
+  "Hungarian Forint (HUF)": 349.7298199729,
+  "Indonesian Rupiah (IDR)": 15196.810558816,
+  "Israeli Shekel (ILS)": 3.7491006603,
+  "Indian Rupee (INR)": 82.8475011016,
+  "Icelandic Krona (ISK)": 131.4663844836,
+  "Japanese Yen (JPY)": 145.0034138135,
+  "South Korean Won (KRW)": 1329.207706231,
+  "Mexican Peso (MXN)": 17.0399319886,
+  "Malaysian Ringgit (MYR)": 4.5866005184,
+  "Norwegian Krone (NOK)": 10.4271016235,
+  "New Zealand Dollar (NZD)": 1.6713103091,
+  "Philippine Peso (PHP)": 56.5777793964,
+  "Polish Zloty (PLN)": 4.0479807547,
+  "Romanian Leu (RON)": 4.5127605347,
+  "Russian Ruble (RUB)": 99.5564450298,
+  "Swedish Krona (SEK)": 10.8334813592,
+  "Singapore Dollar (SGD)": 1.3513002315,
+  "Thai Baht (THB)": 35.0884062283,
+  "Turkish Lira (TRY)": 27.0268552655,
+  "United States Dollar (USD)": 1,
+  "South African Rand (ZAR)": 18.9268628665
+};
+
+function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
+  const navigate = useNavigate();
+
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
   const [selectedMetric, setSelectedMetric] = useState("Average");
 
-  const menuRef = useRef(null);
-  const [isMenuVisible, setMenuVisible] = useState(false);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [preferredCurrency, setPreferredCurrency] = useState('C$');
+  const [totalAmount, setTotalAmount] = useState(0); // This will show the monthly average by default
+
+  // Variables coming from Filters
+  const [filteredCategory, setFilteredCategory] = useState(null);
+
+  // Variables used for Sort
+  const [sorteredSubscriptions, setSorteredSubscriptions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuVisible(false);
+    setSorteredSubscriptions(
+      subscriptions.filter(subscription =>
+        subscription.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, subscriptions]);
+
+  const handleAddClick = () => {
+    navigate("/add-subscription");
+  };
+
+  //GET Subscriptions
+  useEffect(() => {
+    axios
+      .get(`${baseURL}/api/subscriptions/`)
+      .then((response) => {
+        if (response.data && Array.isArray(response.data.subscriptions)) {
+          setSubscriptions(response.data.subscriptions);
+          setSorteredSubscriptions([...response.data.subscriptions]); // Populate sortedSubscriptions
+        } else {
+          console.error("Unexpected data format:", response.data);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching subscriptions:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  // SORT subscriptions by criteria selected
+  const sortSubscriptions = (criteria) => {
+  
+    // Create a new array to trigger React update
+    let sortedSubscriptions = [...sorteredSubscriptions];
+    
+    if (criteria === "Due Date") {
+      sortedSubscriptions.sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
+    } else if (criteria === "Amount") {
+      sortedSubscriptions.sort((a, b) => {
+        // Convert amount to a common currency (USD in this example)
+        const amountA = parseFloat(a.amount) / (hardcodedRates[a.currency] || 1);
+        const amountB = parseFloat(b.amount) / (hardcodedRates[b.currency] || 1);
+        return amountA - amountB;
+      });
+    } else if (criteria === "Name") {
+      sortedSubscriptions.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    // Explicitly set the state to a new reference
+    setSorteredSubscriptions(sortedSubscriptions);
+  };  
+
+  //GET user's preferred currency
+  useEffect(() => {
+    // Using hardcoded user_id for now, needs to come from AUTH
+    const userId = "test-uuid";
+
+    axios
+      .get(`${baseURL}/api/users/${userId}`)
+      .then((response) => {
+        if (response.data && response.data.user && response.data.user.preferred_currency) {
+          setPreferredCurrency(response.data.user.preferred_currency);
+        } else {
+          console.error("Unexpected data format:", response.data);
+          setPreferredCurrency("C$"); // set to default
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching user:", error);
+        setPreferredCurrency("C$"); // set to default
+      });
+  }, []);
+
+  // Converts currency using API, used inside calculateTotalAmount function
+  const convertCurrency = async (fromCurrency, toCurrency, amount) => {
+    const url = `${baseURL}/api/currencies/convert?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&amount=${amount}`;
+    try {
+      const response = await axios.get(url);
+      return parseFloat(response.data.convertedAmount);
+    } catch (error) {
+      console.error("Error converting currency:", error);
+      return amount; // In case converson fails, it will return the original amount
+    }
+  };
+
+  // Used inside calculateTotalAmount function to adjust amount based on recurrence
+  const adjustAmountToRecurrence = (amount, recurrence) => {
+    switch (recurrence.toLowerCase()) {
+      case "weekly":
+        return amount * 4;
+      case "yearly":
+        return amount / 12;
+      case "monthly":
+      default:
+        return amount;
+    }
+  };
+
+  // Calculates total amount in preferred currency
+  const calculateTotalAmount = async () => {
+    let total = 0;
+  
+    for (let subscription of subscriptions) {
+      const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
+      if (!currencyMatch) {
+        console.error("Unexpected currency format:", subscription.currency);
+        continue;
       }
+  
+      const subscriptionCurrency = currencyMatch[1];
+      let adjustedAmount = adjustAmountToRecurrence(
+        parseFloat(subscription.amount),
+        subscription.recurrence
+      );
+  
+      if (subscriptionCurrency !== preferredCurrency) {
+        adjustedAmount = await convertCurrency(
+          subscriptionCurrency,
+          preferredCurrency,
+          adjustedAmount
+        );
+      }
+  
+      // If the subscription is shared, divide the amount here, after currency conversion
+      if (subscription.shared_with > 0) {
+        adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
+      }
+  
+      total += adjustedAmount;
+    }
+    setTotalAmount(total);
+  };
+
+  // This will be used in the interval dropdown to display the amount depending on interval
+  const adjustTotalsToInterval = (monthlyTotal, interval) => {
+    switch (interval.toLowerCase()) {
+      case "weekly":
+        return monthlyTotal / 4;
+      case "yearly":
+        return monthlyTotal * 12;
+      case "monthly":
+      default:
+        return monthlyTotal;
+    }
+  };
+
+  // Gets the start date and end date of the current interval
+  const getCurrentIntervalDates = (interval) => {
+    const now = new Date();
+    let startDate, endDate;
+
+    switch (interval.toLowerCase()) {
+      case "monthly":
+        startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+        break;
+      case "yearly":
+        startDate = new Date(now.getFullYear(), 0, 1);
+        endDate = new Date(now.getFullYear(), 11, 31);
+        break;
+      case "weekly":
+        const day = now.getDay();
+        startDate = new Date(now);
+        startDate.setDate(now.getDate() - day);
+        endDate = new Date(now);
+        endDate.setDate(now.getDate() + (6 - day));
+        break;
+      default:
+        throw new Error("Invalid interval");
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [menuRef]);
+    return { startDate, endDate };
+  };
+
+  // Calculates total based on the current interval on dropdown
+  const calculateTotalForCurrentInterval = async (interval) => {
+    const { startDate, endDate } = getCurrentIntervalDates(interval);
+  
+    const relevantSubscriptions = subscriptions.filter((subscription) => {
+      const nextPaymentDate = new Date(subscription.payment_date);
+      return nextPaymentDate >= startDate && nextPaymentDate <= endDate;
+    });
+  
+    let total = 0;
+  
+    for (let subscription of relevantSubscriptions) {
+      const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
+      if (!currencyMatch) {
+        console.error("Unexpected currency format:", subscription.currency);
+        continue;
+      }
+  
+      const subscriptionCurrency = currencyMatch[1];
+      let adjustedAmount = adjustAmountToRecurrence(
+        parseFloat(subscription.amount),
+        subscription.recurrence
+      );
+  
+      if (subscriptionCurrency !== preferredCurrency) {
+        adjustedAmount = await convertCurrency(
+          subscriptionCurrency,
+          preferredCurrency,
+          adjustedAmount
+        );
+      }
+  
+      // If the subscription is shared, divide the amount here, after currency conversion
+      if (subscription.shared_with > 0) {
+        adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
+      }
+  
+      total += adjustedAmount;
+    }
+  
+    return total;
+  };
+
+  // Recalculate total amount when interval changes
+  useEffect(() => {
+    if (selectedMetric.toLowerCase() === "total") {
+      calculateTotalForCurrentInterval(selectedInterval).then((total) => {
+        setTotalAmount(total);
+      });
+    } else if (selectedMetric.toLowerCase() === "average") {
+      // The logic I already have for average
+      calculateTotalAmount();
+    }
+  }, [subscriptions, preferredCurrency, selectedMetric, selectedInterval]);
+
+  // Rerenders subscription list when one is deleted
+  const removeSubscriptionById = (id) => {
+    const newSubscriptions = subscriptions.filter(sub => sub.subscription_id !== id);
+    setSubscriptions(newSubscriptions);
+    setSorteredSubscriptions(newSubscriptions);
+  };
+
+  // Recalculate total amount when subscriptions or preferred currency changes
+  useEffect(() => {
+    calculateTotalAmount();
+  }, [subscriptions, preferredCurrency]);
 
   return (
-    <main className="responsive-padding">
-      {/* Nav on Mobile */}
-      <NavbarMobile
-        content={"Subscriptions"}
-        toggleMenu={() => setMenuVisible(!isMenuVisible)}
-      />
+    <main className="responsive-padding md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
+      <div className="flex-grow">
+        {/* Nav on Mobile */}
+        <NavbarMobile
+          content={"Subscriptions"}
+          toggleMenu={() => setMenuVisible(!isMenuVisible)}
+        />
 
-      {/* Nav on Desktop */}
-      <NavSubsDesktop content={"Subscriptions"} />
+        {/* Nav on Desktop */}
+        <NavSubsDesktop
+          content={"Subscriptions"}
+          selectedInterval={selectedInterval}
+          selectedMetric={selectedMetric}
+          setSelectedInterval={setSelectedInterval}
+          setSelectedMetric={setSelectedMetric}
+          handleAddClick={handleAddClick}
+          totalAmount={totalAmount}
+          adjustTotalsToInterval={adjustTotalsToInterval}
+          preferredCurrency={preferredCurrency}
+          setFilteredCategory={setFilteredCategory} 
+          sortSubscriptions={sortSubscriptions}
+          setSearchTerm={setSearchTerm}
+        />
 
-      {/* Menu on Mobile */}
-      <div ref={menuRef}>
-        {isMenuVisible && <MenuMobile activePage="subscriptions" />}
-      </div>
-      {/* Menu on Desktop */}
-      <div className="hidden md:block">
-        <MenuDesktop activePage="subscriptions" />
-      </div>
+        {/* Menu on Mobile */}
+        <div ref={menuRef}>
+          {isMenuVisible && <MenuMobile activePage="subscriptions" />}
+        </div>
+        {/* Menu on Desktop */}
+        <div className="hidden md:block">
+          <MenuDesktop activePage="subscriptions" />
+        </div>
 
-      <section className="md:hidden">
-        <div className="flex gap-2.5 justify-between flex-wrap-reverse">
-          <div className="flex gap-2.5">
-            <DropdownFilter
-              options={["Monthly", "Yearly", "Weekly"]}
-              onChange={setSelectedInterval}
-            />
-            <DropdownFilter
-              options={["Average", "Total"]}
-              onChange={setSelectedMetric}
+        <section className="md:hidden">
+          <div className="flex gap-2.5 justify-between flex-wrap-reverse">
+            <div className="flex gap-2.5 mb-4">
+              <DropdownFilter
+                options={["Monthly", "Yearly", "Weekly"]}
+                onChange={setSelectedInterval}
+              />
+              <DropdownFilter
+                options={["Average", "Total"]}
+                onChange={setSelectedMetric}
+              />
+            </div>
+            <ButtonSmall
+              content={"+ Add"}
+              type={"primary"}
+              onClick={handleAddClick}
             />
           </div>
-          <ButtonSmall content={"+ Add"} type={"primary"} />
-        </div>
-        <div className="flex flex-col items-center">
-          <h1 className="py-2 text-4xl">0.00 $</h1>
-          <h4 className="text-medium-grey">
-            {selectedInterval} {selectedMetric}
-          </h4>
-        </div>
-        <div className="mt-6 mb-6 border"></div>
-        <Filters />
-      </section>
+          <div className="flex flex-col items-center">
+            <h1 className="py-2 text-4xl">
+              {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
+              <span className="text-xl">{preferredCurrency}</span>
+            </h1>
+            <h4 className="text-medium-grey">
+              {selectedInterval} {selectedMetric}
+            </h4>
+          </div>
+          <div className="mt-6 mb-6 border"></div>
+          <Filters setFilteredCategory={setFilteredCategory} sortSubscriptions={sortSubscriptions} setSearchTerm={setSearchTerm} />
+        </section>
 
-      <NoSubs />
+        <div className="grid gap-2.5 mb-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
+          {!loading && sorteredSubscriptions.length === 0 ? (
+            <NoSubs />
+          ) : (
+            sorteredSubscriptions.map((subscription) => (
+              <Card
+                key={subscription.subscription_id}
+                id={subscription.subscription_id}
+                imageContent={subscription.logo}
+                name={subscription.name}
+                selectedCurrency={subscription.currency}
+                amount={subscription.amount}
+                sharedNumber={subscription.shared_with}
+                recurrence={subscription.recurrence}
+                nextPaymentDate={subscription.payment_date}
+                website={subscription.website}
+                color={subscription.color}
+                removeSubscriptionById={removeSubscriptionById}
+              />
+            ))
+          )}
+        </div>
+
+      </div>
       <Footer />
     </main>
   );
