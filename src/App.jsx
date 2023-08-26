@@ -6,6 +6,7 @@ import Signup from "./pages/Signup";
 import Subscriptions from "./pages/Subscriptions";
 import AddSubscription from "./pages/AddSubscription";
 import NewSubscription from "./pages/NewSubscription";
+import EditSubscription from "./pages/EditSubscription";
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -54,6 +55,7 @@ function App() {
             }
           />
           <Route path="/new-subscription" element={<NewSubscription />} />
+          <Route path="/edit-subscription/:subscriptionId" element={<EditSubscription />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </div>

@@ -179,7 +179,6 @@ function NewSubscription() {
     axios
       .post(`${baseURL}/api/subscriptions/`, newSubscription)
       .then((response) => {
-        console.log(response);
         navigate("/subscriptions");
       })
       .catch((error) => {

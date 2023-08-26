@@ -1,8 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import axios from "axios";
-
-import AlertModal from "./AlertModal";
 
 import { ReactComponent as ChevronDown } from "../assets/icons/chevron_down.svg";
 import { ReactComponent as EditIcon } from "../assets/icons/edit.svg";
@@ -30,6 +29,7 @@ function Card({
   notFunctional,
   removeSubscriptionById,
 }) {
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const actualAmount = Number(sharedNumber) > 0 ? Number(amount) / (Number(sharedNumber) + 1) : Number(amount);
 
@@ -148,13 +148,15 @@ function Card({
             <DropdownMenu.Root
               onOpenChange={(isOpen) => setIsDropdownOpen(isOpen)}
             >
-              <DropdownMenu.Trigger>
-                <ChevronDown className={`w-3 h-3 ${textColor}`} />
+              <DropdownMenu.Trigger className="p-1.5 rounded hover:bg-opacity-20 hover:bg-light-grey">
+                <ChevronDown className={`w-3 h-3  ${textColor}`} />
               </DropdownMenu.Trigger>
               <DropdownMenu.Content className="flex flex-col gap-5 p-4 mb-3 card">
-                <DropdownMenu.Item className="flex cursor-pointer">
+                <DropdownMenu.Item >
+                  <Link className="flex cursor-pointer" to={`/edit-subscription/${id}`}>
                   <EditIcon className="mt-0.5 mr-3" />
                   <h4>Edit</h4>
+                  </Link>
                 </DropdownMenu.Item>
                 
                 {/* WEBSITE - Shows only if there's a website added */}
