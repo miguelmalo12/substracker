@@ -31,7 +31,9 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   // Variables coming from Filters
   const [filteredCategory, setFilteredCategory] = useState(null);
 
-
+  // Variables used for Sort
+  const [sorteredSubscriptions, setSorteredSubscriptions] = useState([]);
+  
 
   const handleAddClick = () => {
     navigate("/add-subscription");
@@ -44,6 +46,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
       .then((response) => {
         if (response.data && Array.isArray(response.data.subscriptions)) {
           setSubscriptions(response.data.subscriptions);
+          setSorteredSubscriptions([...response.data.subscriptions]); // Populate sortedSubscriptions
         } else {
           console.error("Unexpected data format:", response.data);
         }
@@ -56,17 +59,27 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   }, []);
 
   // Filter subscriptions by category
-  const updateSubscriptions = () => {
-    const filtered = filteredCategory ? 
-              subscriptions.filter(sub => sub.category_name === filteredCategory) : 
-              subscriptions;
-    setSubscriptions(filtered);
-  };
-  
-  useEffect(() => {
-    updateSubscriptions();
-  }, [filteredCategory]);
+  const filteredSubscriptions = filteredCategory ? 
+  subscriptions.filter(sub => sub.category_name === filteredCategory) : 
+  subscriptions;
 
+  // Sort subscriptions by criteria selected
+  const sortSubscriptions = (criteria) => {
+    
+    // Create a new array to trigger React update
+    let sortedSubscriptions = [...sorteredSubscriptions];
+    
+    if (criteria === "Due Date") {
+      sortedSubscriptions.sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
+    } else if (criteria === "Amount") {
+      sortedSubscriptions.sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount));
+    } else if (criteria === "Name") {
+      sortedSubscriptions.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    
+    // Explicitly set the state to a new reference
+    setSorteredSubscriptions([...sortedSubscriptions]);
+  }
 
   //GET user's preferred currency
   useEffect(() => {
@@ -253,9 +266,8 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
     calculateTotalAmount();
   }, [subscriptions, preferredCurrency]);
 
-
   return (
-    <main className="responsive-padding md:pl-28 md:min-h-screen md:flex md:flex-col">
+    <main className="responsive-padding md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
         {/* Nav on Mobile */}
         <NavbarMobile
@@ -275,6 +287,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           adjustTotalsToInterval={adjustTotalsToInterval}
           preferredCurrency={preferredCurrency}
           setFilteredCategory={setFilteredCategory} 
+          sortSubscriptions={sortSubscriptions}
         />
 
         {/* Menu on Mobile */}
@@ -314,14 +327,14 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
             </h4>
           </div>
           <div className="mt-6 mb-6 border"></div>
-          <Filters setFilteredCategory={setFilteredCategory} />
+          <Filters setFilteredCategory={setFilteredCategory} sortSubscriptions={sortSubscriptions} />
         </section>
 
         <div className="grid gap-2.5 mb-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
-          {!loading && subscriptions.length === 0 ? (
+          {!loading && sorteredSubscriptions.length === 0 ? (
             <NoSubs />
           ) : (
-            subscriptions.map((subscription) => (
+            sorteredSubscriptions.map((subscription) => (
               <Card
                 key={subscription.subscription_id}
                 id={subscription.subscription_id}
@@ -338,9 +351,8 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
               />
             ))
           )}
-
-          
         </div>
+
       </div>
       <Footer />
     </main>
