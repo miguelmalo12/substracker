@@ -136,7 +136,7 @@ function EditSubscription() {
   };
 
   const handleGoBack = () => {
-    navigate("/add-subscription");
+    navigate("/subscriptions");
   };
 
   useEffect(() => {

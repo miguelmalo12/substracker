@@ -61,7 +61,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [preferredCurrency, setPreferredCurrency] = useState("CAD");
+  const [preferredCurrency, setPreferredCurrency] = useState('C$');
   const [totalAmount, setTotalAmount] = useState(0); // This will show the monthly average by default
 
   // Variables coming from Filters
@@ -102,12 +102,6 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
       });
   }, []);
 
-  // CAN DELETE ?
-  // Filter subscriptions by category
-  const filteredSubscriptions = filteredCategory ? 
-  subscriptions.filter(sub => sub.category_name === filteredCategory) : 
-  subscriptions;
-
   // SORT subscriptions by criteria selected
   const sortSubscriptions = (criteria) => {
   
@@ -139,14 +133,16 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
     axios
       .get(`${baseURL}/api/users/${userId}`)
       .then((response) => {
-        if (response.data && response.data.user) {
+        if (response.data && response.data.user && response.data.user.preferred_currency) {
           setPreferredCurrency(response.data.user.preferred_currency);
         } else {
           console.error("Unexpected data format:", response.data);
+          setPreferredCurrency("C$"); // set to default
         }
       })
       .catch((error) => {
         console.error("Error fetching user:", error);
+        setPreferredCurrency("C$"); // set to default
       });
   }, []);
 
