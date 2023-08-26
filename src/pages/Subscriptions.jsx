@@ -16,6 +16,42 @@ import Card from "../components/Card";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
+const hardcodedRates = {
+  "Australian Dollar (AUD)": 1.5392802922,
+  "Bulgarian Lev (BGN)": 1.7781102999,
+  "Brazilian Real (BRL)": 4.9004308773,
+  "Canadian Dollar (CAD)": 1.3443201767,
+  "Swiss Franc (CHF)": 0.8767301001,
+  "Chinese Yuan (CNY)": 7.2387010756,
+  "Czech Koruna (CZK)": 21.9700534089,
+  "Danish Krone (DKK)": 6.8079108152,
+  "Euro (EUR)": 0.9134801106,
+  "British Pound (GBP)": 0.7878600901,
+  "Hong Kong Dollar (HKD)": 7.8160608857,
+  "Croatian Kuna (HRK)": 7.0418712792,
+  "Hungarian Forint (HUF)": 349.7298199729,
+  "Indonesian Rupiah (IDR)": 15196.810558816,
+  "Israeli Shekel (ILS)": 3.7491006603,
+  "Indian Rupee (INR)": 82.8475011016,
+  "Icelandic Krona (ISK)": 131.4663844836,
+  "Japanese Yen (JPY)": 145.0034138135,
+  "South Korean Won (KRW)": 1329.207706231,
+  "Mexican Peso (MXN)": 17.0399319886,
+  "Malaysian Ringgit (MYR)": 4.5866005184,
+  "Norwegian Krone (NOK)": 10.4271016235,
+  "New Zealand Dollar (NZD)": 1.6713103091,
+  "Philippine Peso (PHP)": 56.5777793964,
+  "Polish Zloty (PLN)": 4.0479807547,
+  "Romanian Leu (RON)": 4.5127605347,
+  "Russian Ruble (RUB)": 99.5564450298,
+  "Swedish Krona (SEK)": 10.8334813592,
+  "Singapore Dollar (SGD)": 1.3513002315,
+  "Thai Baht (THB)": 35.0884062283,
+  "Turkish Lira (TRY)": 27.0268552655,
+  "United States Dollar (USD)": 1,
+  "South African Rand (ZAR)": 18.9268628665
+};
+
 function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   const navigate = useNavigate();
 
@@ -33,7 +69,15 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
 
   // Variables used for Sort
   const [sorteredSubscriptions, setSorteredSubscriptions] = useState([]);
-  
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    setSorteredSubscriptions(
+      subscriptions.filter(subscription =>
+        subscription.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    );
+  }, [searchTerm, subscriptions]);
 
   const handleAddClick = () => {
     navigate("/add-subscription");
@@ -58,28 +102,34 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
       });
   }, []);
 
+  // CAN DELETE ?
   // Filter subscriptions by category
   const filteredSubscriptions = filteredCategory ? 
   subscriptions.filter(sub => sub.category_name === filteredCategory) : 
   subscriptions;
 
-  // Sort subscriptions by criteria selected
+  // SORT subscriptions by criteria selected
   const sortSubscriptions = (criteria) => {
-    
+  
     // Create a new array to trigger React update
     let sortedSubscriptions = [...sorteredSubscriptions];
     
     if (criteria === "Due Date") {
       sortedSubscriptions.sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
     } else if (criteria === "Amount") {
-      sortedSubscriptions.sort((a, b) => parseFloat(a.amount) - parseFloat(b.amount));
+      sortedSubscriptions.sort((a, b) => {
+        // Convert amount to a common currency (USD in this example)
+        const amountA = parseFloat(a.amount) / (hardcodedRates[a.currency] || 1);
+        const amountB = parseFloat(b.amount) / (hardcodedRates[b.currency] || 1);
+        return amountA - amountB;
+      });
     } else if (criteria === "Name") {
       sortedSubscriptions.sort((a, b) => a.name.localeCompare(b.name));
     }
     
     // Explicitly set the state to a new reference
-    setSorteredSubscriptions([...sortedSubscriptions]);
-  }
+    setSorteredSubscriptions(sortedSubscriptions);
+  };  
 
   //GET user's preferred currency
   useEffect(() => {
@@ -201,7 +251,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
     return { startDate, endDate };
   };
 
-  // Filters the subscriptions based on the current interval
+  // Calculates total based on the current interval on dropdown
   const calculateTotalForCurrentInterval = async (interval) => {
     const { startDate, endDate } = getCurrentIntervalDates(interval);
   
@@ -258,7 +308,9 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
 
   // Rerenders subscription list when one is deleted
   const removeSubscriptionById = (id) => {
-    setSubscriptions(subscriptions.filter(sub => sub.subscription_id !== id));
+    const newSubscriptions = subscriptions.filter(sub => sub.subscription_id !== id);
+    setSubscriptions(newSubscriptions);
+    setSorteredSubscriptions(newSubscriptions);
   };
 
   // Recalculate total amount when subscriptions or preferred currency changes
@@ -288,6 +340,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           preferredCurrency={preferredCurrency}
           setFilteredCategory={setFilteredCategory} 
           sortSubscriptions={sortSubscriptions}
+          setSearchTerm={setSearchTerm}
         />
 
         {/* Menu on Mobile */}
@@ -320,14 +373,14 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           <div className="flex flex-col items-center">
             <h1 className="py-2 text-4xl">
               {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
-              {preferredCurrency}
+              <span className="text-xl">{preferredCurrency}</span>
             </h1>
             <h4 className="text-medium-grey">
               {selectedInterval} {selectedMetric}
             </h4>
           </div>
           <div className="mt-6 mb-6 border"></div>
-          <Filters setFilteredCategory={setFilteredCategory} sortSubscriptions={sortSubscriptions} />
+          <Filters setFilteredCategory={setFilteredCategory} sortSubscriptions={sortSubscriptions} setSearchTerm={setSearchTerm} />
         </section>
 
         <div className="grid gap-2.5 mb-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>

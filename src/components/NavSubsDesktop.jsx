@@ -15,6 +15,7 @@ function NavSubsDesktop({
   setFilteredCategory,
   resetFilters,
   sortSubscriptions,
+  setSearchTerm,
 }) {
   return (
     <header className="hidden w-full gap-5 pt-3 mb-4 md:flex">
@@ -33,6 +34,7 @@ function NavSubsDesktop({
           resetFilters={resetFilters}
           setFilteredCategory={setFilteredCategory}
           sortSubscriptions={sortSubscriptions}
+          setSearchTerm={setSearchTerm}
         />
         <div className="border"></div>
       </div>
@@ -42,7 +44,7 @@ function NavSubsDesktop({
         <div className="flex flex-col">
           <h1 className="py-2 text-4xl">
             {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
-            {preferredCurrency}
+            <span className="text-xl">{preferredCurrency}</span>
           </h1>
           <h4 className="text-xl text-medium-grey">
             {selectedInterval} {selectedMetric}

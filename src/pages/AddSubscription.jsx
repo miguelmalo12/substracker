@@ -11,13 +11,17 @@ import SearchField from "../components/SearchField";
 import ExistingSubsCard from "../components/ExistingSubsCard";
 import Footer from "../components/Footer";
 
+const baseURL = process.env.REACT_APP_BASE_URL;
+
 function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
+  const navigate = useNavigate();
+
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState({});
 
-  const baseURL = process.env.REACT_APP_BASE_URL;
-
-  const navigate = useNavigate();
+  // Used on the Search Field
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleGoBack = () => {
     navigate("/subscriptions");
@@ -33,6 +37,7 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
       .get(`${baseURL}/api/services/`)
       .then((response) => {
         setServices(response.data);
+        setFilteredServices(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -51,6 +56,15 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  // Filters the services based on the search term
+  useEffect(() => {
+    setFilteredServices(
+      services.filter(service =>
+        service.service_name ? service.service_name.toLowerCase().includes(searchTerm.toLowerCase()) : false
+      )
+    );
+  }, [searchTerm, services]);
 
   return (
     <main className="max-w-7xl responsive-padding md:pl-28">
@@ -75,10 +89,10 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
           </div>
           <ButtonSmall content={"+ New"} type={"primary"} onClick={handleAddNewClick} />
         </div>
-        <SearchField placeholder={"Search Service..."} />
+        <SearchField placeholder={"Search Service..."} setSearchTerm={setSearchTerm} />
       </div>
       <div className="md:flex md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
-        {services.map((service) => {
+        {filteredServices.map((service) => {
           return (
             <ExistingSubsCard
               key={service.service_id}

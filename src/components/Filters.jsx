@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
-import PopoverSort from "./PopoverSort";
+import SearchField from "./SearchField";
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 
 import { ReactComponent as FilterIcon } from "../assets/icons/filter.svg";
 import { ReactComponent as SortIcon } from "../assets/icons/sort.svg";
-import { ReactComponent as SearchIcon } from "../assets/icons/search.svg";
 import { ReactComponent as CategoryIcon } from "../assets/icons/category.svg";
 import { ReactComponent as CurrencyIcon } from "../assets/icons/currency.svg";
 import { ReactComponent as PaymentIcon } from "../assets/icons/pay_method.svg";
@@ -16,9 +15,7 @@ import { ReactComponent as CheckIcon } from "../assets/icons/check.svg";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
-function Filters({ setFilteredCategory, resetFilters, sortSubscriptions }) {
-  const [active, setActive] = useState(null);
-  const [showPopoverSort, setShowPopoverSort] = useState(false);
+function Filters({ setFilteredCategory, resetFilters, sortSubscriptions, setSearchTerm }) {
   const [checkedItem, setCheckedItem] = useState("Due Date"); // This is for sort dropdown
 
   const categoryList = [
@@ -73,39 +70,6 @@ function Filters({ setFilteredCategory, resetFilters, sortSubscriptions }) {
 
   const [paymentMethods, setPaymentMethods] = useState([]);
 
-  const filterRef = useRef(null);
-  const sortRef = useRef(null);
-
-  const handleSortItemClick = (sortItem) => {
-    setCheckedItem(sortItem);
-    sortSubscriptions(sortItem);
-  };
-
-  // Can delete
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      let shouldHideAll = true;
-
-      if (filterRef.current && filterRef.current.contains(event.target)) {
-        shouldHideAll = false;
-      }
-
-      if (sortRef.current && sortRef.current.contains(event.target)) {
-        shouldHideAll = false;
-      }
-
-      if (shouldHideAll) {
-        setShowPopoverSort(false);
-        setActive(null);
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, []);
-
   // GETS payment methods
 
   useEffect(() => {
@@ -120,31 +84,15 @@ function Filters({ setFilteredCategory, resetFilters, sortSubscriptions }) {
       });
   }, []);
 
-  const handleDivClick = (divName) => {
-    if (active === divName) {
-      setActive(null);
-      setShowPopoverSort(false);
-    } else {
-      setActive(divName);
-      setShowPopoverSort(divName === "sort");
-    }
-  };
-
   return (
     <div className="z-10 flex items-center justify-between pb-6 md:pb-0">
-      <div className="flex gap-6">
+      <div className="flex gap-1 mr-5 md:mr-0 md:gap-6">
         {/* Filter popover */}
         <div className="flex relative p-1.5 rounded items-center cursor-pointer">
           <DropdownMenu.Root>
-            <div
-              // ref={filterRef}
-              className={`p-1.5 flex rounded ${
-                active === "filter" ? "text-primary bg-primary-bg" : ""
-              }`}
-              onClick={() => handleDivClick("filter")}
-            >
+            <div>
               <DropdownMenu.Trigger className="flex">
-                <FilterIcon className="mr-3" />
+                <FilterIcon className="mr-1 md:mr-3" />
                 <h4>Filter</h4>
               </DropdownMenu.Trigger>
             </div>
@@ -271,7 +219,7 @@ function Filters({ setFilteredCategory, resetFilters, sortSubscriptions }) {
         <div className="flex relative p-1.5 rounded items-center cursor-pointer">
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="flex">
-              <SortIcon className="mr-3" />
+              <SortIcon className="mr-2 md:mr-3" />
               <h4>Sort</h4>
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
@@ -325,9 +273,8 @@ function Filters({ setFilteredCategory, resetFilters, sortSubscriptions }) {
         </div>
       </div>
 
-      <div className="flex p-1.5 cursor-pointer">
-        <SearchIcon className="mr-3" />
-        <h4>Search</h4>
+      <div className="flex cursor-pointer">
+        <SearchField placeholder={"Search"} setSearchTerm={setSearchTerm} />
       </div>
     </div>
   );

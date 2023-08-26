@@ -78,3 +78,8 @@ textarea::placeholder {
     pointer-events: none; /* So it won't interfere with clickable elements on the card */
     z-index: 1;
   }
+
+/* This is used on the subscription cards */
+.lighten-on-hover:hover {
+    filter: brightness(1.1); /* Adjust as needed; 1 is the original brightness */
+}

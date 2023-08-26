@@ -11,8 +11,7 @@ import { ReactComponent as Shared } from "../assets/icons/users_shared.svg";
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
-import * as Portal from '@radix-ui/react-portal';
-
+import * as Portal from "@radix-ui/react-portal";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
@@ -110,12 +109,11 @@ function Card({
       : "text-white";
 
   return (
-    <div className="relative rounded">
+    <div className="relative rounded lighten-on-hover">
       <div
         className={`flex-grow flex items-center justify-between p-3 pr-2 rounded drop-shadow h-18 ${color}`}
         style={{ zIndex: isDropdownOpen ? 1000 : 1 }}
       >
-        
         <AlertDialog.Root>
           <div className="flex">
             {imageContent && imageContent.startsWith("http") ? (
@@ -152,7 +150,6 @@ function Card({
             {notFunctional ? (
               <ChevronDown className={`w-3 h-3 ${textColor}`} />
             ) : (
-              
               <DropdownMenu.Root
                 onOpenChange={(isOpen) => setIsDropdownOpen(isOpen)}
                 style={{ zIndex: 1001 }}
@@ -161,42 +158,42 @@ function Card({
                   <ChevronDown className={`w-3 h-3  ${textColor}`} />
                 </DropdownMenu.Trigger>
                 <Portal.Root>
-                <DropdownMenu.Content className="flex flex-col gap-5 p-4 mb-3 card">
-                  <DropdownMenu.Item>
-                    <Link
-                      className="flex cursor-pointer"
-                      to={`/edit-subscription/${id}`}
-                    >
-                      <EditIcon className="mt-0.5 mr-3" />
-                      <h4>Edit</h4>
-                    </Link>
-                  </DropdownMenu.Item>
-
-                  {/* WEBSITE - Shows only if there's a website added */}
-                  {website && (
-                    <DropdownMenu.Item className="flex cursor-pointer">
-                      <a
-                        href={website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex"
+                  <DropdownMenu.Content className="flex flex-col gap-5 p-4 mb-3 card">
+                    <DropdownMenu.Item>
+                      <Link
+                        className="flex cursor-pointer"
+                        to={`/edit-subscription/${id}`}
                       >
-                        <WebsiteIcon className="mr-3" />
-                        <h4>Visit Website</h4>
-                      </a>
+                        <EditIcon className="mt-0.5 mr-3" />
+                        <h4>Edit</h4>
+                      </Link>
                     </DropdownMenu.Item>
-                  )}
 
-                  {/* DELETE - Opens alert dialog */}
-                  <DropdownMenu.Item className="flex cursor-pointer">
-                    <AlertDialog.Trigger asChild>
-                      <div className="flex items-center">
-                        <DeleteIcon className="mr-3" />
-                        <h4 className="pr-3 text-error">Delete</h4>
-                      </div>
-                    </AlertDialog.Trigger>
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
+                    {/* WEBSITE - Shows only if there's a website added */}
+                    {website && (
+                      <DropdownMenu.Item className="flex cursor-pointer">
+                        <a
+                          href={website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex"
+                        >
+                          <WebsiteIcon className="mr-3" />
+                          <h4>Visit Website</h4>
+                        </a>
+                      </DropdownMenu.Item>
+                    )}
+
+                    {/* DELETE - Opens alert dialog */}
+                    <DropdownMenu.Item className="flex cursor-pointer">
+                      <AlertDialog.Trigger asChild>
+                        <div className="flex items-center">
+                          <DeleteIcon className="mr-3" />
+                          <h4 className="pr-3 text-error">Delete</h4>
+                        </div>
+                      </AlertDialog.Trigger>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
                 </Portal.Root>
               </DropdownMenu.Root>
             )}
@@ -229,23 +226,27 @@ function Card({
             </AlertDialog.Content>
           </AlertDialog.Portal>
         </AlertDialog.Root>
-        
+
         {/* Card background effect */}
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10 gradient-overlay">
-        <div 
-    className={`absolute w-40 h-40 rounded-full opacity-10 ${
-      ['bg-white', 'bg-gray-200', 'bg-primary-bg'].includes(color) ? 'bg-medium-grey' : 'bg-light-grey'
-    }`}
-    style={{top: '-160%', right: '-5%'}}
-  ></div>
-  <div 
-    className={`absolute w-24 h-24 rounded-full opacity-10 ${
-      ['bg-white', 'bg-gray-200', 'bg-primary-bg'].includes(color) ? 'bg-medium-grey' : 'bg-light-grey'
-    }`}
-    style={{top: '10%', right: '-15%'}}
-  ></div>        </div>
+          <div
+            className={`absolute w-40 h-40 rounded-full opacity-10 ${
+              ["bg-white", "bg-gray-200", "bg-primary-bg"].includes(color)
+                ? "bg-medium-grey"
+                : "bg-light-grey"
+            }`}
+            style={{ top: "-160%", right: "-5%" }}
+          ></div>
+          <div
+            className={`absolute w-24 h-24 rounded-full opacity-10 ${
+              ["bg-white", "bg-gray-200", "bg-primary-bg"].includes(color)
+                ? "bg-medium-grey"
+                : "bg-light-grey"
+            }`}
+            style={{ top: "10%", right: "-15%" }}
+          ></div>{" "}
+        </div>
       </div>
-     
     </div>
   );
 }
