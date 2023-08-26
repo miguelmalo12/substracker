@@ -15,7 +15,7 @@ import { ReactComponent as ChevronRight } from "../assets/icons/chevron_right.sv
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
-function Filters() {
+function Filters({ setFilteredCategory }) {
   const [active, setActive] = useState(null);
   const [showPopoverSort, setShowPopoverSort] = useState(false);
 
@@ -157,8 +157,7 @@ function Filters() {
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          // Handle the selection of the category here
-                          console.log(`Selected category: ${category}`);
+                          setFilteredCategory(category);
                         }}
                         className="relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100"
                       >
@@ -185,7 +184,7 @@ function Filters() {
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          // Handle the selection of the category here
+                          // Handle the selection of the currency here
                           console.log(`Selected currency: ${currency}`);
                         }}
                         className="relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100"

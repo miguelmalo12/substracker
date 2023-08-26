@@ -28,6 +28,11 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   const [preferredCurrency, setPreferredCurrency] = useState("CAD");
   const [totalAmount, setTotalAmount] = useState(0); // This will show the monthly average by default
 
+  // Variables coming from Filters
+  const [filteredCategory, setFilteredCategory] = useState(null);
+
+
+
   const handleAddClick = () => {
     navigate("/add-subscription");
   };
@@ -49,6 +54,19 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
         setLoading(false);
       });
   }, []);
+
+  // Filter subscriptions by category
+  const updateSubscriptions = () => {
+    const filtered = filteredCategory ? 
+              subscriptions.filter(sub => sub.category_name === filteredCategory) : 
+              subscriptions;
+    setSubscriptions(filtered);
+  };
+  
+  useEffect(() => {
+    updateSubscriptions();
+  }, [filteredCategory]);
+
 
   //GET user's preferred currency
   useEffect(() => {
@@ -235,6 +253,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
     calculateTotalAmount();
   }, [subscriptions, preferredCurrency]);
 
+
   return (
     <main className="responsive-padding md:pl-28 md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
@@ -255,6 +274,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           totalAmount={totalAmount}
           adjustTotalsToInterval={adjustTotalsToInterval}
           preferredCurrency={preferredCurrency}
+          setFilteredCategory={setFilteredCategory} 
         />
 
         {/* Menu on Mobile */}
@@ -294,7 +314,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
             </h4>
           </div>
           <div className="mt-6 mb-6 border"></div>
-          <Filters />
+          <Filters setFilteredCategory={setFilteredCategory} />
         </section>
 
         <div className="grid gap-2.5 mb-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>

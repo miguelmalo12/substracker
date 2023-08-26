@@ -12,6 +12,7 @@ function NavSubsDesktop({
   totalAmount,
   adjustTotalsToInterval,
   preferredCurrency,
+  setFilteredCategory,
 }) {
   return (
     <header className="hidden w-full gap-5 pt-3 mb-4 md:flex">
@@ -22,7 +23,7 @@ function NavSubsDesktop({
           <ButtonSmall content={"+ Add"} type={"primary"} onClick={handleAddClick}/>
         </nav>
 
-        <Filters />
+        <Filters setFilteredCategory={setFilteredCategory}  />
         <div className="border"></div>
       </div>
 
