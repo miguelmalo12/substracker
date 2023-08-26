@@ -386,17 +386,19 @@ function NewSubscription() {
             </div>
             <div className="flex flex-col w-full gap-2 pt-4 border-t">
               <h3>Card Preview</h3>
-              <Card
-                imageContent={logoFromPreviousPage || selectedEmoji}
-                name={name}
-                selectedCurrency={selectedCurrency}
-                amount={amount}
-                sharedNumber={sharedNumber}
-                nextPaymentDate={nextPaymentDate}
-                recurrence={recurrence}
-                color={color}
-                notFunctional={true}
-              />
+              <div className="max-w-sm">
+                <Card
+                  imageContent={logoFromPreviousPage || selectedEmoji}
+                  name={name}
+                  selectedCurrency={selectedCurrency}
+                  amount={amount}
+                  sharedNumber={sharedNumber}
+                  nextPaymentDate={nextPaymentDate}
+                  recurrence={recurrence}
+                  color={color}
+                  notFunctional={true}
+                />
+              </div>
             </div>
             <div className="flex pt-5 mb-5 cursor-pointer md:pt-8">
               {/* Color choose popover */}

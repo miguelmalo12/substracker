@@ -297,7 +297,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           <Filters />
         </section>
 
-        <div className="flex flex-wrap gap-3 md:gap-9">
+        <div className="grid gap-2.5 mb-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
           {!loading && subscriptions.length === 0 ? (
             <NoSubs />
           ) : (
