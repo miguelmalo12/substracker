@@ -315,7 +315,7 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
   }, [subscriptions, preferredCurrency]);
 
   return (
-    <main className="responsive-padding md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
+    <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
         {/* Nav on Mobile */}
         <NavbarMobile
@@ -348,7 +348,8 @@ function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
           <MenuDesktop activePage="subscriptions" />
         </div>
 
-        <section className="md:hidden">
+        {/* Top section only visible on Mobile */}
+        <section className="md:hidden dark:text-light-grey">
           <div className="flex gap-2.5 justify-between flex-wrap-reverse">
             <div className="flex gap-2.5 mb-4">
               <DropdownFilter

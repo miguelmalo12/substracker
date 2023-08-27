@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilState } from 'recoil';
+import { darkModeState } from '../state/darkModeState';
 
 import axios from "axios";
 
@@ -29,6 +31,7 @@ function Card({
   notFunctional,
   removeSubscriptionById,
 }) {
+  const [darkMode] = useRecoilState(darkModeState);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const actualAmount =
     Number(sharedNumber) > 0
@@ -144,7 +147,7 @@ function Card({
               <Shared className={`absolute w-6 h-6 -left-8 ${textColor}`} />
             )}
             <div className="flex items-center p-2 px-3 bg-white rounded drop-shadow h-9">
-              <p className="text-xs">{formatDate(nextPaymentDate)}</p>
+              <p className="text-xs text-dark-grey">{formatDate(nextPaymentDate)}</p>
             </div>
 
             {notFunctional ? (
@@ -158,7 +161,7 @@ function Card({
                   <ChevronDown className={`w-3 h-3  ${textColor}`} />
                 </DropdownMenu.Trigger>
                 <Portal.Root>
-                  <DropdownMenu.Content className="flex flex-col gap-5 p-4 mb-3 card">
+                  <DropdownMenu.Content className={`flex flex-col gap-5 p-4 mb-3 rounded drop-shadow ${darkMode ? 'bg-dark-grey text-light-grey border-dark' : 'bg-white'}`}>
                     <DropdownMenu.Item>
                       <Link
                         className="flex cursor-pointer"

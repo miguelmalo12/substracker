@@ -7,9 +7,9 @@ function SearchField({ placeholder, setSearchTerm }) {
   
   return (
     <div className="w-full h-10 md:w-72">
-      <div className="relative flex items-center mb-3 border rounded">
+      <div className="relative flex items-center mb-3 border rounded dark:border-dark">
         <input
-          className="w-full h-10 pl-3 border-none rounded bg-light-grey placeholder:text-sm placeholder:text-medium-grey"
+          className="w-full h-10 pl-3 border-none rounded dark:bg-dark-grey bg-light-grey placeholder:text-sm placeholder:text-medium-grey"
           type="text"
           placeholder={placeholder}
           onChange={handleSearch}

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useRecoilState } from 'recoil';
+import { darkModeState } from './state/darkModeState';
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -9,7 +11,7 @@ import NewSubscription from "./pages/NewSubscription";
 import EditSubscription from "./pages/EditSubscription";
 
 function App() {
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useRecoilState(darkModeState);
 
   const menuRef = useRef(null);
   const [isMenuVisible, setMenuVisible] = useState(false);
@@ -30,6 +32,7 @@ function App() {
   return (
     <Router>
       <div className={darkMode ? "dark" : ""}>
+        <div className="dark:bg-dark">
         <Routes>
           {/* <Route path="/" element={<Home />} /> */}
           <Route path="/login" element={<Login />} />
@@ -58,6 +61,7 @@ function App() {
           <Route path="/edit-subscription/:subscriptionId" element={<EditSubscription />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
+        </div>
       </div>
     </Router>
   );

@@ -67,7 +67,7 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
   }, [searchTerm, services]);
 
   return (
-    <main className="max-w-7xl responsive-padding md:pl-28">
+    <main className="min-h-screen max-w-7xl md:h-fh responsive-padding md:pl-28 dark:text-light-grey">
       {/* Nav on Mobile */}
       <NavbarMobile content={"Add Subscription"} goBack={handleGoBack} />
 
@@ -91,7 +91,7 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
         </div>
         <SearchField placeholder={"Search Service..."} setSearchTerm={setSearchTerm} />
       </div>
-      <div className="md:flex md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
+      <div className="md:flex md:dark:bg-dark-grey dark:text-light-grey dark:border-dark md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
         {filteredServices.map((service) => {
           return (
             <ExistingSubsCard

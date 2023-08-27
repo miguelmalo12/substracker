@@ -270,7 +270,7 @@ function EditSubscription() {
 
         <main className="flex flex-col-reverse md:flex-row">
           {/* Form fields */}
-          <section className="md:card md:py-3 md:px-6 md:w-1/2">
+          <section className="md:card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
             <div className="pb-6">
               <FieldBorder
                 title={"Name"}
@@ -369,7 +369,7 @@ function EditSubscription() {
           </section>
 
           {/* CARD PREVIEW */}
-          <section className="flex flex-col justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
+          <section className="flex flex-col justify-center dark:text-light-grey md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
             <div className="flex flex-col">
               {logo ? (
                 <img
@@ -400,7 +400,7 @@ function EditSubscription() {
                   style={{ width: inputWidth }}
                   type="text"
                   value={amount}
-                  className="py-3 text-3xl font-bold border border-transparent rounded cursor-pointer focus:border-primary"
+                  className="py-3 text-3xl font-bold border border-transparent rounded cursor-pointer dark:bg-dark focus:border-primary"
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^\d.]/g, "");
                     setAmount(value);
@@ -429,7 +429,7 @@ function EditSubscription() {
                 </span>
               </div>
             </div>
-            <div className="flex flex-col w-full gap-2 pt-4 border-t">
+            <div className="flex flex-col w-full gap-2 pt-4 border-t dark:border-medium-grey">
               <h3>Card Preview</h3>
               <div className="max-w-sm">
                 <Card
@@ -453,11 +453,11 @@ function EditSubscription() {
                 >
                   <Popover.Anchor />
                 </Popover.Trigger>
-                <Popover.Content className="relative flex flex-col p-4 mt-4 bg-white rounded drop-shadow">
+                <Popover.Content className="relative flex flex-col p-4 mt-4 bg-white rounded dark:bg-dark-grey dark:border dark:border-dark drop-shadow">
                   <Popover.Arrow />
                   <h5 className="mb-2">Choose Color</h5>
                   <Popover.Close
-                    className="absolute p-2 rounded-full top-1 right-1 PopoverClose hover:bg-primary-bg"
+                    className="absolute p-2 rounded-full top-1 right-1 dark:hover:bg-dark hover:bg-primary-bg"
                     aria-label="Close"
                   >
                     <Cross2Icon />
