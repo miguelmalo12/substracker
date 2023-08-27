@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { mobileMenuState } from "../state/mobileMenuState";
 
 import axios from "axios";
 
@@ -52,8 +54,9 @@ const hardcodedRates = {
   "South African Rand (ZAR)": 18.9268628665
 };
 
-function Subscriptions({ isMenuVisible, setMenuVisible, menuRef }) {
+function Subscriptions({ menuRef }) {
   const navigate = useNavigate();
+  const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
 
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
   const [selectedMetric, setSelectedMetric] = useState("Average");

@@ -1,6 +1,9 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { currencyListState } from "../state/currencyListState";
+import { paymentMethodsState } from "../state/paymentMethodsState";
+
 
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
@@ -17,61 +20,14 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 
-const currencyList = [
-  "Australian Dollar (AUD)",
-  "Bulgarian Lev (BGN)",
-  "Brazilian Real (BRL)",
-  "Canadian Dollar (CAD)",
-  "Swiss Franc (CHF)",
-  "Chinese Yuan (CNY)",
-  "Czech Koruna (CZK)",
-  "Danish Krone (DKK)",
-  "Euro (EUR)",
-  "British Pound Sterling (GBP)",
-  "Hong Kong Dollar (HKD)",
-  "Croatian Kuna (HRK)",
-  "Hungarian Forint (HUF)",
-  "Indonesian Rupiah (IDR)",
-  "Israeli New Shekel (ILS)",
-  "Indian Rupee (INR)",
-  "Icelandic Króna (ISK)",
-  "Japanese Yen (JPY)",
-  "South Korean Won (KRW)",
-  "Mexican Peso (MXN)",
-  "Malaysian Ringgit (MYR)",
-  "Norwegian Krone (NOK)",
-  "New Zealand Dollar (NZD)",
-  "Philippine Peso (PHP)",
-  "Polish Złoty (PLN)",
-  "Romanian Leu (RON)",
-  "Russian Ruble (RUB)",
-  "Swedish Krona (SEK)",
-  "Singapore Dollar (SGD)",
-  "Thai Baht (THB)",
-  "Turkish Lira (TRY)",
-  "US Dollar (USD)",
-  "South African Rand (ZAR)",
-];
+
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function EditSubscription() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [currencyList] = useRecoilState(currencyListState);
   const { subscriptionId } = useParams();
-  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
-  const idToCategoryMapping = {
-    1: "Entertainment",
-    2: "Software & Apps",
-    3: "Telecommunications",
-    4: "Health & Fitness",
-    5: "Food & Beverages",
-    6: "Banking & Finance",
-    7: "Insurance",
-    8: "Transportation",
-    9: "Education & Learning",
-    10: "Utilities & Home Expenses",
-    11: "Miscellaneous",
-  };
+  const paymentMethodsList = useRecoilValue(paymentMethodsState);
 
   const [inputWidth, setInputWidth] = useState("auto");
   const measureRef = useRef(null);
@@ -138,17 +94,6 @@ function EditSubscription() {
   const handleGoBack = () => {
     navigate("/subscriptions");
   };
-
-  useEffect(() => {
-    axios
-      .get(`${baseURL}/api/methods/`)
-      .then((response) => {
-        setPaymentMethodsList(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {

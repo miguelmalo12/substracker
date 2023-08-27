@@ -1,5 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { currencyListState } from "../state/currencyListState";
+import { paymentMethodsState } from "../state/paymentMethodsState";
+        
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import * as Popover from "@radix-ui/react-popover";
@@ -15,47 +19,14 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 
-const currencyList = [
-  "Australian Dollar (AUD)",
-  "Bulgarian Lev (BGN)",
-  "Brazilian Real (BRL)",
-  "Canadian Dollar (CAD)",
-  "Swiss Franc (CHF)",
-  "Chinese Yuan (CNY)",
-  "Czech Koruna (CZK)",
-  "Danish Krone (DKK)",
-  "Euro (EUR)",
-  "British Pound Sterling (GBP)",
-  "Hong Kong Dollar (HKD)",
-  "Croatian Kuna (HRK)",
-  "Hungarian Forint (HUF)",
-  "Indonesian Rupiah (IDR)",
-  "Israeli New Shekel (ILS)",
-  "Indian Rupee (INR)",
-  "Icelandic Króna (ISK)",
-  "Japanese Yen (JPY)",
-  "South Korean Won (KRW)",
-  "Mexican Peso (MXN)",
-  "Malaysian Ringgit (MYR)",
-  "Norwegian Krone (NOK)",
-  "New Zealand Dollar (NZD)",
-  "Philippine Peso (PHP)",
-  "Polish Złoty (PLN)",
-  "Romanian Leu (RON)",
-  "Russian Ruble (RUB)",
-  "Swedish Krona (SEK)",
-  "Singapore Dollar (SGD)",
-  "Thai Baht (THB)",
-  "Turkish Lira (TRY)",
-  "US Dollar (USD)",
-  "South African Rand (ZAR)",
-];
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function NewSubscription() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
+  const [currencyList] = useRecoilState(currencyListState);
+  const paymentMethodsList = useRecoilValue(paymentMethodsState);
+
   const idToCategoryMapping = {
     1: "Entertainment",
     2: "Software & Apps",
@@ -113,17 +84,6 @@ function NewSubscription() {
   const handleGoBack = () => {
     navigate("/add-subscription");
   };
-
-  useEffect(() => {
-    axios
-      .get(`${baseURL}/api/methods/`)
-      .then((response) => {
-        setPaymentMethodsList(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {

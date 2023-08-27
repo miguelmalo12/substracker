@@ -1,5 +1,6 @@
 import { useRecoilState } from 'recoil';
 import { darkModeState } from '../state/darkModeState';
+import { useNavigate } from 'react-router-dom';
 
 import { ReactComponent as SubsIcon } from "../assets/icons/subscriptions.svg";
 import { ReactComponent as SettingsIcon } from "../assets/icons/settings.svg";
@@ -13,6 +14,7 @@ import logoWhite from "../assets/logos/SubsTracker-logo-wide-white.svg";
 import Switch from "./Switch";
 
 function MenuDesktop({ activePage }) {
+  const navigate = useNavigate();
   const isActive = (page) => (activePage === page ? "text-primary" : "");
   const [darkMode] = useRecoilState(darkModeState);
 
@@ -27,6 +29,7 @@ function MenuDesktop({ activePage }) {
             className={`flex items-center pb-5 mb-3 cursor-pointer ${isActive(
               "subscriptions"
             )}`}
+            onClick={() => navigate("/subscriptions")}
           >
             {activePage === "subscriptions" && (
               <ActiveMenuIcon className="absolute left-0 w-2 h-8" />
@@ -40,6 +43,7 @@ function MenuDesktop({ activePage }) {
             className={`flex items-center pb-5 cursor-pointer ${isActive(
               "settings"
             )}`}
+            onClick={() => navigate("/settings")}
           >
             {activePage === "settings" && (
               <ActiveMenuIcon className="absolute left-0 w-2 h-8" />

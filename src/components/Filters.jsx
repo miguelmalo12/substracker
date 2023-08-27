@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { darkModeState } from "../state/darkModeState";
+import { currencyListState } from "../state/currencyListState";
 
 import SearchField from "./SearchField";
 
@@ -26,7 +27,7 @@ function Filters({
 }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [checkedItem, setCheckedItem] = useState("Due Date"); // This is for sort dropdown
-
+  const [currencyList] = useRecoilState(currencyListState);
   const categoryList = [
     "Entertainment",
     "Software & Apps",
@@ -39,42 +40,6 @@ function Filters({
     "Education & Learning",
     "Utilities & Home Expenses",
     "Miscellaneous",
-  ];
-
-  const currencyList = [
-    "Australian Dollar (AUD)",
-    "Bulgarian Lev (BGN)",
-    "Brazilian Real (BRL)",
-    "Canadian Dollar (CAD)",
-    "Swiss Franc (CHF)",
-    "Chinese Yuan (CNY)",
-    "Czech Koruna (CZK)",
-    "Danish Krone (DKK)",
-    "Euro (EUR)",
-    "British Pound Sterling (GBP)",
-    "Hong Kong Dollar (HKD)",
-    "Croatian Kuna (HRK)",
-    "Hungarian Forint (HUF)",
-    "Indonesian Rupiah (IDR)",
-    "Israeli New Shekel (ILS)",
-    "Indian Rupee (INR)",
-    "Icelandic Króna (ISK)",
-    "Japanese Yen (JPY)",
-    "South Korean Won (KRW)",
-    "Mexican Peso (MXN)",
-    "Malaysian Ringgit (MYR)",
-    "Norwegian Krone (NOK)",
-    "New Zealand Dollar (NZD)",
-    "Philippine Peso (PHP)",
-    "Polish Złoty (PLN)",
-    "Romanian Leu (RON)",
-    "Russian Ruble (RUB)",
-    "Swedish Krona (SEK)",
-    "Singapore Dollar (SGD)",
-    "Thai Baht (THB)",
-    "Turkish Lira (TRY)",
-    "US Dollar (USD)",
-    "South African Rand (ZAR)",
   ];
 
   const [paymentMethods, setPaymentMethods] = useState([]);

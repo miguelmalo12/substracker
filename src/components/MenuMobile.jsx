@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { ReactComponent as SubsIcon } from "../assets/icons/subscriptions.svg";
 import { ReactComponent as SettingsIcon } from "../assets/icons/settings.svg";
 import { ReactComponent as DarkModeIcon } from "../assets/icons/dark_mode.svg";
@@ -7,6 +9,8 @@ import { ReactComponent as ActiveMenuIcon } from "../assets/icons/active_menu.sv
 import Switch from "./Switch";
 
 function MenuMobile({ activePage }) {
+  const navigate = useNavigate();
+
   return (
     <div className="absolute z-10 -mt-3 dark:bg-dark-grey dark:border-dark dark:text-light-grey w-52 card">
       <div className="p-4 mb-3 border-b border-border">
@@ -15,12 +19,12 @@ function MenuMobile({ activePage }) {
         </p>
       </div>
       <div className="p-4 mb-3 border-b border-border">
-        <div className="flex pb-3 mb-3 cursor-pointer">
+        <div className="flex pb-3 mb-3 cursor-pointer" onClick={() => navigate("/subscriptions")} >
           {activePage === "subscriptions" && <ActiveMenuIcon className="absolute left-0" />}
           <SubsIcon className="mt-0.5 mr-3" />
           <h4>Subscriptions</h4>
         </div>
-        <div className="flex pb-3 cursor-pointer">
+        <div className="flex pb-3 cursor-pointer" onClick={() => navigate("/settings")}>
           {activePage === "settings" && <ActiveMenuIcon className="absolute left-0" />}
           <SettingsIcon className="mr-3" />
           <h4>Settings</h4>
