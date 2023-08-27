@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
+import { currencyRatesState } from "../state/currencyRatesState";
 
 import axios from "axios";
 
@@ -18,44 +19,9 @@ import Card from "../components/Card";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
-const hardcodedRates = {
-  "Australian Dollar (AUD)": 1.5392802922,
-  "Bulgarian Lev (BGN)": 1.7781102999,
-  "Brazilian Real (BRL)": 4.9004308773,
-  "Canadian Dollar (CAD)": 1.3443201767,
-  "Swiss Franc (CHF)": 0.8767301001,
-  "Chinese Yuan (CNY)": 7.2387010756,
-  "Czech Koruna (CZK)": 21.9700534089,
-  "Danish Krone (DKK)": 6.8079108152,
-  "Euro (EUR)": 0.9134801106,
-  "British Pound (GBP)": 0.7878600901,
-  "Hong Kong Dollar (HKD)": 7.8160608857,
-  "Croatian Kuna (HRK)": 7.0418712792,
-  "Hungarian Forint (HUF)": 349.7298199729,
-  "Indonesian Rupiah (IDR)": 15196.810558816,
-  "Israeli Shekel (ILS)": 3.7491006603,
-  "Indian Rupee (INR)": 82.8475011016,
-  "Icelandic Krona (ISK)": 131.4663844836,
-  "Japanese Yen (JPY)": 145.0034138135,
-  "South Korean Won (KRW)": 1329.207706231,
-  "Mexican Peso (MXN)": 17.0399319886,
-  "Malaysian Ringgit (MYR)": 4.5866005184,
-  "Norwegian Krone (NOK)": 10.4271016235,
-  "New Zealand Dollar (NZD)": 1.6713103091,
-  "Philippine Peso (PHP)": 56.5777793964,
-  "Polish Zloty (PLN)": 4.0479807547,
-  "Romanian Leu (RON)": 4.5127605347,
-  "Russian Ruble (RUB)": 99.5564450298,
-  "Swedish Krona (SEK)": 10.8334813592,
-  "Singapore Dollar (SGD)": 1.3513002315,
-  "Thai Baht (THB)": 35.0884062283,
-  "Turkish Lira (TRY)": 27.0268552655,
-  "United States Dollar (USD)": 1,
-  "South African Rand (ZAR)": 18.9268628665
-};
-
 function Subscriptions({ menuRef }) {
   const navigate = useNavigate();
+  const rates = useRecoilValue(currencyRatesState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
 
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
@@ -105,6 +71,11 @@ function Subscriptions({ menuRef }) {
       });
   }, []);
 
+  // Caculates amount after "shared with" value; used in Card and in Sort function
+  const calculateActualAmount = (amount, sharedNumber) => {
+    return Number(sharedNumber) > 0 ? Number(amount) / (Number(sharedNumber) + 1) : Number(amount);
+  };
+
   // SORT subscriptions by criteria selected
   const sortSubscriptions = (criteria) => {
   
@@ -115,10 +86,14 @@ function Subscriptions({ menuRef }) {
       sortedSubscriptions.sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
     } else if (criteria === "Amount") {
       sortedSubscriptions.sort((a, b) => {
-        // Convert amount to a common currency (USD in this example)
-        const amountA = parseFloat(a.amount) / (hardcodedRates[a.currency] || 1);
-        const amountB = parseFloat(b.amount) / (hardcodedRates[b.currency] || 1);
-        return amountA - amountB;
+
+        const actualAmountA = calculateActualAmount(a.amount, a.shared_with);
+      const actualAmountB = calculateActualAmount(b.amount, b.shared_with);
+
+      const convertedAmountA = convertCurrency(a.currency, "United States Dollar (USD)", actualAmountA, rates);
+      const convertedAmountB = convertCurrency(b.currency, "United States Dollar (USD)", actualAmountB, rates);
+
+      return convertedAmountA - convertedAmountB;
       });
     } else if (criteria === "Name") {
       sortedSubscriptions.sort((a, b) => a.name.localeCompare(b.name));
@@ -149,16 +124,26 @@ function Subscriptions({ menuRef }) {
       });
   }, []);
 
-  // Converts currency using API, used inside calculateTotalAmount function
-  const convertCurrency = async (fromCurrency, toCurrency, amount) => {
-    const url = `${baseURL}/api/currencies/convert?fromCurrency=${fromCurrency}&toCurrency=${toCurrency}&amount=${amount}`;
-    try {
-      const response = await axios.get(url);
-      return parseFloat(response.data.convertedAmount);
-    } catch (error) {
-      console.error("Error converting currency:", error);
-      return amount; // In case converson fails, it will return the original amount
+  // This will convert the global state rates to a 3 letter format that the convertCurrency function expects
+  const extractCurrencyCode = (currencyStr) => {
+    const currencyMatch = currencyStr.match(/\((\w{3})\)/);
+    if (!currencyMatch) {
+      return currencyStr; // Fallback
     }
+    return currencyMatch[1];
+  };
+
+  // Converts currency used inside calculateTotalAmount and calculateTotalForCurrentInterval function
+  const convertCurrency = (fromCurrency, toCurrency, amount, rates) => {
+    const fromCurrencyCode = extractCurrencyCode(fromCurrency);
+    const toCurrencyCode = extractCurrencyCode(toCurrency);
+
+    if (!rates[fromCurrencyCode] || !rates[toCurrencyCode]) {
+      console.error("Invalid currency");
+      return amount; // Fallback
+    }
+  
+    return amount * rates[toCurrencyCode] / rates[fromCurrencyCode];
   };
 
   // Used inside calculateTotalAmount function to adjust amount based on recurrence
@@ -195,7 +180,8 @@ function Subscriptions({ menuRef }) {
         adjustedAmount = await convertCurrency(
           subscriptionCurrency,
           preferredCurrency,
-          adjustedAmount
+          adjustedAmount, 
+          rates
         );
       }
   
@@ -278,7 +264,8 @@ function Subscriptions({ menuRef }) {
         adjustedAmount = await convertCurrency(
           subscriptionCurrency,
           preferredCurrency,
-          adjustedAmount
+          adjustedAmount,
+          rates
         );
       }
   
@@ -395,6 +382,7 @@ function Subscriptions({ menuRef }) {
                 name={subscription.name}
                 selectedCurrency={subscription.currency}
                 amount={subscription.amount}
+                actualAmount={calculateActualAmount(subscription.amount, subscription.shared_with)}
                 sharedNumber={subscription.shared_with}
                 recurrence={subscription.recurrence}
                 nextPaymentDate={subscription.payment_date}

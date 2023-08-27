@@ -23,6 +23,7 @@ function Card({
   name,
   selectedCurrency,
   amount,
+  actualAmount,
   sharedNumber,
   recurrence,
   nextPaymentDate,
@@ -33,10 +34,6 @@ function Card({
 }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const actualAmount =
-    Number(sharedNumber) > 0
-      ? Number(amount) / (Number(sharedNumber) + 1)
-      : Number(amount);
 
   // DELETE Method
   const deleteSubscription = async (subscriptionId) => {

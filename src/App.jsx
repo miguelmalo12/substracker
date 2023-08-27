@@ -4,6 +4,8 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { darkModeState } from './state/darkModeState';
 import { mobileMenuState } from "./state/mobileMenuState";
 import { paymentMethodsState } from "./state/paymentMethodsState";
+import { currencyRatesState } from "./state/currencyRatesState";
+import { hardcodedRates } from "./state/hardcodedRates";
 
 import axios from "axios";
 
@@ -17,13 +19,18 @@ import Settings from "./pages/Settings";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
+let cachedRates = null;
+let lastFetchTime = null;
+
 function App() {
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
   const setPaymentMethodsList = useSetRecoilState(paymentMethodsState);
+  const setCurrencyRates = useSetRecoilState(currencyRatesState);
 
   const menuRef = useRef(null);
 
+  // Gets all methods
   useEffect(() => {
     axios
       .get(`${baseURL}/api/methods/`)
@@ -35,6 +42,33 @@ function App() {
       });
   }, [setPaymentMethodsList]);
 
+  // Gets currency rates
+  useEffect(() => {
+    const currentTime = new Date();
+
+    const fetchCurrencyRates = async () => {
+      if (!lastFetchTime || (currentTime - lastFetchTime > 3600000)) { // 1 hour
+        try {
+          const response = await axios.get('https://api.freecurrencyapi.com/v1/latest', {
+            params: {
+              apikey: process.env.REACT_APP_FREECURRENCY_API_KEY,
+            }
+          });
+          cachedRates = response.data.data;
+          lastFetchTime = currentTime;
+        } catch (error) {
+          console.error('Error fetching currency rates:', error);
+          cachedRates = hardcodedRates; // Fallback to hardcoded rates
+        }
+      }
+      
+      setCurrencyRates(cachedRates);
+    };
+
+    fetchCurrencyRates();
+  }, []);
+
+  // Closes mobile menu when clicking outside of it
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
