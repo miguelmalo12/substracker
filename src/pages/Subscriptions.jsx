@@ -372,7 +372,9 @@ function Subscriptions({ menuRef }) {
 
         <div className="grid gap-2.5 mb-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
           {!loading && sorteredSubscriptions.length === 0 ? (
-            <NoSubs />
+            <div className="md:absolute md:inset-0 md:flex md:items-center md:justify-center">
+              <NoSubs />
+            </div>
           ) : (
             sorteredSubscriptions.map((subscription) => (
               <Card

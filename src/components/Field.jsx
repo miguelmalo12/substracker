@@ -1,22 +1,19 @@
-function Field({ title, type, options, defaultValue }) {
+function Field({ title, type, value, options, onChange }) {
   if (type === "dropdown" && (!options || options.length === 0)) return null;
 
   return (
     <div className="pb-4">
       <h2 className="pb-2">{title}</h2>
       {type === "dropdown" ? (
-        <select className="w-full p-2" defaultValue={defaultValue}>
+        <select className="w-full p-2" value={value} onChange={onChange}>
           {options.map((option, index) => (
-            <option key={index} value={option}>
-              {option}
+            <option key={index} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>
       ) : (
-        <input
-          className="w-full p-2"
-          type={type}
-        />
+        <input className="w-full p-2" type={type} value={value} onChange={onChange} />
       )}
     </div>
   );
