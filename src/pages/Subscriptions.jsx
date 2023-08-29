@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 import { currencyRatesState } from "../state/currencyRatesState";
+import { userState } from "../state/userState";
 
 import axios from "axios";
 
@@ -21,6 +22,8 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Subscriptions({ menuRef }) {
   const navigate = useNavigate();
+  // Recoil States
+  const [user, setUser] = useRecoilState(userState);
   const rates = useRecoilValue(currencyRatesState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
 
@@ -39,6 +42,13 @@ function Subscriptions({ menuRef }) {
   // Variables used for Sort
   const [sorteredSubscriptions, setSorteredSubscriptions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Updates local storage when user state changes
+  // useEffect(() => {
+  //   if (user) {
+  //     localStorage.setItem('userData', JSON.stringify(user));
+  //   }
+  // }, [user]);
 
   useEffect(() => {
     setSorteredSubscriptions(
@@ -105,13 +115,17 @@ function Subscriptions({ menuRef }) {
 
   //GET user's preferred currency
   useEffect(() => {
-    // Using hardcoded user_id for now, needs to come from AUTH
-    const userId = "test-uuid";
-
+    const userId = user.user_id;
+    console.log("User ID:", userId);
+    console.log("User:", user);
     axios
       .get(`${baseURL}/api/users/${userId}`)
       .then((response) => {
-        if (response.data && response.data.user && response.data.user.preferred_currency) {
+        if (
+          response.data &&
+          response.data.user &&
+          response.data.user.preferred_currency
+        ) {
           setPreferredCurrency(response.data.user.preferred_currency);
         } else {
           console.error("Unexpected data format:", response.data);
@@ -122,7 +136,7 @@ function Subscriptions({ menuRef }) {
         console.error("Error fetching user:", error);
         setPreferredCurrency("C$"); // set to default
       });
-  }, []);
+  }, [user]); 
 
   // This will convert the global state rates to a 3 letter format that the convertCurrency function expects
   const extractCurrencyCode = (currencyStr) => {
