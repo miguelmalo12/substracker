@@ -19,7 +19,7 @@ module.exports = {
         'dark': '#111111',
       },
       fontFamily: {
-        'sans': ['Montserrat', 'sans-serif'],
+        'sans': ['Lexend', 'Montserrat', 'sans-serif'],
       },
       width: {
         '18': '4.5rem', // 72px
