@@ -1,3 +1,6 @@
+import { useRecoilState } from 'recoil';
+import { darkModeState } from '../state/darkModeState'; 
+
 import * as Select from "@radix-ui/react-select";
 import {
   CheckIcon,
@@ -6,6 +9,8 @@ import {
 } from "@radix-ui/react-icons";
 
 function FieldBorder({ title, type, options, value, placeholder, onChange }) {
+  const [darkMode, setDarkMode] = useRecoilState(darkModeState);
+
   if (type === "select" && (!options || options.length === 0)) return null;
 
   const handleValueChange = (eventOrValue) => {
@@ -21,7 +26,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
   };
 
   return (
-    <div className="flex items-center justify-between pt-4 pb-2 border-b-2">
+    <div className="flex items-center justify-between pt-4 pb-2 border-b-2 dark:border-medium-grey">
       <h2 className="mr-3">{title}</h2>
       {type === "select" ? (
         <Select.Root
@@ -36,7 +41,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
           </Select.Trigger>
 
           <Select.Portal>
-            <Select.Content className="overflow-hidden bg-white rounded md:-ml-12 drop-shadow">
+            <Select.Content className={`overflow-hidden rounded md:-ml-12 drop-shadow ${darkMode ? 'bg-dark' : 'bg-white'}`}>
               <Select.ScrollUpButton className="flex items-center justify-center h-7">
                 <ChevronUpIcon />
               </Select.ScrollUpButton>
@@ -45,8 +50,8 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
                   <Select.Item
                     key={index}
                     value={option}
-                    className="relative flex items-center h-6 px-6 text-xs leading-none rounded select-none hover:text-white hover:bg-primary hover:border-success"
-                  >
+                    className={`relative flex items-center h-6 px-6 text-xs leading-none rounded select-none hover:bg-primary ${darkMode ? 'text-light-grey' : ''} hover:text-white`}
+                    >
                     <Select.ItemText>{option}</Select.ItemText>
                     <Select.ItemIndicator className="absolute left-0 inline-flex items-center justify-center w-6 ">
                       <CheckIcon />
@@ -64,7 +69,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
       ) : type === "date" ? (
         <div className="flex-grow text-right">
           <input
-            className={`border-none text-right ${!value ? 'text-gray-300' : ''}`}
+            className={`border-none dark:bg-dark-grey text-right ${!value ? 'text-gray-300' : ''}`}
             type={type}
             value={value}
             placeholder={placeholder}
@@ -73,7 +78,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
         </div>
       ) : (
         <input
-          className="flex-grow text-right border-none"
+          className="flex-grow text-right border-none dark:bg-dark-grey"
           type={type}
           value={value}
           placeholder={placeholder}

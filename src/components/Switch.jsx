@@ -1,10 +1,15 @@
 import { useState } from 'react';
 
+import { useRecoilState } from 'recoil';
+import { darkModeState } from '../state/darkModeState'; 
+
 function Switch() {
   const [isOn, setIsOn] = useState(false);
+  const [darkMode, setDarkMode] = useRecoilState(darkModeState);
 
   const toggleSwitch = () => {
     setIsOn(!isOn);
+    setDarkMode(!darkMode);
   };
 
   return (

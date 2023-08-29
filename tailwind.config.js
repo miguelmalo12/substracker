@@ -16,7 +16,7 @@ module.exports = {
         'error': '#FF617E',
         'success': '#00C48C',
         'light-bg': '#FFFFFF',
-        'dark-bg': '#111111',
+        'dark': '#111111',
       },
       fontFamily: {
         'sans': ['Montserrat', 'sans-serif'],

@@ -1,6 +1,9 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { currencyListState } from "../state/currencyListState";
+import { paymentMethodsState } from "../state/paymentMethodsState";
+
 
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
@@ -17,61 +20,14 @@ import Button from "../components/Button";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
 
-const currencyList = [
-  "Australian Dollar (AUD)",
-  "Bulgarian Lev (BGN)",
-  "Brazilian Real (BRL)",
-  "Canadian Dollar (CAD)",
-  "Swiss Franc (CHF)",
-  "Chinese Yuan (CNY)",
-  "Czech Koruna (CZK)",
-  "Danish Krone (DKK)",
-  "Euro (EUR)",
-  "British Pound Sterling (GBP)",
-  "Hong Kong Dollar (HKD)",
-  "Croatian Kuna (HRK)",
-  "Hungarian Forint (HUF)",
-  "Indonesian Rupiah (IDR)",
-  "Israeli New Shekel (ILS)",
-  "Indian Rupee (INR)",
-  "Icelandic Króna (ISK)",
-  "Japanese Yen (JPY)",
-  "South Korean Won (KRW)",
-  "Mexican Peso (MXN)",
-  "Malaysian Ringgit (MYR)",
-  "Norwegian Krone (NOK)",
-  "New Zealand Dollar (NZD)",
-  "Philippine Peso (PHP)",
-  "Polish Złoty (PLN)",
-  "Romanian Leu (RON)",
-  "Russian Ruble (RUB)",
-  "Swedish Krona (SEK)",
-  "Singapore Dollar (SGD)",
-  "Thai Baht (THB)",
-  "Turkish Lira (TRY)",
-  "US Dollar (USD)",
-  "South African Rand (ZAR)",
-];
+
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function EditSubscription() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const [currencyList] = useRecoilState(currencyListState);
   const { subscriptionId } = useParams();
-  const [paymentMethodsList, setPaymentMethodsList] = useState([]);
-  const idToCategoryMapping = {
-    1: "Entertainment",
-    2: "Software & Apps",
-    3: "Telecommunications",
-    4: "Health & Fitness",
-    5: "Food & Beverages",
-    6: "Banking & Finance",
-    7: "Insurance",
-    8: "Transportation",
-    9: "Education & Learning",
-    10: "Utilities & Home Expenses",
-    11: "Miscellaneous",
-  };
+  const paymentMethodsList = useRecoilValue(paymentMethodsState);
 
   const [inputWidth, setInputWidth] = useState("auto");
   const measureRef = useRef(null);
@@ -138,17 +94,6 @@ function EditSubscription() {
   const handleGoBack = () => {
     navigate("/subscriptions");
   };
-
-  useEffect(() => {
-    axios
-      .get(`${baseURL}/api/methods/`)
-      .then((response) => {
-        setPaymentMethodsList(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {
@@ -270,7 +215,7 @@ function EditSubscription() {
 
         <main className="flex flex-col-reverse md:flex-row">
           {/* Form fields */}
-          <section className="md:card md:py-3 md:px-6 md:w-1/2">
+          <section className="md:card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
             <div className="pb-6">
               <FieldBorder
                 title={"Name"}
@@ -369,7 +314,7 @@ function EditSubscription() {
           </section>
 
           {/* CARD PREVIEW */}
-          <section className="flex flex-col justify-center md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
+          <section className="flex flex-col justify-center dark:text-light-grey md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
             <div className="flex flex-col">
               {logo ? (
                 <img
@@ -400,7 +345,7 @@ function EditSubscription() {
                   style={{ width: inputWidth }}
                   type="text"
                   value={amount}
-                  className="py-3 text-3xl font-bold border border-transparent rounded cursor-pointer focus:border-primary"
+                  className="py-3 text-3xl font-bold border border-transparent rounded cursor-pointer dark:bg-dark focus:border-primary"
                   onChange={(e) => {
                     const value = e.target.value.replace(/[^\d.]/g, "");
                     setAmount(value);
@@ -429,7 +374,7 @@ function EditSubscription() {
                 </span>
               </div>
             </div>
-            <div className="flex flex-col w-full gap-2 pt-4 border-t">
+            <div className="flex flex-col w-full gap-2 pt-4 border-t dark:border-medium-grey">
               <h3>Card Preview</h3>
               <div className="max-w-sm">
                 <Card
@@ -453,11 +398,11 @@ function EditSubscription() {
                 >
                   <Popover.Anchor />
                 </Popover.Trigger>
-                <Popover.Content className="relative flex flex-col p-4 mt-4 bg-white rounded drop-shadow">
+                <Popover.Content className="relative flex flex-col p-4 mt-4 bg-white rounded dark:bg-dark-grey dark:border dark:border-dark drop-shadow">
                   <Popover.Arrow />
                   <h5 className="mb-2">Choose Color</h5>
                   <Popover.Close
-                    className="absolute p-2 rounded-full top-1 right-1 PopoverClose hover:bg-primary-bg"
+                    className="absolute p-2 rounded-full top-1 right-1 dark:hover:bg-dark hover:bg-primary-bg"
                     aria-label="Close"
                   >
                     <Cross2Icon />
