@@ -10,6 +10,7 @@ import { hardcodedRates } from "./state/hardcodedRates";
 import axios from "axios";
 
 import Login from "./pages/Login";
+import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Subscriptions from "./pages/Subscriptions";
 import AddSubscription from "./pages/AddSubscription";
@@ -87,7 +88,7 @@ function App() {
       <div className={darkMode ? "dark" : ""}>
         <div className="dark:bg-dark">
         <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/subscriptions" element={<Subscriptions menuRef={menuRef} />}/>
