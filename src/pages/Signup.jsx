@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from "recoil";
 import { currencyListState } from "../state/currencyListState";
 
@@ -10,6 +11,7 @@ import Footer from "../components/Footer";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Signup() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
@@ -47,12 +49,13 @@ function Signup() {
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify(payload)
       });
 
       const data = await response.json();
       if (response.status === 201) {
-        window.location.href = '/subscriptions';
+        navigate('/subscriptions');
       } else {
         alert(`Signup failed: ${data.message}`);
       }

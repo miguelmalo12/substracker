@@ -13,10 +13,31 @@ import logoWhite from "../assets/logos/SubsTracker-logo-wide-white.svg";
 
 import Switch from "./Switch";
 
+const baseURL = process.env.REACT_APP_BASE_URL;
+
 function MenuDesktop({ activePage }) {
   const navigate = useNavigate();
   const isActive = (page) => (activePage === page ? "text-primary" : "");
   const [darkMode] = useRecoilState(darkModeState);
+
+  const handleLogout = async () => {
+    console.log(`Logging out, hitting URL: ${baseURL}/api/users/logout`);
+    try {
+      const response = await fetch(`${baseURL}/api/users/logout`, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      if (!response.ok) {
+        throw new Error(`Failed to logout: ${response.statusText}`);
+      }
+      // Clear any client-side storage here if applicable
+      localStorage.removeItem('userToken');
+
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to logout:', error);
+    }
+  };
 
   return (
     <div className="absolute top-0 left-0 z-10 h-screen pt-6 overflow-hidden duration-300 ease-out bg-white border border-t-0 border-b-0 rounded dark:text-light-grey dark:border-dark dark:bg-dark-grey w-18 transition-width hover:w-60 drop-shadow">
@@ -58,7 +79,7 @@ function MenuDesktop({ activePage }) {
             <h4 className="pr-3 text-base">Darkmode</h4>
             <Switch />
           </div>
-          <div className="flex items-center pb-5 cursor-pointer">
+          <div className="flex items-center pb-5 cursor-pointer" onClick={handleLogout}>
             <LogoutIcon className="w-5 h-6 mr-6" />
             <h4 className="ml-1 text-base text-error">Logout</h4>
           </div>

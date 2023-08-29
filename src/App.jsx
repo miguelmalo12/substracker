@@ -1,6 +1,7 @@
 import { useRef, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { userState } from './state/userState';
 import { darkModeState } from './state/darkModeState';
 import { mobileMenuState } from "./state/mobileMenuState";
 import { paymentMethodsState } from "./state/paymentMethodsState";
@@ -24,12 +25,20 @@ let cachedRates = null;
 let lastFetchTime = null;
 
 function App() {
+  const [user, setUser] = useRecoilState(userState);
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
   const setPaymentMethodsList = useSetRecoilState(paymentMethodsState);
   const setCurrencyRates = useSetRecoilState(currencyRatesState);
 
   const menuRef = useRef(null);
+  
+  // Initializes state for user
+  // useEffect(() => {
+  //   const storedUser = JSON.parse(localStorage.getItem('userData') || '{}');
+  //   console.log('Stored User:', storedUser);
+  //   setUser(storedUser);
+  // }, []);
 
   // Gets all methods
   useEffect(() => {
