@@ -24,14 +24,14 @@ function Navbar({ content }) {
 
       {/* Desktop View Navbar */}
       <div className="hidden md:block">
-        <nav className="flex items-center justify-between w-full p-5">
+        <nav className="flex items-center justify-between w-full px-5 py-4">
           <LeftArrow className="w-5 h-5 cursor-pointer" onClick={() => navigate('/')}/>
           <div className="flex justify-center">
             <img className="w-60" src={logoflat} alt="" />
           </div>{" "}
           <div></div>
         </nav>
-        <div className="mt-2 border mb-14"></div>
+        <div className="mt-2 mb-8 border"></div>
       </div>
     </header>
   );

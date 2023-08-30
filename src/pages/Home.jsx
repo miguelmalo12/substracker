@@ -85,7 +85,7 @@ function Home() {
           >
             <div className="flex lg:flex-1">
               <span className="sr-only">SubsTracker</span>
-              <img className="h-auto w-48" src={logo} alt="" />
+              <img className="w-48 h-auto" src={logo} alt="" />
             </div>
             <div className="flex lg:hidden">
               <button
@@ -94,7 +94,7 @@ function Home() {
                 onClick={() => setMobileMenuOpen(true)}
               >
                 <span className="sr-only">Open main menu</span>
-                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                <Bars3Icon className="w-6 h-6" aria-hidden="true" />
               </button>
             </div>
             <div className="hidden lg:flex lg:gap-x-12">
@@ -102,7 +102,7 @@ function Home() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="text-sm font-semibold leading-6 text-gray-900"
+                  className="text-sm font-semibold leading-6 text-dark-grey"
                 >
                   {item.name}
                 </a>
@@ -117,7 +117,7 @@ function Home() {
               </button>
               <button
                 onClick={() => navigate("/login")}
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold leading-6 transition-transform text-dark-grey hover:-translate-y-1"
               >
                 Log in <span aria-hidden="true">&rarr;</span>
               </button>
@@ -131,26 +131,26 @@ function Home() {
             onClose={setMobileMenuOpen}
           >
             <div className="fixed inset-0 z-50" />
-            <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+            <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full px-6 py-6 overflow-y-auto bg-white sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
               <div className="flex items-center justify-between">
-                <img className="h-auto w-48" src={logo} alt="" />
+                <img className="w-48 h-auto" src={logo} alt="" />
                 <button
                   type="button"
                   className="-m-2.5 rounded-md p-2.5 text-gray-700"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   <span className="sr-only">Close menu</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                  <XMarkIcon className="w-6 h-6" aria-hidden="true" />
                 </button>
               </div>
-              <div className="mt-6 flow-root">
+              <div className="flow-root mt-6">
                 <div className="-my-6 divide-y divide-gray-500/10">
-                  <div className="space-y-2 py-6">
+                  <div className="py-6 space-y-2">
                     {navigation.map((item) => (
                       <a
                         key={item.name}
                         href={item.href}
-                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        className="block px-3 py-2 -mx-3 text-base font-semibold leading-7 rounded-lg text-dark-grey hover:bg-gray-50"
                       >
                         {item.name}
                       </a>
@@ -159,7 +159,7 @@ function Home() {
                   <div className="py-6">
                     <button
                       onClick={() => navigate("/login")}
-                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-dark-grey hover:bg-gray-50"
                     >
                       Log in
                     </button>
@@ -171,9 +171,9 @@ function Home() {
         </header>
 
         {/* App info */}
-        <div id="info" className="relative isolate px-6 pt-14 lg:px-8">
+        <div id="info" className="relative px-6 isolate pt-14 lg:px-8">
           <div
-            className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+            className="absolute inset-x-0 overflow-hidden -top-40 -z-10 transform-gpu blur-3xl sm:-top-80"
             aria-hidden="true"
           >
             <div
@@ -184,20 +184,20 @@ function Home() {
               }}
             />
           </div>
-          <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:pt-24 lg:pb-44">
+          <div className="max-w-2xl py-20 mx-auto sm:py-24 lg:pt-24 lg:pb-44">
             <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-              <div className="flex items-center rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+              <div className="flex items-center px-3 py-1 text-sm leading-6 text-gray-600 rounded-full ring-1 ring-gray-900/10 hover:ring-gray-900/20">
                 <span className="mr-2">Track. Manage. Save.</span>
                 <button
                   onClick={scrollToDiv}
-                  className="font-semibold text-primary"
+                  className="font-semibold transition-transform text-primary hover:-translate-y-1"
                 >
                   Learn more <span aria-hidden="true">&rarr;</span>
                 </button>
               </div>
             </div>
             <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              <h1 className="text-4xl font-bold tracking-tight text-dark-grey sm:text-6xl">
                 The Smart Way To Manage Your Subscriptions
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-600">
@@ -206,10 +206,11 @@ function Home() {
                 simplify your subscription management, making it easy to handle
                 your monthly expenses.
               </p>
-              <div className="mt-10 flex items-center justify-center gap-x-6">
+              <div className="flex items-center justify-center mt-10 gap-x-6">
                 <button
                   onClick={() => navigate("/signup")}
-                  className="rounded bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-bg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  className="rounded bg-primary transition-transform
+                  hover:-translate-y-1 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                 >
                   Start Now
                 </button>
@@ -231,15 +232,15 @@ function Home() {
         </div>
       </div>
 
-      <div className="overflow-hidden bg-white py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+      <div className="py-24 overflow-hidden bg-white sm:py-32">
+        <div className="px-6 mx-auto max-w-7xl lg:px-8">
+          <div className="grid max-w-2xl grid-cols-1 mx-auto gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <div className="lg:pr-8 lg:pt-4">
               <div className="lg:max-w-lg">
                 <h2 className="text-base font-semibold leading-7 text-primary">
                   Forget Unwanted Charges
                 </h2>
-                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                <p className="mt-2 text-3xl font-bold tracking-tight text-dark-grey sm:text-4xl">
                   Simplify Your Recurring Payments with SubsTracker
                 </p>
                 <p className="mt-6 text-lg leading-8 text-gray-600">
@@ -247,12 +248,12 @@ function Home() {
                   recurring payments, avoid payment surprises, and keep track of
                   your expenses.
                 </p>
-                <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
+                <dl className="max-w-xl mt-10 space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
                   {features.map((feature) => (
                     <div key={feature.name} className="relative pl-9">
-                      <dt className="inline font-semibold text-gray-900">
+                      <dt className="inline font-semibold text-dark-grey">
                         <feature.icon
-                          className="absolute left-1 top-1 h-5 w-5 text-primary"
+                          className="absolute w-5 h-5 left-1 top-1 text-primary"
                           aria-hidden="true"
                         />
                         {feature.name}
@@ -275,27 +276,27 @@ function Home() {
       </div>
 
       {/* FEATURES */}
-      <div className="bg-white py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:text-center">
+      <div className="py-24 bg-white sm:py-32">
+        <div className="px-6 mx-auto max-w-7xl lg:px-8">
+          <div className="max-w-2xl mx-auto lg:text-center">
             <h2 className="text-base font-semibold leading-7 text-primary">
               Stay in Control of Your Recurring Payments
             </h2>
-            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <p className="mt-2 text-3xl font-bold tracking-tight text-dark-grey sm:text-4xl">
               Why Choose SubsTracker?
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
               Unveil the powerful tools that set us apart.
             </p>
           </div>
-          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+          <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">
             <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
               {usp.map((feature) => (
                 <div key={feature.name} className="relative pl-16">
-                  <dt className="text-base font-semibold leading-7 text-gray-900">
-                    <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+                  <dt className="text-base font-semibold leading-7 text-dark-grey">
+                    <div className="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-lg bg-primary">
                       <feature.icon
-                        className="h-6 w-6 text-white"
+                        className="w-6 h-6 text-white"
                         aria-hidden="true"
                       />
                     </div>
@@ -313,8 +314,8 @@ function Home() {
 
       {/* CTA */}
       <div className="bg-white">
-        <div className="mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
-          <div className="relative isolate overflow-hidden bg-gray-900 px-6 pt-16 shadow-2xl sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
+        <div className="py-24 mx-auto max-w-7xl sm:px-6 sm:py-32 lg:px-8">
+          <div className="relative px-6 pt-16 overflow-hidden bg-gray-900 shadow-2xl isolate sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
             <svg
               viewBox="0 0 1024 1024"
               className="absolute left-1/2 top-1/2 -z-10 h-[64rem] w-[64rem] -translate-y-1/2 [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-full sm:-ml-80 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2 lg:translate-y-0"
@@ -334,17 +335,18 @@ function Home() {
                 </radialGradient>
               </defs>
             </svg>
-            <div className="mx-auto max-w-md text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left">
+            <div className="max-w-md mx-auto text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left">
               <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 Take Control of Your Recurring Payments
               </h2>
               <p className="mt-6 text-lg leading-8 text-gray-300">
               Never miss a payment or pay for a forgotten subscription again and navigate your financial commitments with ease. Get started with SubsTracker today.
               </p>
-              <div className="mt-10 flex items-center justify-center gap-x-6 lg:justify-start">
+              <div className="flex items-center justify-center mt-10 gap-x-6 lg:justify-start">
                 <button
                   onClick={() => navigate("/signup")}
-                  className="rounded bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="rounded transition-transform
+                  hover:-translate-y-1 bg-white px-3.5 py-2.5 text-sm font-semibold text-dark-grey shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   Get started
                 </button>
@@ -364,39 +366,18 @@ function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8">
+      <footer className="py-8 text-white bg-gray-800">
         <div className="container mx-auto text-center">
           <p className="mb-4">© 2023 SubsTracker. All Rights Reserved.</p>
-          <div className="space-x-4">
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fab fa-twitter text-xl"></i>
-            </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fab fa-facebook-f text-xl"></i>
-            </a>
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <i className="fab fa-instagram text-xl"></i>
-            </a>
+          {/* <div className="space-x-4">
             <a
               href="https://linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <i className="fab fa-linkedin-in text-xl"></i>
+              <i className="text-xl fab fa-linkedin-in"></i>
             </a>
-          </div>
+          </div> */}
         </div>
       </footer>
     </main>

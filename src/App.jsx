@@ -18,6 +18,7 @@ import AddSubscription from "./pages/AddSubscription";
 import NewSubscription from "./pages/NewSubscription";
 import EditSubscription from "./pages/EditSubscription";
 import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
@@ -112,7 +113,7 @@ function App() {
                 <Route path="/settings" element={<Settings menuRef={menuRef} />} />
               </>
             ) : null }
-          <Route path="*" element={<h1>Not Found</h1>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         </div>
       </div>
