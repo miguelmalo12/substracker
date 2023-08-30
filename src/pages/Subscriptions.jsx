@@ -33,7 +33,7 @@ function Subscriptions({ menuRef }) {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const [preferredCurrency, setPreferredCurrency] = useState('C$');
+  const [preferredCurrency, setPreferredCurrency] = useState("C$");
   const [totalAmount, setTotalAmount] = useState(0); // This will show the monthly average by default
 
   // Variables coming from Filters
@@ -41,8 +41,8 @@ function Subscriptions({ menuRef }) {
 
   // Variables used for Sort
   const [sorteredSubscriptions, setSorteredSubscriptions] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  
+  const [searchTerm, setSearchTerm] = useState("");
+
   // Updates local storage when user state changes
   // useEffect(() => {
   //   if (user) {
@@ -52,7 +52,7 @@ function Subscriptions({ menuRef }) {
 
   useEffect(() => {
     setSorteredSubscriptions(
-      subscriptions.filter(subscription =>
+      subscriptions.filter((subscription) =>
         subscription.name.toLowerCase().includes(searchTerm.toLowerCase())
       )
     );
@@ -83,35 +83,47 @@ function Subscriptions({ menuRef }) {
 
   // Caculates amount after "shared with" value; used in Card and in Sort function
   const calculateActualAmount = (amount, sharedNumber) => {
-    return Number(sharedNumber) > 0 ? Number(amount) / (Number(sharedNumber) + 1) : Number(amount);
+    return Number(sharedNumber) > 0
+      ? Number(amount) / (Number(sharedNumber) + 1)
+      : Number(amount);
   };
 
   // SORT subscriptions by criteria selected
   const sortSubscriptions = (criteria) => {
-  
     // Create a new array to trigger React update
     let sortedSubscriptions = [...sorteredSubscriptions];
-    
+
     if (criteria === "Due Date") {
-      sortedSubscriptions.sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
+      sortedSubscriptions.sort(
+        (a, b) => new Date(a.payment_date) - new Date(b.payment_date)
+      );
     } else if (criteria === "Amount") {
       sortedSubscriptions.sort((a, b) => {
-
         const actualAmountA = calculateActualAmount(a.amount, a.shared_with);
-      const actualAmountB = calculateActualAmount(b.amount, b.shared_with);
+        const actualAmountB = calculateActualAmount(b.amount, b.shared_with);
 
-      const convertedAmountA = convertCurrency(a.currency, "United States Dollar (USD)", actualAmountA, rates);
-      const convertedAmountB = convertCurrency(b.currency, "United States Dollar (USD)", actualAmountB, rates);
+        const convertedAmountA = convertCurrency(
+          a.currency,
+          "United States Dollar (USD)",
+          actualAmountA,
+          rates
+        );
+        const convertedAmountB = convertCurrency(
+          b.currency,
+          "United States Dollar (USD)",
+          actualAmountB,
+          rates
+        );
 
-      return convertedAmountA - convertedAmountB;
+        return convertedAmountA - convertedAmountB;
       });
     } else if (criteria === "Name") {
       sortedSubscriptions.sort((a, b) => a.name.localeCompare(b.name));
     }
-    
+
     // Explicitly set the state to a new reference
     setSorteredSubscriptions(sortedSubscriptions);
-  };  
+  };
 
   //GET user's preferred currency
   useEffect(() => {
@@ -136,7 +148,7 @@ function Subscriptions({ menuRef }) {
         console.error("Error fetching user:", error);
         setPreferredCurrency("C$"); // set to default
       });
-  }, [user]); 
+  }, [user]);
 
   // This will convert the global state rates to a 3 letter format that the convertCurrency function expects
   const extractCurrencyCode = (currencyStr) => {
@@ -156,8 +168,8 @@ function Subscriptions({ menuRef }) {
       console.error("Invalid currency");
       return amount; // Fallback
     }
-  
-    return amount * rates[toCurrencyCode] / rates[fromCurrencyCode];
+
+    return (amount * rates[toCurrencyCode]) / rates[fromCurrencyCode];
   };
 
   // Used inside calculateTotalAmount function to adjust amount based on recurrence
@@ -176,34 +188,34 @@ function Subscriptions({ menuRef }) {
   // Calculates total amount in preferred currency
   const calculateTotalAmount = async () => {
     let total = 0;
-  
+
     for (let subscription of subscriptions) {
       const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
       if (!currencyMatch) {
         console.error("Unexpected currency format:", subscription.currency);
         continue;
       }
-  
+
       const subscriptionCurrency = currencyMatch[1];
       let adjustedAmount = adjustAmountToRecurrence(
         parseFloat(subscription.amount),
         subscription.recurrence
       );
-  
+
       if (subscriptionCurrency !== preferredCurrency) {
         adjustedAmount = await convertCurrency(
           subscriptionCurrency,
           preferredCurrency,
-          adjustedAmount, 
+          adjustedAmount,
           rates
         );
       }
-  
+
       // If the subscription is shared, divide the amount here, after currency conversion
       if (subscription.shared_with > 0) {
         adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
       }
-  
+
       total += adjustedAmount;
     }
     setTotalAmount(total);
@@ -253,27 +265,27 @@ function Subscriptions({ menuRef }) {
   // Calculates total based on the current interval on dropdown
   const calculateTotalForCurrentInterval = async (interval) => {
     const { startDate, endDate } = getCurrentIntervalDates(interval);
-  
+
     const relevantSubscriptions = subscriptions.filter((subscription) => {
       const nextPaymentDate = new Date(subscription.payment_date);
       return nextPaymentDate >= startDate && nextPaymentDate <= endDate;
     });
-  
+
     let total = 0;
-  
+
     for (let subscription of relevantSubscriptions) {
       const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
       if (!currencyMatch) {
         console.error("Unexpected currency format:", subscription.currency);
         continue;
       }
-  
+
       const subscriptionCurrency = currencyMatch[1];
       let adjustedAmount = adjustAmountToRecurrence(
         parseFloat(subscription.amount),
         subscription.recurrence
       );
-  
+
       if (subscriptionCurrency !== preferredCurrency) {
         adjustedAmount = await convertCurrency(
           subscriptionCurrency,
@@ -282,15 +294,15 @@ function Subscriptions({ menuRef }) {
           rates
         );
       }
-  
+
       // If the subscription is shared, divide the amount here, after currency conversion
       if (subscription.shared_with > 0) {
         adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
       }
-  
+
       total += adjustedAmount;
     }
-  
+
     return total;
   };
 
@@ -308,7 +320,9 @@ function Subscriptions({ menuRef }) {
 
   // Rerenders subscription list when one is deleted
   const removeSubscriptionById = (id) => {
-    const newSubscriptions = subscriptions.filter(sub => sub.subscription_id !== id);
+    const newSubscriptions = subscriptions.filter(
+      (sub) => sub.subscription_id !== id
+    );
     setSubscriptions(newSubscriptions);
     setSorteredSubscriptions(newSubscriptions);
   };
@@ -338,7 +352,7 @@ function Subscriptions({ menuRef }) {
           totalAmount={totalAmount}
           adjustTotalsToInterval={adjustTotalsToInterval}
           preferredCurrency={preferredCurrency}
-          setFilteredCategory={setFilteredCategory} 
+          setFilteredCategory={setFilteredCategory}
           sortSubscriptions={sortSubscriptions}
           setSearchTerm={setSearchTerm}
         />
@@ -381,35 +395,48 @@ function Subscriptions({ menuRef }) {
             </h4>
           </div>
           <div className="mt-6 mb-6 border"></div>
-          <Filters setFilteredCategory={setFilteredCategory} sortSubscriptions={sortSubscriptions} setSearchTerm={setSearchTerm} />
+          <Filters
+            setFilteredCategory={setFilteredCategory}
+            sortSubscriptions={sortSubscriptions}
+            setSearchTerm={setSearchTerm}
+          />
         </section>
 
-        <div className="grid gap-2.5 mb-5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
+        <div className="relative">
           {!loading && sorteredSubscriptions.length === 0 ? (
-            <div className="md:absolute md:inset-0 md:flex md:items-center md:justify-center">
+            <div className="flex items-center justify-center">
               <NoSubs />
             </div>
           ) : (
-            sorteredSubscriptions.map((subscription) => (
-              <Card
-                key={subscription.subscription_id}
-                id={subscription.subscription_id}
-                imageContent={subscription.logo}
-                name={subscription.name}
-                selectedCurrency={subscription.currency}
-                amount={subscription.amount}
-                actualAmount={calculateActualAmount(subscription.amount, subscription.shared_with)}
-                sharedNumber={subscription.shared_with}
-                recurrence={subscription.recurrence}
-                nextPaymentDate={subscription.payment_date}
-                website={subscription.website}
-                color={subscription.color}
-                removeSubscriptionById={removeSubscriptionById}
-              />
-            ))
+            <div
+              className="grid gap-2.5 mb-5"
+              style={{
+                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+              }}
+            >
+              {sorteredSubscriptions.map((subscription) => (
+                <Card
+                  key={subscription.subscription_id}
+                  id={subscription.subscription_id}
+                  imageContent={subscription.logo}
+                  name={subscription.name}
+                  selectedCurrency={subscription.currency}
+                  amount={subscription.amount}
+                  actualAmount={calculateActualAmount(
+                    subscription.amount,
+                    subscription.shared_with
+                  )}
+                  sharedNumber={subscription.shared_with}
+                  recurrence={subscription.recurrence}
+                  nextPaymentDate={subscription.payment_date}
+                  website={subscription.website}
+                  color={subscription.color}
+                  removeSubscriptionById={removeSubscriptionById}
+                />
+              ))}
+            </div>
           )}
         </div>
-
       </div>
       <Footer />
     </main>

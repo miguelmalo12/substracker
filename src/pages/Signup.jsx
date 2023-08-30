@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { currencyListState } from "../state/currencyListState";
+import { userState } from "../state/userState";
 
 import Navbar from "../components/Navbar";
 import Field from "../components/Field";
@@ -12,57 +13,63 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Signup() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [preferredCurrency, setPreferredCurrency] = useState({ label: "Canadian Dollar (CAD)", value: "CAD" });
-  
+  const [user, setUser] = useRecoilState(userState);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const [preferredCurrency, setPreferredCurrency] = useState({
+    label: "Canadian Dollar (CAD)",
+    value: "CAD",
+  });
+
   const [currencyList] = useRecoilState(currencyListState);
-  
+
   // User sees whole currency name, database gets 3 letter code
   const transformedCurrencyList = currencyList.map((currency) => {
     const match = currency.match(/\(([^)]+)\)/);
-    const code = match ? match[1] : '';
+    const code = match ? match[1] : "";
     return {
       label: currency,
-      value: code
+      value: code,
     };
   });
 
   // POST Register User
-  const handleSignup = async () => {
+  const handleSignup = async (event) => {
+    event.preventDefault();
     if (password !== repeatPassword) {
-      alert('Passwords do not match!');
+      alert("Passwords do not match!");
       return;
     }
 
     const payload = {
       user_email: email,
       user_password: password,
-      preferred_currency: preferredCurrency.value
+      preferred_currency: preferredCurrency.value,
     };
     console.log("Payload being sent:", payload);
 
     try {
-      const response = await fetch(`${baseURL}/api/users/register`, { 
-        method: 'POST',
+      const response = await fetch(`${baseURL}/api/users/register`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
-        body: JSON.stringify(payload)
+        credentials: "include",
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
       if (response.status === 201) {
-        navigate('/subscriptions');
+        localStorage.setItem("userData", JSON.stringify(data.userData));
+        setUser(data.userData);
+        navigate("/subscriptions");
       } else {
         alert(`Signup failed: ${data.message}`);
       }
-
     } catch (error) {
-      console.error('There was a problem with the signup:', error);
-      alert('There was a problem with the signup.');
+      console.error("There was a problem with the signup:", error);
+      alert("There was a problem with the signup.");
     }
   };
 
@@ -75,21 +82,42 @@ function Signup() {
             <h1 className="text-2xl text-left">Signup</h1>
             <div className="mt-1 mb-5 border-4 w-22 border-primary"></div>
           </div>
-          <Field title={"Email"} type={"text"} value={email} onChange={e => setEmail(e.target.value)} />
-          <Field title={"Password"} type={"password"} value={password} onChange={e => setPassword(e.target.value)} className="pt-0" />
-          <Field title={"Repeat Password"} type={"password"} value={repeatPassword} onChange={e => setRepeatPassword(e.target.value)} className="pt-0" />
-          <Field
-            title={"Currency"}
-            type={"dropdown"}
-            options={transformedCurrencyList}
-            value={preferredCurrency}
-            onChange={e => {
-              const selectedCurrency = transformedCurrencyList.find(currency => currency.value === e.target.value);
-              setPreferredCurrency(selectedCurrency);
-            }}
-            className="pt-0"
-          />
-          <Button content={"Signup"} onClick={handleSignup} />
+          <form>
+            <Field
+              title={"Email"}
+              type={"text"}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Field
+              title={"Password"}
+              type={"password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pt-0"
+            />
+            <Field
+              title={"Repeat Password"}
+              type={"password"}
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              className="pt-0"
+            />
+            <Field
+              title={"Currency"}
+              type={"dropdown"}
+              options={transformedCurrencyList}
+              value={preferredCurrency}
+              onChange={(e) => {
+                const selectedCurrency = transformedCurrencyList.find(
+                  (currency) => currency.value === e.target.value
+                );
+                setPreferredCurrency(selectedCurrency);
+              }}
+              className="pt-0"
+            />
+            <Button content={"Signup"} onClick={handleSignup} />
+          </form>
           <p className="text-center">
             Already have an account?{" "}
             <a href="/login" className="font-bold cursor-pointer text-primary">
