@@ -11,12 +11,14 @@ import { hardcodedRates } from "./state/hardcodedRates";
 import axios from "axios";
 
 import Login from "./pages/Login";
+import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Subscriptions from "./pages/Subscriptions";
 import AddSubscription from "./pages/AddSubscription";
 import NewSubscription from "./pages/NewSubscription";
 import EditSubscription from "./pages/EditSubscription";
 import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
@@ -31,15 +33,18 @@ function App() {
   const setCurrencyRates = useSetRecoilState(currencyRatesState);
 
   const menuRef = useRef(null);
-  
-  // Initializes state for user
-  // useEffect(() => {
-  //   const storedUser = JSON.parse(localStorage.getItem('userData') || '{}');
-  //   console.log('Stored User:', storedUser);
-  //   setUser(storedUser);
-  // }, []);
 
-  // Gets all methods
+  const isAuthenticated = Boolean(user.user_id && user.user_email);
+
+  useEffect(() => {
+    // Check if there's user data in local storage when app initializes
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, [setUser]);
+
+  // Gets all methods and sets them in global state
   useEffect(() => {
     axios
       .get(`${baseURL}/api/methods/`)
@@ -51,7 +56,7 @@ function App() {
       });
   }, [setPaymentMethodsList]);
 
-  // Gets currency rates
+  // Gets currency rates and sets them in global state
   useEffect(() => {
     const currentTime = new Date();
 
@@ -96,15 +101,19 @@ function App() {
       <div className={darkMode ? "dark" : ""}>
         <div className="dark:bg-dark">
         <Routes>
-          {/* <Route path="/" element={<Home />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/subscriptions" element={<Subscriptions menuRef={menuRef} />}/>
-          <Route path="/add-subscription" element={<AddSubscription menuRef={menuRef}/>}/>
-          <Route path="/new-subscription" element={<NewSubscription />} />
-          <Route path="/edit-subscription/:subscriptionId" element={<EditSubscription />} />
-          <Route path="/settings" element={<Settings menuRef={menuRef} />} />
-          <Route path="*" element={<h1>Not Found</h1>} />
+          { isAuthenticated ? (
+              <>
+                <Route path="/subscriptions" element={<Subscriptions menuRef={menuRef} />}/>
+                <Route path="/add-subscription" element={<AddSubscription menuRef={menuRef}/>}/>
+                <Route path="/new-subscription" element={<NewSubscription />} />
+                <Route path="/edit-subscription/:subscriptionId" element={<EditSubscription />} />
+                <Route path="/settings" element={<Settings menuRef={menuRef} />} />
+              </>
+            ) : null }
+          <Route path="*" element={<NotFound />} />
         </Routes>
         </div>
       </div>
