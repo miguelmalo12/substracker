@@ -39,7 +39,8 @@ function Card({
   const deleteSubscription = async (subscriptionId) => {
     try {
       const response = await axios.delete(
-        `${baseURL}/api/subscriptions/${subscriptionId}`
+        `${baseURL}/api/subscriptions/${subscriptionId}`,
+        { withCredentials: true }
       );
 
       if (response.status === 200) {
@@ -132,7 +133,7 @@ function Card({
                 {name || "Name"}
               </h2>
               <span className={`text-xl font-base ${textColor}`}>
-                {formatCurrency(selectedCurrency)} {actualAmount.toFixed(2)}
+                {formatCurrency(selectedCurrency)} {(actualAmount ?? Number(amount)).toFixed(2)}
               </span>
               <span className={`pl-0.5 text-xs font-base ${textColor}`}>
                 {formatRecurrence(recurrence)}

@@ -60,7 +60,9 @@ function EditSubscription() {
   // Function to GET subscription data from database
   useEffect(() => {
     if (subscriptionId) {
-    axios.get(`${baseURL}/api/subscriptions/${subscriptionId}`)
+    axios.get(`${baseURL}/api/subscriptions/${subscriptionId}`, {
+      withCredentials: true,
+    })
         .then((response) => {
           const fetchedSubscription = response.data.subscription;
           
@@ -78,6 +80,11 @@ function EditSubscription() {
           setColor(fetchedSubscription.color);
           setSharedNumber(fetchedSubscription.shared_with);
           setLogo(fetchedSubscription.logo);
+
+          // If the logo is not a URL, it means it's an emoji
+          if (fetchedSubscription.logo && !fetchedSubscription.logo.startsWith("http")) {
+            setSelectedEmoji(fetchedSubscription.logo);
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -148,7 +155,9 @@ function EditSubscription() {
     };
 
     axios
-      .put(`${baseURL}/api/subscriptions/${subscriptionId}`, updatedSubscription)
+      .put(`${baseURL}/api/subscriptions/${subscriptionId}`, updatedSubscription, {
+        withCredentials: true,
+      })
       .then((response) => {
         navigate("/subscriptions");
       })
@@ -316,7 +325,7 @@ function EditSubscription() {
           {/* CARD PREVIEW */}
           <section className="flex flex-col justify-center dark:text-light-grey md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
             <div className="flex flex-col">
-              {logo ? (
+              {logo && logo.startsWith("http") ? (
                 <img
                   className="w-12 h-12 mx-auto my-0 rounded-full md:mx-0 drop-shadow"
                   src={logo}
