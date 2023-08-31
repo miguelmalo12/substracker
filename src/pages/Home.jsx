@@ -2,12 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  CloudArrowUpIcon,
-  LockClosedIcon,
-  ServerIcon,
-} from "@heroicons/react/20/solid";
-import { ArrowPathIcon, FingerPrintIcon } from "@heroicons/react/24/outline";
+
+import { ReactComponent as TrackIcon } from "../assets/icons/solid/usp_track.svg";
+import { ReactComponent as CurrencyIcon } from "../assets/icons/solid/usp_currency.svg";
+import { ReactComponent as SharedIcon } from "../assets/icons/solid/usp_shared.svg";
+
+import { ReactComponent as DashboardIcon } from "../assets/icons/solid/usp_dashboard.svg";
+import { ReactComponent as MethodIcon } from "../assets/icons/solid/usp_methods.svg";
+import { ReactComponent as ReminderIcon } from "../assets/icons/solid/usp_reminders.svg";
+import { ReactComponent as UiIcon } from "../assets/icons/solid/usp_ui.svg";
+
 import logo from "../assets/logos/SubsTracker-Logo-H.png";
 
 // For future potential site growth
@@ -20,19 +24,19 @@ const features = [
     name: "Comprehensive Tracking of Recurring Payments.",
     description:
       "Manage recurring payments with ease. SubsTracker categorizes payments in a centralized view. Set reminders for individual payments to avoid late fees or accidental renewals.",
-    icon: CloudArrowUpIcon,
+    icon: <TrackIcon />,
   },
   {
     name: "Multi-Currency Support.",
     description:
       "SubsTracker supports multiple currencies and converts your total spend into your preferred currency, keeping you in the loop regardless of where your payments are going.",
-    icon: LockClosedIcon,
+    icon: <CurrencyIcon />,
   },
   {
     name: "Shared Expenses Made Easy.",
     description:
       "Have shared expenses? With SubsTracker, see which payments are shared, helping you track these expenses seamlessly.",
-    icon: ServerIcon,
+    icon: <SharedIcon />,
   },
 ];
 
@@ -41,25 +45,25 @@ const usp = [
     name: "All-in-One Dashboard",
     description:
       "View all your subscriptions, payments, and reminders in one intuitive dashboard. No more toggling between multiple apps or spreadsheets.",
-    icon: CloudArrowUpIcon,
+    icon: <DashboardIcon />,
   },
   {
     name: "Personalized Payment Reminders",
     description:
       "Set up reminders for specific payments you don't want to miss. Whether it's your monthly rent or a quarterly subscription, our reminder system keeps you on top of your payment schedule.",
-    icon: LockClosedIcon,
+    icon: <ReminderIcon />,
   },
   {
     name: "Custom Payment Methods",
     description:
       "SubsTracker allows you to add your own payment methods, providing a comprehensive way to track how you're making your recurring payments. No matter how you are making that payment, see it all in one place.",
-    icon: ArrowPathIcon,
+    icon: <MethodIcon />,
   },
   {
     name: "User-Friendly Interface",
     description:
       "With a focus on user experience, SubsTracker offers a clean, intuitive, and responsive design that makes managing all your recurring payments a smooth and enjoyable process.",
-    icon: FingerPrintIcon,
+    icon: <UiIcon />,
   },
 ];
 
@@ -158,6 +162,12 @@ function Home() {
                   </div>
                   <div className="py-6">
                     <button
+                      onClick={() => navigate("/signup")}
+                      className="rounded mr-4 border border-primary px-3.5 py-2.5 text-sm font-semibold text-primary hover:text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    >
+                      Get started
+                    </button>
+                    <button
                       onClick={() => navigate("/login")}
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-dark-grey hover:bg-gray-50"
                     >
@@ -168,12 +178,14 @@ function Home() {
               </div>
             </Dialog.Panel>
           </Dialog>
+          {/* Mobile menu END */}
         </header>
 
         {/* App info */}
         <div id="info" className="relative px-6 isolate pt-14 lg:px-8">
+          {/* Background Effect */}
           <div
-            className="absolute inset-x-0 overflow-hidden -top-40 -z-10 transform-gpu blur-3xl sm:-top-80"
+            className="absolute inset-x-0 overflow-hidden -top-40 -z-50 transform-gpu blur-3xl sm:-top-80"
             aria-hidden="true"
           >
             <div
@@ -184,6 +196,7 @@ function Home() {
               }}
             />
           </div>
+
           <div className="max-w-2xl py-20 mx-auto sm:py-24 lg:pt-24 lg:pb-44">
             <div className="hidden sm:mb-8 sm:flex sm:justify-center">
               <div className="flex items-center px-3 py-1 text-sm leading-6 text-gray-600 rounded-full ring-1 ring-gray-900/10 hover:ring-gray-900/20">
@@ -217,8 +230,55 @@ function Home() {
               </div>
             </div>
           </div>
+          {/* Animated PNGs */}
+          <div className="hidden sm:block absolute w-16 h-16 -z-30 top-15% left-7% md:top-20% opacity-70 lg:left-10%">
+            <img
+              src="https://i.postimg.cc/8kJyjgJP/netflix-3d.png"
+              alt="Netflix Icon"
+              className="drop-shadow-xl"
+            />
+          </div>
+          <div className="hidden sm:block absolute w-14 h-14 -z-30 bottom-1/2 left-2% sm:bottom-1/2 md:top-1/2 opacity-70 lg:left-5%">
+            <img
+              src="https://i.postimg.cc/05TVSXDG/slack-3d.png"
+              alt="Slack Icon"
+              className="drop-shadow-xl"
+            />
+          </div>
+          <div className="hidden sm:block absolute w-18 h-18 lg:w-20 lg:h-20 -z-30 bottom-15% left-5% lg:bottom-20% opacity-70 lg:left-10%">
+            <img
+              src="https://i.postimg.cc/T1DQSnMW/spotify-3d.png"
+              alt="Spotify Icon"
+              className="drop-shadow-xl"
+            />
+          </div>
+
+          <div className="hidden sm:block absolute w-18 h-18 -z-30 top-15% right-10% md:top-20% opacity-70 lg:right-12%">
+            <img
+              src="https://i.postimg.cc/jSKvgW8L/dropbox-3d.png"
+              alt="Dropbox Icon"
+              className="drop-shadow-xl"
+            />
+          </div>
+
+          <div className="hidden sm:block absolute w-16 h-16 -z-30 bottom-1/2 right-5% opacity-70 lg:right-7%">
+            <img
+              src="https://i.postimg.cc/RF8XXX8B/youtube-3d.png"
+              alt="Youtube Icon"
+              className="drop-shadow-xl"
+            />
+          </div>
+          <div className="hidden sm:block absolute w-12 h-12 -z-30 bottom-20% right-7% opacity-70 lg:right-12%">
+            <img
+              src="https://i.postimg.cc/htrsHSwM/amazon-3d.png"
+              alt="Amazon Icon"
+              className="drop-shadow-xl"
+            />
+          </div>
+
+          {/* Animated PNGs END*/}
           <div
-            className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
+            className="hidden sm:block absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
             aria-hidden="true"
           >
             <div
@@ -252,12 +312,11 @@ function Home() {
                   {features.map((feature) => (
                     <div key={feature.name} className="relative pl-9">
                       <dt className="inline font-semibold text-dark-grey">
-                        <feature.icon
-                          className="absolute w-5 h-5 left-1 top-1 text-primary"
-                          aria-hidden="true"
-                        />
+                        <div className="absolute w-5 h-5 left-1 top-1 text-primary">
+                          {feature.icon}
+                        </div>
                         {feature.name}
-                      </dt>{" "}
+                      </dt>
                       <dd className="inline">{feature.description}</dd>
                     </div>
                   ))}
@@ -292,13 +351,13 @@ function Home() {
           <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">
             <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
               {usp.map((feature) => (
-                <div key={feature.name} className="relative pl-16">
+                <div
+                  key={feature.name}
+                  className="relative pl-16"
+                >
                   <dt className="text-base font-semibold leading-7 text-dark-grey">
-                    <div className="absolute top-0 left-0 flex items-center justify-center w-10 h-10 rounded-lg bg-primary">
-                      <feature.icon
-                        className="w-6 h-6 text-white"
-                        aria-hidden="true"
-                      />
+                    <div className="absolute top-0 left-0 flex items-center justify-center w-10 h-10 p-2 text-white rounded-lg bg-primary">
+                      {feature.icon}
                     </div>
                     {feature.name}
                   </dt>
@@ -340,13 +399,14 @@ function Home() {
                 Take Control of Your Recurring Payments
               </h2>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-              Never miss a payment or pay for a forgotten subscription again and navigate your financial commitments with ease. Get started with SubsTracker today.
+                Never miss a payment or pay for a forgotten subscription again
+                and navigate your financial commitments with ease. Get started
+                with SubsTracker today.
               </p>
               <div className="flex items-center justify-center mt-10 gap-x-6 lg:justify-start">
                 <button
                   onClick={() => navigate("/signup")}
-                  className="rounded transition-transform
-                  hover:-translate-y-1 bg-white px-3.5 py-2.5 text-sm font-semibold text-dark-grey shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="rounded transition-transform hover:-translate-y-1 bg-white px-3.5 py-2.5 text-sm font-semibold text-dark-grey shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 >
                   Get started
                 </button>
