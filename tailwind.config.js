@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       colors: {
         'primary': '#9145B6',
+        'primary-dark': '#7E33A3',
         'primary-bg': '#EDE3F2',
         'dark-grey': '#333333',
         'medium-grey': '#8D8D8D',
@@ -16,17 +17,29 @@ module.exports = {
         'error': '#FF617E',
         'success': '#00C48C',
         'light-bg': '#FFFFFF',
-        'dark-bg': '#111111',
+        'dark': '#111111',
       },
       fontFamily: {
-        'sans': ['Montserrat', 'sans-serif'],
+        'sans': ['Lexend', 'Montserrat', 'sans-serif'],
       },
       width: {
         '18': '4.5rem', // 72px
         '22': '5.5rem', // 88px
       },
       height: {
+        '18': '4.5rem', // 72px
         '34': '8.5rem', // 136px
+      },
+      inset: {
+        '2%': '2%',
+        '5%': '5%',
+        '7%': '7%',
+        '10%': '10%',
+        '12%': '12%',
+        '15%': '15%',
+        '20%': '20%',
+        '25%': '25%',
+        '30%': '30%',
       },
     },
   },

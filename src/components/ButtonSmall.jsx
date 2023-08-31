@@ -5,7 +5,7 @@ function ButtonSmall({ content, type, onClick }) {
   return (
     <div 
       onClick={onClick}
-      className={`flex items-center justify-center w-22 md:-w-30 h-10 ${textColor} rounded-md cursor-pointer ${bgColor}`}>
+      className={`flex flex-start self-start items-center justify-center w-22 md:-w-30 h-10 ${textColor} rounded-md cursor-pointer ${bgColor}`}>
       <h2 className="font-semibold">{content}</h2>
     </div>
   );

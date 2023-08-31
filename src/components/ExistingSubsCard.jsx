@@ -4,7 +4,7 @@ function ExistingSubsCard({ service, categories, onClick }) {
   const { logo_url, service_name, category_id } = service;
 
   return (
-    <div className="flex items-center justify-between w-full py-4 border-b md:max-w-xs">
+    <div className="flex items-center justify-between w-full py-4 border-b dark:border-medium-grey md:max-w-xs">
       <div className="flex items-center flex-grow">
         <img
           className="rounded-full drop-shadow"

@@ -4,7 +4,7 @@ import { ReactComponent as LeftArrow } from "../assets/icons/left_arrow.svg";
 
 function NavbarMobile({ content, toggleMenu, goBack }) {
   return (
-    <header className="mb-4 md:hidden">
+    <header className="mb-4 md:hidden dark:text-light-grey">
       <div>
         <nav className="flex items-center justify-between w-full">
         { toggleMenu 

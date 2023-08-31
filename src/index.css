@@ -7,7 +7,7 @@ body {
 }
 
 .dark body {
-    @apply text-white bg-dark-bg;
+    @apply text-white bg-dark;
 }
 
 h1 {
@@ -27,16 +27,12 @@ h4 {
 }
 
 input, select, textarea {
-    @apply transition-all border rounded border-border focus:outline-none focus:border-primary;
+    @apply transition-all border rounded border-border focus:outline-none ;
 }
 
 input::placeholder,
 textarea::placeholder {
-    @apply text-medium-grey;
-}
-
-select option:disabled {
-    @apply text-medium-grey;
+    @apply text-gray-300;
 }
 
 .card {
@@ -63,14 +59,27 @@ select option:disabled {
 
 @media (min-width: 768px) {
     .responsive-navbar-padding {
-        @apply p-0; /* No padding */
+        @apply p-0; 
     }
 }
 
-.double-arrow-dropdown {
-    appearance: none; 
+.text-primary svg {
+    color: #9145B6; 
 }
 
-.text-primary svg {
-    color: #9145B6; /* replace with your actual primary color code */
+.gradient-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.2));
+    pointer-events: none; /* So it won't interfere with clickable elements on the card */
+    z-index: 1;
+  }
+
+/* This is used on the subscription cards */
+.lighten-on-hover:hover {
+    filter: brightness(1.1); /* Adjust as needed; 1 is the original brightness */
 }

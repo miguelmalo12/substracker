@@ -1,6 +1,9 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { mobileMenuState } from "../state/mobileMenuState";
+
+import axios from "axios";
 
 import NavbarMobile from "../components/NavbarMobile";
 import NavbarDesktop from "../components/NavbarDesktop";
@@ -11,13 +14,18 @@ import SearchField from "../components/SearchField";
 import ExistingSubsCard from "../components/ExistingSubsCard";
 import Footer from "../components/Footer";
 
-function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
+const baseURL = process.env.REACT_APP_BASE_URL;
+
+function AddSubscription({ menuRef }) {
+  const navigate = useNavigate();
+  const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
+
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState({});
 
-  const baseURL = process.env.REACT_APP_BASE_URL;
-
-  const navigate = useNavigate();
+  // Used on the Search Field
+  const [filteredServices, setFilteredServices] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleGoBack = () => {
     navigate("/subscriptions");
@@ -33,6 +41,7 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
       .get(`${baseURL}/api/services/`)
       .then((response) => {
         setServices(response.data);
+        setFilteredServices(response.data);
       })
       .catch((error) => {
         console.log(error);
@@ -52,8 +61,17 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
       .catch((error) => console.error(error));
   }, []);
 
+  // Filters the services based on the search term
+  useEffect(() => {
+    setFilteredServices(
+      services.filter(service =>
+        service.service_name ? service.service_name.toLowerCase().includes(searchTerm.toLowerCase()) : false
+      )
+    );
+  }, [searchTerm, services]);
+
   return (
-    <main className="max-w-7xl responsive-padding md:pl-28">
+    <main className="min-h-screen max-w-7xl md:h-fh responsive-padding md:pl-28 dark:text-light-grey">
       {/* Nav on Mobile */}
       <NavbarMobile content={"Add Subscription"} goBack={handleGoBack} />
 
@@ -75,16 +93,16 @@ function AddSubscription({ setMenuVisible, isMenuVisible, menuRef }) {
           </div>
           <ButtonSmall content={"+ New"} type={"primary"} onClick={handleAddNewClick} />
         </div>
-        <SearchField placeholder={"Search Service..."} />
+        <SearchField placeholder={"Search Service..."} setSearchTerm={setSearchTerm} />
       </div>
-      <div className="md:flex md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
-        {services.map((service) => {
+      <div className="md:flex md:dark:bg-dark-grey dark:text-light-grey dark:border-dark md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
+        {filteredServices.map((service) => {
           return (
             <ExistingSubsCard
               key={service.service_id}
               service={service}
               categories={categories}
-              onClick={() => navigate('/new-subscription/', { state: {logo: service.logo_url, name: service.service_name, id: service.service_id} })}
+              onClick={() => navigate('/new-subscription/', { state: {logo: service.logo_url, name: service.service_name, id: service.service_id, categoryId: service.category_id, website: service.website} })}
             />
           );
         })}
