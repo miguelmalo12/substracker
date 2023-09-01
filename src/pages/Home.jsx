@@ -24,21 +24,21 @@ const navigation = [
 
 const features = [
   {
-    name: "Comprehensive Tracking of Recurring Payments.",
+    name: "Comprehensive Tracking of Recurring Payments",
     description:
-      "Manage recurring payments with ease. SubsTracker categorizes payments in a centralized view. Set reminders for individual payments to avoid late fees or accidental renewals.",
+      "Manage recurring payments with ease in a centralized view. Set reminders for individual payments to avoid late fees or accidental renewals.",
     icon: <TrackIcon />,
   },
   {
-    name: "Multi-Currency Support.",
+    name: "Multi-Currency Support",
     description:
-      "SubsTracker supports multiple currencies and converts your total spend into your preferred currency, keeping you in the loop regardless of where your payments are going.",
+      "SubsTracker converts amounts into your preferred currency, keeping you in the loop regardless of where your payments are going.",
     icon: <CurrencyIcon />,
   },
   {
-    name: "Shared Expenses Made Easy.",
+    name: "Shared Expenses Made Easy",
     description:
-      "Have shared expenses? With SubsTracker, see which payments are shared, helping you track these expenses seamlessly.",
+      "Have shared expenses? See which payments are shared and track these expenses seamlessly.",
     icon: <SharedIcon />,
   },
 ];
@@ -353,10 +353,10 @@ function Home() {
       {/* Hero END*/}
 
       {/* INFO + MOCKUP */}
-      <div className="py-24 overflow-hidden bg-white z-99 sm:py-32">
+      <div className="py-16 overflow-hidden bg-white z-99 sm:py-32">
         <div className="px-6 mx-auto max-w-7xl lg:px-8">
           <div className="grid max-w-2xl grid-cols-1 mx-auto gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-            <div className="lg:pr-8 lg:pt-4">
+            <div className="lg:pr-8">
               <div className="lg:max-w-lg">
                 <h2 className="text-base font-semibold leading-7 text-primary">
                   Forget Unwanted Charges
@@ -365,9 +365,7 @@ function Home() {
                   Simplify Your Recurring Payments with SubsTracker
                 </p>
                 <p className="mt-6 text-lg leading-8 text-gray-600">
-                  With our solution, you can effortlessly manage all your
-                  recurring payments, avoid payment surprises, and keep track of
-                  your expenses.
+                  Effortlessly manage all your recurring payments, avoid payment surprises, and keep track of your expenses.
                 </p>
                 <dl className="max-w-xl mt-10 space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
                   {features.map((feature) => (
@@ -376,7 +374,7 @@ function Home() {
                         <div className="absolute w-5 h-5 left-1 top-1 text-primary">
                           {feature.icon}
                         </div>
-                        {feature.name}
+                        {feature.name}<br></br>
                       </dt>
                       <dd className="inline">{feature.description}</dd>
                     </div>
@@ -396,7 +394,7 @@ function Home() {
       </div>
 
       {/* FEATURES */}
-      <div className="py-24 bg-white sm:py-32">
+      <div className="py-16 bg-white sm:py-32">
         <div className="px-6 mx-auto max-w-7xl lg:px-8">
           <div className="max-w-2xl mx-auto lg:text-center">
             <h2 className="text-base font-semibold leading-7 text-primary">
@@ -431,7 +429,7 @@ function Home() {
 
       {/* CTA */}
       <div className="bg-white">
-        <div className="py-24 mx-auto max-w-7xl sm:px-6 sm:py-32 lg:px-8">
+        <div className="py-16 mx-auto max-w-7xl sm:px-6 sm:py-32 lg:px-8">
           <div className="relative px-6 pt-16 overflow-hidden bg-gray-900 shadow-2xl isolate sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
             <svg
               viewBox="0 0 1024 1024"
@@ -447,8 +445,8 @@ function Home() {
               />
               <defs>
                 <radialGradient id="759c1415-0410-454c-8f7c-9a820de03641">
-                  <stop stopColor="#7775D6" />
-                  <stop offset={1} stopColor="#E935C1" />
+                  <stop stopColor="#9145B6" />
+                  <stop offset={1} stopColor="#D180F6" />
                 </radialGradient>
               </defs>
             </svg>
