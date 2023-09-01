@@ -41,6 +41,17 @@ module.exports = {
         '25%': '25%',
         '30%': '30%',
       },
+      keyframes: {
+        'grow-and-fade-in': {
+          '0%': { transform: 'scale(0)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '0.7' },
+        },
+      },
+      animation: {
+        'grow-and-fade-in-1s': 'grow-and-fade-in 3s ease-out 0s forwards',
+        'grow-and-fade-in-2s': 'grow-and-fade-in 3s ease-out 0.75s forwards',
+        'grow-and-fade-in-4s': 'grow-and-fade-in 3s ease-out 1.5s forwards',
+      },
     },
   },
   plugins: [],
