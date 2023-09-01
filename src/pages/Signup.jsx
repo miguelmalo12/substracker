@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { currencyListState } from "../state/currencyListState";
@@ -36,6 +36,13 @@ function Signup() {
 
   // POST Register User
   const handleSignup = async (event) => {
+    if (user && user.user_id) {
+      alert("You're already logged in. Please log out first to create a new account.");
+      return;
+    }
+    
+    localStorage.removeItem('userData');
+    
     event.preventDefault();
     if (password !== repeatPassword) {
       alert("Passwords do not match!");
@@ -74,7 +81,7 @@ function Signup() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen responsive-navbar-padding">
+    <div className="flex flex-col min-h-screen dark:text-light-grey responsive-navbar-padding">
       <Navbar content={"Create Account"} />
       <div className="flex-grow">
         <div className="max-w-sm mx-auto">
@@ -107,7 +114,7 @@ function Signup() {
               title={"Currency"}
               type={"dropdown"}
               options={transformedCurrencyList}
-              value={preferredCurrency}
+              value={preferredCurrency.value}
               onChange={(e) => {
                 const selectedCurrency = transformedCurrencyList.find(
                   (currency) => currency.value === e.target.value
@@ -120,9 +127,9 @@ function Signup() {
           </form>
           <p className="text-center">
             Already have an account?{" "}
-            <a href="/login" className="font-bold cursor-pointer text-primary">
+            <span onClick={() => navigate('/login')} className="font-bold cursor-pointer text-primary">
               Login
-            </a>
+            </span>
           </p>
         </div>
       </div>

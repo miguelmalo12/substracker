@@ -65,7 +65,9 @@ function Subscriptions({ menuRef }) {
   //GET Subscriptions
   useEffect(() => {
     axios
-      .get(`${baseURL}/api/subscriptions/`)
+      .get(`${baseURL}/api/subscriptions/`, {
+        withCredentials: true,
+      })
       .then((response) => {
         if (response.data && Array.isArray(response.data.subscriptions)) {
           setSubscriptions(response.data.subscriptions);

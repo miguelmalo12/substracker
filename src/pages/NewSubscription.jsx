@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { currencyListState } from "../state/currencyListState";
 import { paymentMethodsState } from "../state/paymentMethodsState";
+import { userState } from "../state/userState";
         
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
@@ -24,6 +25,7 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 function NewSubscription() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [user] = useRecoilState(userState);
   const [currencyList] = useRecoilState(currencyListState);
   const paymentMethodsList = useRecoilValue(paymentMethodsState);
 
@@ -119,7 +121,7 @@ function NewSubscription() {
     }
 
     const newSubscription = {
-      user_id: 1,
+      user_id: user.user_id,
       service_id: location.state?.id,
       name: name,
       description: description,
@@ -135,9 +137,11 @@ function NewSubscription() {
       shared_with: sharedNumber,
       logo: logoFromPreviousPage || selectedEmoji,
     };
-
+    console.log(newSubscription);
     axios
-      .post(`${baseURL}/api/subscriptions/`, newSubscription)
+      .post(`${baseURL}/api/subscriptions/`, newSubscription, {
+        withCredentials: true,
+        })
       .then((response) => {
         navigate("/subscriptions");
       })
