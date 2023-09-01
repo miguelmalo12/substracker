@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userStateFromLocalStorage } from "../state/userState";
+
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
@@ -12,7 +15,7 @@ import { ReactComponent as MethodIcon } from "../assets/icons/solid/usp_methods.
 import { ReactComponent as ReminderIcon } from "../assets/icons/solid/usp_reminders.svg";
 import { ReactComponent as UiIcon } from "../assets/icons/solid/usp_ui.svg";
 
-import logo from "../assets/logos/SubsTracker-Logo-H.png";
+import logo from "../assets/logos/SubsTracker-logo-H.svg";
 
 // For future potential site growth
 const navigation = [
@@ -70,6 +73,7 @@ const usp = [
 function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const user = useRecoilValue(userStateFromLocalStorage);
 
   const scrollToDiv = (ref) => {
     const element = document.getElementById(ref);
@@ -113,18 +117,37 @@ function Home() {
               ))}
             </div>
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-              <button
-                onClick={() => navigate("/signup")}
-                className="rounded mr-4 border border-primary px-3.5 py-2.5 text-sm font-semibold text-primary hover:text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-              >
-                Get started
-              </button>
-              <button
-                onClick={() => navigate("/login")}
-                className="text-sm font-semibold leading-6 transition-transform text-dark-grey hover:-translate-y-1"
-              >
-                Log in <span aria-hidden="true">&rarr;</span>
-              </button>
+              {user.user_id ? (
+                <>
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="rounded mr-4 border border-primary px-3.5 py-2.5 text-sm font-semibold text-primary hover:text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    Signup
+                  </button>
+                  <button
+                    onClick={() => navigate("/subscriptions")}
+                    className="text-sm font-semibold leading-6 transition-transform text-dark-grey hover:-translate-y-1"
+                  >
+                    Access Your Dashboard <span aria-hidden="true">&rarr;</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="rounded mr-4 border border-primary px-3.5 py-2.5 text-sm font-semibold text-primary hover:text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    Get started
+                  </button>
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="text-sm font-semibold leading-6 transition-transform text-dark-grey hover:-translate-y-1"
+                  >
+                    Log in <span aria-hidden="true">&rarr;</span>
+                  </button>
+                </>
+              )}
             </div>
           </nav>
           {/* Mobile menu */}
@@ -161,18 +184,37 @@ function Home() {
                     ))}
                   </div>
                   <div className="py-6">
-                    <button
-                      onClick={() => navigate("/signup")}
-                      className="rounded mr-4 border border-primary px-3.5 py-2.5 text-sm font-semibold text-primary hover:text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                    >
-                      Get started
-                    </button>
-                    <button
-                      onClick={() => navigate("/login")}
-                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-dark-grey hover:bg-gray-50"
-                    >
-                      Log in
-                    </button>
+                    {user.user_id ? (
+                      <>
+                      <button
+                        onClick={() => navigate("/signup")}
+                        className="rounded mr-4 border border-primary px-3.5 py-2.5 text-sm font-semibold text-primary hover:text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                      >
+                        Signup
+                      </button>
+                      <button
+                        onClick={() => navigate("/login")}
+                        className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-dark-grey hover:bg-gray-50"
+                      >
+                        Access Your Dashboard
+                      </button>
+                    </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => navigate("/signup")}
+                          className="rounded mr-4 border border-primary px-3.5 py-2.5 text-sm font-semibold text-primary hover:text-white shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                        >
+                          Get started
+                        </button>
+                        <button
+                          onClick={() => navigate("/login")}
+                          className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-dark-grey hover:bg-gray-50"
+                        >
+                          Log in
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -351,10 +393,7 @@ function Home() {
           <div className="max-w-2xl mx-auto mt-16 sm:mt-20 lg:mt-24 lg:max-w-4xl">
             <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
               {usp.map((feature) => (
-                <div
-                  key={feature.name}
-                  className="relative pl-16"
-                >
+                <div key={feature.name} className="relative pl-16">
                   <dt className="text-base font-semibold leading-7 text-dark-grey">
                     <div className="absolute top-0 left-0 flex items-center justify-center w-10 h-10 p-2 text-white rounded-lg bg-primary">
                       {feature.icon}
