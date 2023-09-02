@@ -50,6 +50,7 @@ function EditSubscription() {
   const [selectedCurrency, setSelectedCurrency] = useState("");
   const [recurrence, setRecurrence] = useState("");
   const [nextPaymentDate, setNextPaymentDate] = useState("");
+  const [reminderDays, setReminderDays] = useState("");
   const [category, setCategory] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [website, setWebsite] = useState("");
@@ -74,6 +75,7 @@ function EditSubscription() {
           setSelectedCurrency(fetchedSubscription.currency);
           setRecurrence(capitalizeFirstLetter(fetchedSubscription.recurrence));
           setNextPaymentDate(formatDate(fetchedSubscription.payment_date));
+          setReminderDays(fetchedSubscription.reminder_days);
           setCategory(fetchedSubscription.category_name);
           setPaymentMethod(fetchedSubscription.payment_method);
           setWebsite(fetchedSubscription.website);
@@ -135,6 +137,9 @@ function EditSubscription() {
       return;
     }
 
+    const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
+    const reminderDaysNumber = matchedNumber ? parseInt(matchedNumber[0]) : null;
+
     const updatedSubscription = {
       subscription_id: subscriptionId,
       user_id: userId,
@@ -145,12 +150,12 @@ function EditSubscription() {
       currency: selectedCurrency,
       recurrence: recurrence,
       payment_date: nextPaymentDate,
+      ...(reminderDaysNumber !== null && { reminder_days: reminderDaysNumber }),
       category_name: category,
       color: color,
       logo: logo || selectedEmoji,
       shared_with: sharedNumber,
       payment_method: paymentMethod,
-      is_active: true,
       website: website,
     };
 
@@ -282,6 +287,14 @@ function EditSubscription() {
                 placeholder={"Select Date"}
                 value={nextPaymentDate}
                 onChange={(e) => setNextPaymentDate(e.target.value)}
+              />
+              <FieldBorder
+                title={"Reminder"}
+                type={"select"}
+                placeholder={"None"}
+                value={reminderDays}
+                options={["None", "1 day before", "3 days before", "5 days before", "7 days before", "10 days before"]}
+                onChange={(e) => setReminderDays(e.target.value)}
               />
               <FieldBorder
                 title={"Recurrence"}

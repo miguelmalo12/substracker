@@ -64,7 +64,8 @@ function NewSubscription() {
   );
   const [sharedNumber, setSharedNumber] = useState("0");
   const [nextPaymentDate, setNextPaymentDate] = useState("");
-  const [recurrence, setRecurrence] = useState("Monthly");
+  const [reminderDays, setReminderDays] = useState("");
+  const [recurrence, setRecurrence] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [website, setWebsite] = useState(websiteFromPreviousPage || "");
   const [color, setColor] = useState("bg-primary");
@@ -120,6 +121,9 @@ function NewSubscription() {
       return;
     }
 
+    const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
+    const reminderDaysNumber = matchedNumber ? parseInt(matchedNumber[0]) : null;
+
     const newSubscription = {
       user_id: user.user_id,
       service_id: location.state?.id,
@@ -129,9 +133,9 @@ function NewSubscription() {
       currency: selectedCurrency,
       recurrence: recurrence,
       payment_date: nextPaymentDate,
+      ...(reminderDaysNumber !== null && { reminder_days: reminderDaysNumber }),
       category_name: category,
       payment_method: paymentMethod,
-      is_active: true,
       website: website,
       color: color,
       shared_with: sharedNumber,
@@ -247,6 +251,14 @@ function NewSubscription() {
                 placeholder={"Select Date"}
                 value={nextPaymentDate}
                 onChange={(e) => setNextPaymentDate(e.target.value)}
+              />
+              <FieldBorder
+                title={"Reminder"}
+                type={"select"}
+                placeholder={"None"}
+                value={reminderDays}
+                options={["None", "1 day before", "3 days before", "5 days before", "7 days before", "10 days before"]}
+                onChange={(e) => setReminderDays(e.target.value)}
               />
               <FieldBorder
                 title={"Recurrence"}
