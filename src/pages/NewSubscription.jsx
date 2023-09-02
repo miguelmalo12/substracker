@@ -17,7 +17,7 @@ import NavbarDesktop from "../components/NavbarDesktop";
 import MenuDesktop from "../components/MenuDesktop";
 import FieldBorder from "../components/FieldBorder";
 import Button from "../components/Button";
-import Card from "../components/Card";
+import CardPreview from "../components/CardPreview";
 import Footer from "../components/Footer";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
@@ -298,7 +298,7 @@ function NewSubscription() {
                 />
               ) : (
                 // Emoji selector in case there is no logo
-                <>
+                <div className="relative">
                   <div
                     className="mx-auto my-0 text-3xl cursor-pointer md:mx-0 emoji-placeholder"
                     onClick={() => setShowEmojiPicker(true)}
@@ -306,13 +306,15 @@ function NewSubscription() {
                     {selectedEmoji || "✏️"}{" "}
                   </div>
                   {showEmojiPicker && (
-                    <Picker
+                    <div className="absolute top-0 left-0 z-10">
+                      <Picker
                       data={data}
                       previewPosition="none"
                       onEmojiSelect={handleEmojiClick}
                     />
+                    </div>
                   )}
-                </>
+                </div>
               )}
               <div className="flex items-center justify-center">
                 <input
@@ -351,7 +353,7 @@ function NewSubscription() {
             <div className="flex flex-col w-full gap-2 pt-4 border-t dark:border-medium-grey">
               <h3>Card Preview</h3>
               <div className="max-w-sm">
-                <Card
+                <CardPreview
                   imageContent={logoFromPreviousPage || selectedEmoji}
                   name={name}
                   selectedCurrency={selectedCurrency}
@@ -360,7 +362,6 @@ function NewSubscription() {
                   nextPaymentDate={nextPaymentDate}
                   recurrence={recurrence}
                   color={color}
-                  notFunctional={true}
                 />
               </div>
             </div>

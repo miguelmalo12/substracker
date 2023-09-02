@@ -17,7 +17,7 @@ import NavbarDesktop from "../components/NavbarDesktop";
 import MenuDesktop from "../components/MenuDesktop";
 import FieldBorder from "../components/FieldBorder";
 import Button from "../components/Button";
-import Card from "../components/Card";
+import CardPreview from "../components/CardPreview";
 import Footer from "../components/Footer";
 
 
@@ -386,7 +386,7 @@ function EditSubscription() {
             <div className="flex flex-col w-full gap-2 pt-4 border-t dark:border-medium-grey">
               <h3>Card Preview</h3>
               <div className="max-w-sm">
-                <Card
+                <CardPreview
                   imageContent={logo || selectedEmoji}
                   name={name}
                   selectedCurrency={selectedCurrency}
@@ -395,7 +395,6 @@ function EditSubscription() {
                   nextPaymentDate={nextPaymentDate}
                   recurrence={recurrence}
                   color={color}
-                  notFunctional={true}
                 />
               </div>
             </div>

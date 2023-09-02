@@ -422,6 +422,8 @@ function Subscriptions({ menuRef }) {
                   id={subscription.subscription_id}
                   imageContent={subscription.logo}
                   name={subscription.name}
+                  description={subscription.description}
+                  category={subscription.category_name}
                   selectedCurrency={subscription.currency}
                   amount={subscription.amount}
                   actualAmount={calculateActualAmount(
@@ -431,6 +433,7 @@ function Subscriptions({ menuRef }) {
                   sharedNumber={subscription.shared_with}
                   recurrence={subscription.recurrence}
                   nextPaymentDate={subscription.payment_date}
+                  paymentMethod={subscription.payment_method}
                   website={subscription.website}
                   color={subscription.color}
                   removeSubscriptionById={removeSubscriptionById}
