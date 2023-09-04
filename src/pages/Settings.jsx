@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 import { currencyListState } from "../state/currencyListState";
@@ -34,29 +33,77 @@ const getCurrencyFullName = (code, currencyList) => {
 };
 
 function Settings({ menuRef }) {
-  const navigate = useNavigate();
   const [darkMode] = useRecoilState(darkModeState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
   const [currencyList, setCurrencyList] = useRecoilState(currencyListState);
   const [userInfo, setUserInfo] = useRecoilState(userState);
-  const [newPaymentMethodName, setNewPaymentMethodName] = useState(''); 
-  const [paymentMethods, setPaymentMethods] = useRecoilState(paymentMethodsState);
-
-  const fullCurrencyName = getCurrencyFullName(
-    userInfo.preferred_currency,
-    currencyList
+  const [localCurrency, setLocalCurrency] = useState(
+    userInfo.preferred_currency
   );
+  const [localTheme, setLocalTheme] = useState(userInfo.preferred_theme);
 
-  // CURRENCY Change
-  const handleCurrencyChange = (e) => {
+  const [newPaymentMethodName, setNewPaymentMethodName] = useState("");
+  const [paymentMethods, setPaymentMethods] =
+    useRecoilState(paymentMethodsState);
+
+  const [originalSettings, setOriginalSettings] = useState({
+    preferred_currency: userInfo.preferred_currency,
+    preferred_theme: userInfo.preferred_theme,
+  });
+
+  const [settingsUpdated, setSettingsUpdated] = useState(false);
+  const [methodAdded, setMethodAdded] = useState(false);
+
+  const fullCurrencyName = getCurrencyFullName(localCurrency, currencyList);
+
+  // Initialize original settings when component renders or userInfo changes
+  useEffect(() => {
+    setOriginalSettings({
+      preferred_currency: userInfo.preferred_currency,
+      preferred_theme: userInfo.preferred_theme,
+    });
+  }, [userInfo]);
+
+  // PUT Update User
+  const handleSave = () => {
+    const newSettings = {
+      preferred_currency: localCurrency,
+      preferred_theme: localTheme,
+    };
+  
+    if (JSON.stringify(newSettings) !== JSON.stringify(originalSettings)) {
+      // Update the settings via PUT request if they have changed
+      axios
+        .put(`${baseURL}/api/users/${userInfo.user_id}`, newSettings, {
+          withCredentials: true,
+        })
+        .then(response => {
+          // Update Recoil state and local storage
+          setUserInfo({ ...userInfo, ...newSettings }); 
+          const currentLocalStorageData = JSON.parse(localStorage.getItem("userData"));
+          localStorage.setItem("userData", JSON.stringify({ ...currentLocalStorageData, ...newSettings }));
+          setSettingsUpdated(true);
+        })
+        .catch(error => {
+          console.log("Failed to update settings:", error);
+        });
+    } else {
+      console.log("Settings have not changed. No update necessary.");
+    }
+  };
+
+   // CURRENCY Change
+   const handleCurrencyChange = (e) => {
+    setSettingsUpdated(false);
     const selectedFullName = e.target.value;
     const selectedCode = selectedFullName.match(/\(([^)]+)\)/)[1]; // Extracts the code between parentheses
-    setUserInfo({ ...userInfo, preferred_currency: selectedCode });
+    setLocalCurrency(selectedCode);
   };
 
   // THEME Change
   const handleThemeChange = (e) => {
-    setUserInfo({ ...userInfo, preferred_theme: e.target.value });
+    setSettingsUpdated(false);
+    setLocalTheme(e.target.value);
   };
 
   // POST Payment Method
@@ -71,6 +118,7 @@ function Settings({ menuRef }) {
         withCredentials: true,
       })
       .then((response) => {
+        setMethodAdded(true);
         setPaymentMethods((prevMethods) => [...prevMethods, newPaymentMethod]);
       })
       .catch((error) => {
@@ -124,7 +172,7 @@ function Settings({ menuRef }) {
             <FieldBorder
               title={"Preferred Theme"}
               type={"select"}
-              value={userInfo.preferred_theme || "Light"}
+              value={localTheme || "Light"}
               options={["Light", "Dark"]}
               onChange={handleThemeChange}
             />
@@ -149,21 +197,26 @@ function Settings({ menuRef }) {
                     </Dialog.Description>
                     <fieldset className="mb-[15px] flex items-center gap-5">
                       <label
-                        className="text-dark-grey w-[90px] text-right text-[15px]"
+                        className="w-[90px] text-right text-[15px]"
                         htmlFor="name"
                       >
                         Name
                       </label>
                       <input
-                        className="text-dark-grey shadow-violet7 focus:shadow-primary inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
+                        className="text-dark-grey shadow-primary focus:shadow-primary inline-flex h-[35px] w-full flex-1 items-center justify-center rounded-[4px] px-[10px] text-[15px] leading-none shadow-[0_0_0_1px] outline-none focus:shadow-[0_0_0_2px]"
                         id="name"
                         defaultValue="Enter Payment Method"
-                        onChange={(e) => setNewPaymentMethodName(e.target.value)}
+                        onChange={(e) =>
+                          setNewPaymentMethodName(e.target.value)
+                        }
                       />
                     </fieldset>
                     <div className="mt-[25px] flex justify-end">
                       <Dialog.Close asChild>
-                        <button onClick={handleAddPaymentMethod} className="inline-flex items-center justify-center w-auto px-4 py-2 text-base font-medium rounded text-dark-grey bg-light-grey hover:bg-border focus:ring-2 focus:ring-dark-grey">
+                        <button
+                          onClick={handleAddPaymentMethod}
+                          className="inline-flex items-center justify-center w-auto px-4 py-2 text-base font-medium rounded text-dark-grey bg-light-grey hover:bg-border focus:ring-2 focus:ring-dark-grey"
+                        >
                           + Add
                         </button>
                       </Dialog.Close>
@@ -181,7 +234,17 @@ function Settings({ menuRef }) {
               </Dialog.Root>
             </div>
           </div>
-          <Button content={"Save"} />
+          <Button content={"Save"} onClick={handleSave} />
+          {settingsUpdated && (
+            <p className="mt-4 text-center text-success">
+              Settings successfully updated!
+            </p>
+          )}
+          {methodAdded && (
+            <p className="mt-4 text-center text-success">
+              New payment method added!
+            </p>
+          )}
         </section>
       </div>
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userState, userStateFromLocalStorage } from "../state/userState";
+import { darkModeState } from "../state/darkModeState";
 
 import Navbar from "../components/Navbar";
 import Field from "../components/Field";
@@ -10,12 +11,13 @@ import Footer from "../components/Footer";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
-function Login() {
+function Login({ initializeDarkMode }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const user = useRecoilValue(userState);
   const [password, setPassword] = useState("");
   const setUserState = useSetRecoilState(userStateFromLocalStorage);
+  const setDarkMode = useSetRecoilState(darkModeState);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -37,15 +39,11 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Login successful:", data);
-        console.log("Data.user:", data.user);
+        
         localStorage.setItem("userData", JSON.stringify(data.user));
-        console.log(
-          "localStorage immediately after set:",
-          JSON.parse(localStorage.getItem("userData"))
-        );
 
         setUserState(data.user);
+        initializeDarkMode(data.user, setDarkMode);
         navigate("/subscriptions");
       } else {
         const text = await response.text();
