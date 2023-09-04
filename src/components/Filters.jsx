@@ -125,8 +125,10 @@ function Filters({
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
-                        <p>{category}</p>
-                        {checkedCategory === category && <CheckIcon className="ml-auto" />}
+                        <p className={checkedCategory === category ? "text-primary" : ""}>
+                          {category}
+                        </p>
+                        {checkedCategory === category && <CheckIcon className="ml-auto text-primary" />}
 
                       </DropdownMenu.Item>
                     ))}
@@ -161,8 +163,10 @@ function Filters({
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
-                        <p>{currency}</p>
-                        {checkedCurrency === currency && <CheckIcon className="ml-auto" />}
+                        <p className={checkedCurrency === currency ? "text-primary" : ""}>
+                          {currency}
+                        </p>
+                        {checkedCurrency === currency && <CheckIcon className="ml-auto text-primary" />}
 
                       </DropdownMenu.Item>
                     ))}
@@ -197,8 +201,10 @@ function Filters({
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
-                        <p>{method.method_name}</p>
-                        {checkedPaymentMethod === method.method_name && <CheckIcon className="ml-auto" />}
+                        <p className={checkedPaymentMethod === method.method_name ? "text-primary" : ""}>
+                          {method.method_name}
+                        </p>
+                        {checkedPaymentMethod === method.method_name && <CheckIcon className="ml-auto text-primary" />}
 
                       </DropdownMenu.Item>
                     ))}
@@ -231,8 +237,10 @@ function Filters({
                         setCheckedShared("Personal");
                        }}
                     >
-                      <p>Personal</p>
-                      {checkedShared === "Personal" && <CheckIcon className="ml-auto" />}
+                      <p className={checkedShared === "Personal" ? "text-primary" : ""}>
+                          Personal
+                        </p>
+                      {checkedShared === "Personal" && <CheckIcon className="ml-auto text-primary" />}
 
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
@@ -244,8 +252,10 @@ function Filters({
                         setCheckedShared("Shared");
                        }}
                     >
-                      <p>Shared</p>
-                      {checkedShared === "Shared" && <CheckIcon className="ml-auto" />}
+                      <p className={checkedShared === "Shared" ? "text-primary" : ""}>
+                          Shared
+                        </p>
+                      {checkedShared === "Shared" && <CheckIcon className="ml-auto text-primary" />}
 
                     </DropdownMenu.Item>
                   </DropdownMenu.SubContent>

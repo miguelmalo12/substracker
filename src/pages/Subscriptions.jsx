@@ -397,6 +397,13 @@ function Subscriptions({ menuRef }) {
     setCheckedShared(null);
   };
 
+  // Makes sure filters are reset when component is unmounted
+  useEffect(() => {
+    return () => {
+      resetFilters();
+    };
+  }, []);
+
   // This will set the subscriptions to be rendered after search / filters / sort
   const processSubscriptions = (subscriptions) => {
     let searchableSubscriptions = subscriptions.filter((subscription) =>

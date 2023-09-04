@@ -32,7 +32,7 @@ input, select, textarea {
 
 input::placeholder,
 textarea::placeholder {
-    @apply text-gray-300;
+    @apply text-gray-300 dark:text-zinc-500;
 }
 
 .card {

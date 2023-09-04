@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 import { currencyListState } from "../state/currencyListState";
 import { paymentMethodsState } from "../state/paymentMethodsState";
@@ -41,6 +41,11 @@ function Settings({ menuRef }) {
     userInfo.preferred_currency
   );
   const [localTheme, setLocalTheme] = useState(userInfo.preferred_theme);
+
+  // Used to keep button disabled if no value changes
+  const [initialCurrency, setInitialCurrency] = useState(localCurrency);
+  const [initialTheme, setInitialTheme] = useState(localTheme);
+  const [initialValuesUpdated, setInitialValuesUpdated] = useState(false);
 
   const [newPaymentMethodName, setNewPaymentMethodName] = useState("");
   const [paymentMethods, setPaymentMethods] =
@@ -90,6 +95,8 @@ function Settings({ menuRef }) {
     } else {
       console.log("Settings have not changed. No update necessary.");
     }
+    setInitialCurrency(localCurrency);
+    setInitialTheme(localTheme);
   };
 
    // CURRENCY Change
@@ -105,6 +112,14 @@ function Settings({ menuRef }) {
     setSettingsUpdated(false);
     setLocalTheme(e.target.value);
   };
+
+  useEffect(() => {
+    if (localCurrency !== initialCurrency || localTheme !== initialTheme) {
+      setInitialValuesUpdated(true);
+    } else {
+      setInitialValuesUpdated(false);
+    }
+  }, [localCurrency, localTheme, initialCurrency, initialTheme]);
 
   // POST Payment Method
   const handleAddPaymentMethod = () => {
@@ -125,6 +140,8 @@ function Settings({ menuRef }) {
         console.log(error);
       });
   };
+
+  
 
   return (
     <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
@@ -234,7 +251,7 @@ function Settings({ menuRef }) {
               </Dialog.Root>
             </div>
           </div>
-          <Button content={"Save"} onClick={handleSave} />
+          <Button content={"Save"} onClick={handleSave} disabled={!initialValuesUpdated} />
           {settingsUpdated && (
             <p className="mt-4 text-center text-success">
               Settings successfully updated!
