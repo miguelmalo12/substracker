@@ -25,8 +25,15 @@ function Filters({
   updateFilter,
   resetFilters,
   setSortCriteria,
-  checkedFilter,
-  setCheckedFilter,
+  checkedCategory,
+  setCheckedCategory,
+  checkedCurrency,
+  setCheckedCurrency,
+  checkedPaymentMethod,
+  setCheckedPaymentMethod,
+  checkedShared,
+  setCheckedShared,
+  isAnyFilterActive,
 }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [checkedItem, setCheckedItem] = useState("Due Date"); // This is for sort dropdown
@@ -68,7 +75,7 @@ function Filters({
         {/* Filter popover */}
         <div className="flex relative p-1.5 rounded items-center cursor-pointer">
           <DropdownMenu.Root>
-            <div className={`${checkedFilter ? 'text-primary' : ''}`}>
+            <div className={`${isAnyFilterActive ? 'text-primary' : ''}`}>
               <DropdownMenu.Trigger className="flex">
                 <FilterIcon className="mr-1 md:mr-3" />
                 <h4>Filter</h4>
@@ -112,14 +119,14 @@ function Filters({
                         key={index}
                         onSelect={() => {
                           updateFilter('categoryFilter', category);
-                          setCheckedFilter(category);
+                          setCheckedCategory(category);
                         }}
                         className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
                         <p>{category}</p>
-                        {checkedFilter === category && <CheckIcon className="ml-auto" />}
+                        {checkedCategory === category && <CheckIcon className="ml-auto" />}
 
                       </DropdownMenu.Item>
                     ))}
@@ -148,14 +155,14 @@ function Filters({
                         key={index}
                         onSelect={() => {
                           updateFilter('currencyFilter', currency);
-                          setCheckedFilter(currency);
+                          setCheckedCurrency(currency);
                         }}
                         className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
                         <p>{currency}</p>
-                        {checkedFilter === currency && <CheckIcon className="ml-auto" />}
+                        {checkedCurrency === currency && <CheckIcon className="ml-auto" />}
 
                       </DropdownMenu.Item>
                     ))}
@@ -184,14 +191,14 @@ function Filters({
                         key={index}
                         onSelect={() => {
                           updateFilter('paymentMethodFilter', method.method_name);
-                          setCheckedFilter(method.method_name);
+                          setCheckedPaymentMethod(method.method_name);
                         }}
                         className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
                         <p>{method.method_name}</p>
-                        {checkedFilter === method.method_name && <CheckIcon className="ml-auto" />}
+                        {checkedPaymentMethod === method.method_name && <CheckIcon className="ml-auto" />}
 
                       </DropdownMenu.Item>
                     ))}
@@ -221,11 +228,11 @@ function Filters({
                       }`}
                       onSelect={ () => {
                         updateFilter('sharedFilter', "Personal");
-                        setCheckedFilter("Personal");
+                        setCheckedShared("Personal");
                        }}
                     >
                       <p>Personal</p>
-                      {checkedFilter === "Personal" && <CheckIcon className="ml-auto" />}
+                      {checkedShared === "Personal" && <CheckIcon className="ml-auto" />}
 
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
@@ -234,11 +241,11 @@ function Filters({
                       }`}
                       onSelect={ () => {
                         updateFilter('sharedFilter', "Shared");
-                        setCheckedFilter("Shared");
+                        setCheckedShared("Shared");
                        }}
                     >
                       <p>Shared</p>
-                      {checkedFilter === "Shared" && <CheckIcon className="ml-auto" />}
+                      {checkedShared === "Shared" && <CheckIcon className="ml-auto" />}
 
                     </DropdownMenu.Item>
                   </DropdownMenu.SubContent>

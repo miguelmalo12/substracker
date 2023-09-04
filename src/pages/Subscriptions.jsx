@@ -30,6 +30,13 @@ function Subscriptions({ menuRef }) {
 
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
   const [selectedMetric, setSelectedMetric] = useState("Average");
+  const intervalMapping = {
+    "Monthly": "Current Month",
+    "Yearly": "Current Year",
+    "Weekly": "Current Week"
+  };
+  let displayInterval = selectedMetric === "Total" ? intervalMapping[selectedInterval] : selectedInterval;
+
 
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -45,7 +52,10 @@ function Subscriptions({ menuRef }) {
   // Variables coming from Filters
   const [filters, setFilters] = useRecoilState(filtersState);
   const [filteredSubscriptions, setFilteredSubscriptions] = useState([]);
-  const [checkedFilter, setCheckedFilter] = useState(null);
+  const [checkedCategory, setCheckedCategory] = useState(null);
+  const [checkedCurrency, setCheckedCurrency] = useState(null);
+  const [checkedPaymentMethod, setCheckedPaymentMethod] = useState(null);
+  const [checkedShared, setCheckedShared] = useState(null);
 
   const [subscriptionsToRender, setSubscriptionsToRender] = useState([]);
 
@@ -124,8 +134,7 @@ function Subscriptions({ menuRef }) {
   //GET user's preferred currency
   useEffect(() => {
     const userId = user.user_id;
-    console.log("User ID:", userId);
-    console.log("User:", user);
+   
     axios
       .get(`${baseURL}/api/users/${userId}`)
       .then((response) => {
@@ -182,10 +191,15 @@ function Subscriptions({ menuRef }) {
   };
 
   // Calculates total amount in preferred currency
-  const calculateTotalAmount = async () => {
+  const calculateTotalAmount = async (subscriptionsToCalculate) => {
+    if (!Array.isArray(subscriptionsToCalculate)) {
+      console.error("subscriptionsToCalculate is not an array:", subscriptionsToCalculate);
+      return;
+    }
+    
     let total = 0;
 
-    for (let subscription of subscriptions) {
+    for (let subscription of subscriptionsToCalculate) {
       const currencyMatch = subscription.currency.match(/\((\w{3})\)/);
       if (!currencyMatch) {
         console.error("Unexpected currency format:", subscription.currency);
@@ -300,19 +314,7 @@ function Subscriptions({ menuRef }) {
     }
 
     return total;
-  };
-
-  // Recalculate total amount when interval changes
-  useEffect(() => {
-    if (selectedMetric.toLowerCase() === "total") {
-      calculateTotalForCurrentInterval(selectedInterval).then((total) => {
-        setTotalAmount(total);
-      });
-    } else if (selectedMetric.toLowerCase() === "average") {
-      // The logic I already have for average
-      calculateTotalAmount();
-    }
-  }, [subscriptions, preferredCurrency, selectedMetric, selectedInterval]);
+  }; 
 
   // Rerenders subscription list when one is deleted
   const removeSubscriptionById = (id) => {
@@ -336,11 +338,6 @@ function Subscriptions({ menuRef }) {
         return currencyCode;
     }
   };
-
-  // Recalculate total amount when subscriptions or preferred currency changes
-  useEffect(() => {
-    calculateTotalAmount();
-  }, [subscriptions, preferredCurrency]);
 
   // Applies FILTERS
   const applyFilters = (unfilteredSubscriptions) => {
@@ -384,9 +381,7 @@ function Subscriptions({ menuRef }) {
   }, [filters]);
 
   // Checks if any filter is active
-  const isAnyFilterActive = (filters) => {
-    return Object.values(filters).some(filter => filter !== null);
-  };
+  const isAnyFilterActive = Boolean(checkedCurrency || checkedPaymentMethod || checkedCategory || checkedShared);
 
   // Resets FILTERS
   const resetFilters = () => {
@@ -396,22 +391,22 @@ function Subscriptions({ menuRef }) {
       paymentMethodFilter: null,
       sharedFilter: null,
     });
-    setCheckedFilter(null);
-
+    setCheckedCategory(null);
+    setCheckedCurrency(null);
+    setCheckedPaymentMethod(null);
+    setCheckedShared(null);
   };
 
+  // This will set the subscriptions to be rendered after search / filters / sort
   const processSubscriptions = (subscriptions) => {
     let searchableSubscriptions = subscriptions.filter((subscription) =>
       subscription.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     
-    // Apply filters
     let filteredSubscriptions = applyFilters(searchableSubscriptions);
     
-    // Apply sorting criteria
     let sortedSubscriptions = sortSubscriptions(sortCriteria, filteredSubscriptions);
   
-    // Return the processed subscriptions
     return sortedSubscriptions;
   };
 
@@ -419,6 +414,19 @@ function Subscriptions({ menuRef }) {
     const processedSubscriptions = processSubscriptions(subscriptions);
     setSubscriptionsToRender(processedSubscriptions);
   }, [subscriptions, filters, sortCriteria, searchTerm]);
+  
+  // Recalculate total amount when parameters change
+  useEffect(() => {
+    const subscriptionsToUse = selectedMetric.toLowerCase() === "average" ? subscriptionsToRender : subscriptions;
+  
+    if (selectedMetric.toLowerCase() === "total") {
+      calculateTotalForCurrentInterval(selectedInterval).then((total) => {
+        setTotalAmount(total);
+      });
+    } else if (selectedMetric.toLowerCase() === "average") {
+      calculateTotalAmount(subscriptionsToUse);
+    }
+  }, [subscriptions, subscriptionsToRender, preferredCurrency, selectedMetric, selectedInterval, filters]);
 
   return (
     <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
@@ -436,6 +444,7 @@ function Subscriptions({ menuRef }) {
           selectedMetric={selectedMetric}
           setSelectedInterval={setSelectedInterval}
           setSelectedMetric={setSelectedMetric}
+          displayInterval={displayInterval}
           handleAddClick={handleAddClick}
           totalAmount={totalAmount}
           adjustTotalsToInterval={adjustTotalsToInterval}
@@ -446,8 +455,15 @@ function Subscriptions({ menuRef }) {
           updateFilter={updateFilter}
           resetFilters={resetFilters}
           setSortCriteria={setSortCriteria}
-          checkedFilter={checkedFilter}
-          setCheckedFilter={setCheckedFilter}
+          checkedCategory={checkedCategory}
+          setCheckedCategory={setCheckedCategory}
+          checkedCurrency={checkedCurrency}
+          setCheckedCurrency={setCheckedCurrency}
+          checkedPaymentMethod={checkedPaymentMethod}
+          setCheckedPaymentMethod={setCheckedPaymentMethod}
+          checkedShared={checkedShared}
+          setCheckedShared={setCheckedShared}
+          isAnyFilterActive={isAnyFilterActive}
         />
 
         {/* Menu on Mobile */}
@@ -484,7 +500,7 @@ function Subscriptions({ menuRef }) {
               <span className="text-xl">{getCurrencySymbol(preferredCurrency)}</span>
             </h1>
             <h4 className="text-medium-grey">
-              {selectedInterval} {selectedMetric}
+              {displayInterval} {selectedMetric}
             </h4>
           </div>
           <div className="mt-6 mb-6 border"></div>
@@ -494,8 +510,15 @@ function Subscriptions({ menuRef }) {
             updateFilter={updateFilter}
             resetFilters={resetFilters}
             setSortCriteria={setSortCriteria}
-            checkedFilter={checkedFilter}
-            setCheckedFilter={setCheckedFilter}
+            checkedCategory={checkedCategory}
+            setCheckedCategory={setCheckedCategory}
+            checkedCurrency={checkedCurrency}
+            setCheckedCurrency={setCheckedCurrency}
+            checkedPaymentMethod={checkedPaymentMethod}
+            setCheckedPaymentMethod={setCheckedPaymentMethod}
+            checkedShared={checkedShared}
+            setCheckedShared={setCheckedShared}
+            isAnyFilterActive={isAnyFilterActive}
           />
         </section>
 

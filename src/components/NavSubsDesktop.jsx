@@ -8,6 +8,7 @@ function NavSubsDesktop({
   selectedMetric,
   setSelectedInterval,
   setSelectedMetric,
+  displayInterval,
   handleAddClick,
   totalAmount,
   adjustTotalsToInterval,
@@ -18,8 +19,15 @@ function NavSubsDesktop({
   updateFilter,
   resetFilters,
   setSortCriteria,
-  checkedFilter,
-  setCheckedFilter,
+  checkedCategory,
+  setCheckedCategory,
+  checkedCurrency,
+  setCheckedCurrency,
+  checkedPaymentMethod,
+  setCheckedPaymentMethod,
+  checkedShared,
+  setCheckedShared,
+  isAnyFilterActive,
 }) {
 
   return (
@@ -41,8 +49,15 @@ function NavSubsDesktop({
           updateFilter={updateFilter}
           resetFilters={resetFilters}
           setSortCriteria={setSortCriteria}
-          checkedFilter={checkedFilter}
-          setCheckedFilter={setCheckedFilter}
+          checkedCategory={checkedCategory}
+          setCheckedCategory={setCheckedCategory}
+          checkedCurrency={checkedCurrency}
+          setCheckedCurrency={setCheckedCurrency}
+          checkedPaymentMethod={checkedPaymentMethod}
+          setCheckedPaymentMethod={setCheckedPaymentMethod}
+          checkedShared={checkedShared}
+          setCheckedShared={setCheckedShared}
+          isAnyFilterActive={isAnyFilterActive}
         />
         <div className="border dark:border-dark-grey"></div>
       </div>
@@ -54,8 +69,8 @@ function NavSubsDesktop({
             {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
             <span className="text-xl">{getCurrencySymbol(preferredCurrency)}</span>
           </h1>
-          <h4 className="text-xl text-medium-grey">
-            {selectedInterval} {selectedMetric}
+          <h4 className="text-lg text-medium-grey">
+            {displayInterval} {selectedMetric}
           </h4>
         </div>
         <div className="flex flex-col gap-3">
