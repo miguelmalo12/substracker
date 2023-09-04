@@ -33,6 +33,8 @@ function CardPreview({
 
   // Extracts and format currency
   const formatCurrency = (currencyString) => {
+    if (!currencyString) return '';
+    
     const match = currencyString.match(/\(([^)]+)\)/); // Extracts the value inside brackets
     if (!match) return currencyString;
 

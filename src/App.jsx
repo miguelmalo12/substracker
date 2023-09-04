@@ -47,14 +47,14 @@ function App() {
   // Gets all methods and sets them in global state
   useEffect(() => {
     axios
-      .get(`${baseURL}/api/methods/`)
+    .get(`${baseURL}/api/methods/`, { params: { user_id: user.user_id } })
       .then((response) => {
         setPaymentMethodsList(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [setPaymentMethodsList]);
+  }, [setPaymentMethodsList, user]);
 
   // Gets currency rates and sets them in global state
   useEffect(() => {

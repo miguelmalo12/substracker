@@ -133,7 +133,7 @@ function EditSubscription() {
   const handleUpdateSubscription = () => {
     setButtonClicked(true);
 
-    if (!name || !category || !nextPaymentDate || !paymentMethod) {
+    if (!name || !category || !nextPaymentDate || !recurrence || !paymentMethod) {
       return;
     }
 

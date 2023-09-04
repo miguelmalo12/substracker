@@ -329,6 +329,20 @@ function Subscriptions({ menuRef }) {
     setSorteredSubscriptions(newSubscriptions);
   };
 
+  // Converts currency 3 letter code to symbol
+  const getCurrencySymbol = (currencyCode) => {
+    switch (currencyCode) {
+      case 'CAD':
+        return 'C$';
+      case 'USD':
+        return '$';
+      case 'EUR':
+        return '€';
+      default:
+        return currencyCode;
+    }
+  };
+
   // Recalculate total amount when subscriptions or preferred currency changes
   useEffect(() => {
     calculateTotalAmount();
@@ -357,6 +371,7 @@ function Subscriptions({ menuRef }) {
           setFilteredCategory={setFilteredCategory}
           sortSubscriptions={sortSubscriptions}
           setSearchTerm={setSearchTerm}
+          getCurrencySymbol={getCurrencySymbol}
         />
 
         {/* Menu on Mobile */}
@@ -390,7 +405,7 @@ function Subscriptions({ menuRef }) {
           <div className="flex flex-col items-center">
             <h1 className="py-2 text-4xl">
               {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
-              <span className="text-xl">{preferredCurrency}</span>
+              <span className="text-xl">{getCurrencySymbol(preferredCurrency)}</span>
             </h1>
             <h4 className="text-medium-grey">
               {selectedInterval} {selectedMetric}
@@ -433,6 +448,7 @@ function Subscriptions({ menuRef }) {
                   sharedNumber={subscription.shared_with}
                   recurrence={subscription.recurrence}
                   nextPaymentDate={subscription.payment_date}
+                  reminderDays={subscription.reminder_days}
                   paymentMethod={subscription.payment_method}
                   website={subscription.website}
                   color={subscription.color}

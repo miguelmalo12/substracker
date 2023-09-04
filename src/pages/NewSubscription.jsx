@@ -59,9 +59,7 @@ function NewSubscription() {
   const [name, setName] = useState(nameFromPreviousPage || "");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState(initialCategory);
-  const [selectedCurrency, setSelectedCurrency] = useState(
-    "Canadian Dollar (CAD)"
-  );
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [sharedNumber, setSharedNumber] = useState("0");
   const [nextPaymentDate, setNextPaymentDate] = useState("");
   const [reminderDays, setReminderDays] = useState("");
@@ -87,6 +85,20 @@ function NewSubscription() {
   const handleGoBack = () => {
     navigate("/add-subscription");
   };
+
+  // Takes the preferred currrency from logged-in user to populate field
+  useEffect(() => {
+    if (user && user.preferred_currency) {
+      const preferredCurrencyFull = currencyList.find((currency) => currency.includes(`(${user.preferred_currency})`));
+      if (preferredCurrencyFull) {
+        setSelectedCurrency(preferredCurrencyFull);
+      }
+    } else {
+      setSelectedCurrency('Canadian Dollar (CAD)'); // Fallback
+    }
+  }, [user, currencyList]);
+
+  const placeholder = selectedCurrency || 'Canadian Dollar (CAD)';
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {
@@ -115,9 +127,10 @@ function NewSubscription() {
 
   // Function to POST new Subscription to database
   const handleAddSubscription = () => {
+    console.log(user)
     setButtonClicked(true);
 
-    if (!name || !category || !nextPaymentDate || !paymentMethod) {
+    if (!name || !category || !nextPaymentDate || !paymentMethod || !recurrence) {
       return;
     }
 
@@ -232,8 +245,8 @@ function NewSubscription() {
               <FieldBorder
                 title={"Currency"}
                 type={"select"}
-                value={selectedCurrency}
-                placeholder={"Canadian Dollar (CAD)"}
+                value={selectedCurrency || placeholder}
+                placeholder={placeholder}
                 options={currencyList}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
               />
@@ -290,7 +303,9 @@ function NewSubscription() {
                 {!name && <p className="text-error">Name is required.</p>}
                 {!category && <p className="text-error">Category is required.</p>}
                 {!nextPaymentDate && <p className="text-error">Next payment date is required.</p>}
+                {!recurrence && <p className="text-error">Recurrence is required.</p>}
                 {!paymentMethod && <p className="text-error">Payment Method is required.</p>}
+
               </div>
             )}
             <Button
@@ -301,7 +316,7 @@ function NewSubscription() {
 
           {/* CARD PREVIEW */}
           <section className="flex flex-col justify-center dark:text-light-grey md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center lg:items-baseline">
               {logoFromPreviousPage ? (
                 <img
                   className="w-12 h-12 mx-auto my-0 rounded-full md:mx-0 drop-shadow"

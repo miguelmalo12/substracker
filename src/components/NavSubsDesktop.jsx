@@ -16,7 +16,9 @@ function NavSubsDesktop({
   resetFilters,
   sortSubscriptions,
   setSearchTerm,
+  getCurrencySymbol,
 }) {
+
   return (
     <header className="hidden w-full gap-5 pt-3 mb-4 dark:text-light-grey md:flex">
       {/* Left Card */}
@@ -44,7 +46,7 @@ function NavSubsDesktop({
         <div className="flex flex-col">
           <h1 className="py-2 text-4xl">
             {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
-            <span className="text-xl">{preferredCurrency}</span>
+            <span className="text-xl">{getCurrencySymbol(preferredCurrency)}</span>
           </h1>
           <h4 className="text-xl text-medium-grey">
             {selectedInterval} {selectedMetric}
