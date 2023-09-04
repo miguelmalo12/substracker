@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 import { currencyRatesState } from "../state/currencyRatesState";
 import { userState } from "../state/userState";
+import { filtersState } from "../state/filtersState";
 
 import axios from "axios";
 
@@ -36,27 +37,17 @@ function Subscriptions({ menuRef }) {
   const [preferredCurrency, setPreferredCurrency] = useState("C$");
   const [totalAmount, setTotalAmount] = useState(0); // This will show the monthly average by default
 
-  // Variables coming from Filters
-  const [filteredCategory, setFilteredCategory] = useState(null);
-
   // Variables used for Sort
   const [sorteredSubscriptions, setSorteredSubscriptions] = useState([]);
+  const [sortCriteria, setSortCriteria] = useState("Due Date");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Updates local storage when user state changes
-  // useEffect(() => {
-  //   if (user) {
-  //     localStorage.setItem('userData', JSON.stringify(user));
-  //   }
-  // }, [user]);
+  // Variables coming from Filters
+  const [filters, setFilters] = useRecoilState(filtersState);
+  const [filteredSubscriptions, setFilteredSubscriptions] = useState([]);
+  const [checkedFilter, setCheckedFilter] = useState(null);
 
-  useEffect(() => {
-    setSorteredSubscriptions(
-      subscriptions.filter((subscription) =>
-        subscription.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    );
-  }, [searchTerm, subscriptions]);
+  const [subscriptionsToRender, setSubscriptionsToRender] = useState([]);
 
   const handleAddClick = () => {
     navigate("/add-subscription");
@@ -71,7 +62,7 @@ function Subscriptions({ menuRef }) {
       .then((response) => {
         if (response.data && Array.isArray(response.data.subscriptions)) {
           setSubscriptions(response.data.subscriptions);
-          setSorteredSubscriptions([...response.data.subscriptions]); // Populate sortedSubscriptions
+          setSorteredSubscriptions([...response.data.subscriptions]);
         } else {
           console.error("Unexpected data format:", response.data);
         }
@@ -91,9 +82,13 @@ function Subscriptions({ menuRef }) {
   };
 
   // SORT subscriptions by criteria selected
-  const sortSubscriptions = (criteria) => {
-    // Create a new array to trigger React update
-    let sortedSubscriptions = [...sorteredSubscriptions];
+  const sortSubscriptions = (criteria, subscriptionsToSort) => {
+    if (!Array.isArray(subscriptionsToSort)) {
+      console.error('Invalid argument: subscriptionsToSort must be an array');
+      return [];
+    }
+    
+    let sortedSubscriptions = [...subscriptionsToSort];
 
     if (criteria === "Due Date") {
       sortedSubscriptions.sort(
@@ -123,8 +118,7 @@ function Subscriptions({ menuRef }) {
       sortedSubscriptions.sort((a, b) => a.name.localeCompare(b.name));
     }
 
-    // Explicitly set the state to a new reference
-    setSorteredSubscriptions(sortedSubscriptions);
+    return sortedSubscriptions;
   };
 
   //GET user's preferred currency
@@ -348,6 +342,84 @@ function Subscriptions({ menuRef }) {
     calculateTotalAmount();
   }, [subscriptions, preferredCurrency]);
 
+  // Applies FILTERS
+  const applyFilters = (unfilteredSubscriptions) => {
+    let filteredSubscriptions = [...unfilteredSubscriptions];
+    
+    const { categoryFilter, currencyFilter, paymentMethodFilter, sharedFilter } = filters;
+  
+    if (categoryFilter) {
+      filteredSubscriptions = filteredSubscriptions.filter(sub => sub.category_name === categoryFilter);
+    }
+
+    if (currencyFilter) {
+      filteredSubscriptions = filteredSubscriptions.filter(sub => sub.currency === currencyFilter);
+    }
+
+    if (paymentMethodFilter) {
+      filteredSubscriptions = filteredSubscriptions.filter(sub => sub.payment_method === paymentMethodFilter);
+    }
+
+    if (sharedFilter) {
+      if (sharedFilter === 'Personal') {
+        filteredSubscriptions = filteredSubscriptions.filter(sub => sub.shared_with === 0);
+      } else if (sharedFilter === 'Shared') {
+        filteredSubscriptions = filteredSubscriptions.filter(sub => sub.shared_with > 0);
+      }
+    }
+    
+    return filteredSubscriptions;
+  };
+
+  const updateFilter = (filterName, newValue) => {
+    setFilters({
+      ...filters,
+      [filterName]: newValue
+    });
+  };
+
+  useEffect(() => {
+    const filtered = applyFilters(sorteredSubscriptions);
+    setFilteredSubscriptions(filtered);
+  }, [filters]);
+
+  // Checks if any filter is active
+  const isAnyFilterActive = (filters) => {
+    return Object.values(filters).some(filter => filter !== null);
+  };
+
+  // Resets FILTERS
+  const resetFilters = () => {
+    setFilters({
+      categoryFilter: null,
+      currencyFilter: null,
+      paymentMethodFilter: null,
+      sharedFilter: null,
+    });
+    setCheckedFilter(null);
+
+  };
+
+  const processSubscriptions = (subscriptions) => {
+    let searchableSubscriptions = subscriptions.filter((subscription) =>
+      subscription.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    // Apply filters
+    let filteredSubscriptions = applyFilters(searchableSubscriptions);
+    
+    // Apply sorting criteria
+    let sortedSubscriptions = sortSubscriptions(sortCriteria, filteredSubscriptions);
+  
+    // Return the processed subscriptions
+    return sortedSubscriptions;
+  };
+
+  useEffect(() => {
+    const processedSubscriptions = processSubscriptions(subscriptions);
+    setSubscriptionsToRender(processedSubscriptions);
+  }, [subscriptions, filters, sortCriteria, searchTerm]);
+
   return (
     <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
@@ -368,10 +440,14 @@ function Subscriptions({ menuRef }) {
           totalAmount={totalAmount}
           adjustTotalsToInterval={adjustTotalsToInterval}
           preferredCurrency={preferredCurrency}
-          setFilteredCategory={setFilteredCategory}
           sortSubscriptions={sortSubscriptions}
           setSearchTerm={setSearchTerm}
           getCurrencySymbol={getCurrencySymbol}
+          updateFilter={updateFilter}
+          resetFilters={resetFilters}
+          setSortCriteria={setSortCriteria}
+          checkedFilter={checkedFilter}
+          setCheckedFilter={setCheckedFilter}
         />
 
         {/* Menu on Mobile */}
@@ -413,9 +489,13 @@ function Subscriptions({ menuRef }) {
           </div>
           <div className="mt-6 mb-6 border"></div>
           <Filters
-            setFilteredCategory={setFilteredCategory}
             sortSubscriptions={sortSubscriptions}
             setSearchTerm={setSearchTerm}
+            updateFilter={updateFilter}
+            resetFilters={resetFilters}
+            setSortCriteria={setSortCriteria}
+            checkedFilter={checkedFilter}
+            setCheckedFilter={setCheckedFilter}
           />
         </section>
 
@@ -431,7 +511,7 @@ function Subscriptions({ menuRef }) {
                 gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
               }}
             >
-              {sorteredSubscriptions.map((subscription) => (
+              {subscriptionsToRender.map((subscription) => (
                 <Card
                   key={subscription.subscription_id}
                   id={subscription.subscription_id}

@@ -12,11 +12,14 @@ function NavSubsDesktop({
   totalAmount,
   adjustTotalsToInterval,
   preferredCurrency,
-  setFilteredCategory,
-  resetFilters,
   sortSubscriptions,
   setSearchTerm,
   getCurrencySymbol,
+  updateFilter,
+  resetFilters,
+  setSortCriteria,
+  checkedFilter,
+  setCheckedFilter,
 }) {
 
   return (
@@ -33,10 +36,13 @@ function NavSubsDesktop({
         </nav>
 
         <Filters
-          resetFilters={resetFilters}
-          setFilteredCategory={setFilteredCategory}
           sortSubscriptions={sortSubscriptions}
           setSearchTerm={setSearchTerm}
+          updateFilter={updateFilter}
+          resetFilters={resetFilters}
+          setSortCriteria={setSortCriteria}
+          checkedFilter={checkedFilter}
+          setCheckedFilter={setCheckedFilter}
         />
         <div className="border dark:border-dark-grey"></div>
       </div>

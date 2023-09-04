@@ -20,13 +20,17 @@ import { ReactComponent as CheckIcon } from "../assets/icons/check.svg";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Filters({
-  setFilteredCategory,
-  resetFilters,
   sortSubscriptions,
   setSearchTerm,
+  updateFilter,
+  resetFilters,
+  setSortCriteria,
+  checkedFilter,
+  setCheckedFilter,
 }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [checkedItem, setCheckedItem] = useState("Due Date"); // This is for sort dropdown
+
   const [currencyList] = useRecoilState(currencyListState);
   const categoryList = [
     "Entertainment",
@@ -64,7 +68,7 @@ function Filters({
         {/* Filter popover */}
         <div className="flex relative p-1.5 rounded items-center cursor-pointer">
           <DropdownMenu.Root>
-            <div>
+            <div className={`${checkedFilter ? 'text-primary' : ''}`}>
               <DropdownMenu.Trigger className="flex">
                 <FilterIcon className="mr-1 md:mr-3" />
                 <h4>Filter</h4>
@@ -97,9 +101,9 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
@@ -107,13 +111,16 @@ function Filters({
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          setFilteredCategory(category);
+                          updateFilter('categoryFilter', category);
+                          setCheckedFilter(category);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
                         <p>{category}</p>
+                        {checkedFilter === category && <CheckIcon className="ml-auto" />}
+
                       </DropdownMenu.Item>
                     ))}
                   </DropdownMenu.SubContent>
@@ -130,9 +137,9 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
@@ -140,14 +147,16 @@ function Filters({
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          // Handle the selection of the currency here
-                          console.log(`Selected currency: ${currency}`);
+                          updateFilter('currencyFilter', currency);
+                          setCheckedFilter(currency);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
                         <p>{currency}</p>
+                        {checkedFilter === currency && <CheckIcon className="ml-auto" />}
+
                       </DropdownMenu.Item>
                     ))}
                   </DropdownMenu.SubContent>
@@ -164,9 +173,9 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
@@ -174,14 +183,16 @@ function Filters({
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          // Handle the selection of the category here
-                          console.log(`Selected method: ${method.method_name}`);
+                          updateFilter('paymentMethodFilter', method.method_name);
+                          setCheckedFilter(method.method_name);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
                         <p>{method.method_name}</p>
+                        {checkedFilter === method.method_name && <CheckIcon className="ml-auto" />}
+
                       </DropdownMenu.Item>
                     ))}
                   </DropdownMenu.SubContent>
@@ -198,25 +209,37 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
                     <DropdownMenu.Item
-                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                         darkMode ? "hover:bg-dark !important" : ""
                       }`}
+                      onSelect={ () => {
+                        updateFilter('sharedFilter', "Personal");
+                        setCheckedFilter("Personal");
+                       }}
                     >
                       <p>Personal</p>
+                      {checkedFilter === "Personal" && <CheckIcon className="ml-auto" />}
+
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
-                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                         darkMode ? "hover:bg-dark !important" : ""
                       }`}
+                      onSelect={ () => {
+                        updateFilter('sharedFilter', "Shared");
+                        setCheckedFilter("Shared");
+                       }}
                     >
                       <p>Shared</p>
+                      {checkedFilter === "Shared" && <CheckIcon className="ml-auto" />}
+
                     </DropdownMenu.Item>
                   </DropdownMenu.SubContent>
                 </DropdownMenu.Sub>
@@ -246,6 +269,7 @@ function Filters({
                   className="flex items-center cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Due Date");
+                    setSortCriteria("Due Date");
                     sortSubscriptions("Due Date");
                   }}
                 >
@@ -261,6 +285,7 @@ function Filters({
                   className="flex items-center cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Amount");
+                    setSortCriteria("Amount");
                     sortSubscriptions("Amount");
                   }}
                 >
@@ -274,6 +299,7 @@ function Filters({
                   className="flex items-center cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Name");
+                    setSortCriteria("Name");
                     sortSubscriptions("Name");
                   }}
                 >
