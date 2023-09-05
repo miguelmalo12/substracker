@@ -1,13 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+  
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    @apply bg-white text-dark-grey;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.dark body {
+    @apply text-white bg-dark;
+}
+
+h1 {
+    @apply text-lg font-bold;
+}
+
+h2 {
+    @apply text-base font-bold;
+}
+
+h3 {
+    @apply text-base font-semibold;
+}
+
+h4 {
+    @apply text-sm font-semibold md:text-base;
+}
+
+input, select, textarea {
+    @apply transition-all border rounded border-border focus:outline-none ;
+}
+
+input::placeholder,
+textarea::placeholder {
+    @apply text-gray-300 dark:text-zinc-500;
+}
+
+.card {
+    @apply bg-white border rounded drop-shadow;
+}
+
+@media (min-width: 768px) {
+    .md\:card {
+        @apply bg-white border rounded drop-shadow;
+    }
+}
+
+.responsive-padding {
+    @apply px-6 py-4 md:px-10;
+}
+
+.responsive-margin {
+    @apply mx-6 my-4 md:my-8 md:mx-10 lg:my-12 lg:mx-16;
+}
+
+.responsive-navbar-padding {
+    @apply px-6 py-4 md:px-10;
+}
+
+@media (min-width: 768px) {
+    .responsive-navbar-padding {
+        @apply p-0; 
+    }
+}
+
+.text-primary svg {
+    color: #9145B6; 
+}
+
+.gradient-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.2));
+    pointer-events: none; /* So it won't interfere with clickable elements on the card */
+    z-index: 1;
+  }
+
+/* This is used on the subscription cards */
+.lighten-on-hover:hover {
+    filter: brightness(1.1); /* Adjust as needed; 1 is the original brightness */
 }

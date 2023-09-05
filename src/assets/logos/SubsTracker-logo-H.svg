@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 244.77 31.05">
+  <text transform="translate(50.27 27.53)" style="fill: #283a50; font-family: Lexend-Medium, Lexend; font-size: 32px; font-weight: 500;"><tspan x="0" y="0" style="letter-spacing: 0em;">Sub</tspan><tspan x="59.36" y="0" style="letter-spacing: -.05em;">s</tspan><tspan x="73.12" y="0" style="letter-spacing: -.07em;">T</tspan><tspan x="90.21" y="0" style="letter-spacing: -.03em;">r</tspan><tspan x="102.66" y="0" style="letter-spacing: -.01em;">ac</tspan><tspan x="139.81" y="0" style="letter-spacing: -.03em;">k</tspan><tspan x="157.63" y="0" style="letter-spacing: -.01em;">er</tspan></text>
+  <g>
+    <path d="m21.37,1.96l-2.59,2.59,10.86,10.86c1.57,1.57,4.14,1.88,5.87.47,1.98-1.62,2.09-4.55.33-6.31l-7.6-7.6C26.34.06,23.27.06,21.37,1.96Z" style="fill: #9045b5;"/>
+    <path d="m29.82,15.58l-11.04-11.04-4.59,4.59c-1.9,1.9-1.9,4.97,0,6.87l7.6,7.6c1.66,1.66,1.66,4.36,0,6.02l3.01-3.01,8.03-8.03,3.01-3.01c-1.66,1.66-4.36,1.66-6.02,0Z" style="fill: #b062d5;"/>
+    <path d="m9.33,1.96l-7.18,7.18c-1.9,1.9-1.9,4.97,0,6.87l13.45,13.45c1.57,1.57,4.14,1.88,5.86.47,1.98-1.62,2.09-4.55.33-6.31l-7.6-7.6c-1.9-1.9-1.9-4.97,0-6.87l4.59-4.59-2.59-2.59C14.3.06,11.23.06,9.33,1.96Zm-2.91,12.15c-.7.7-1.84.7-2.54,0-.7-.7-.7-1.84,0-2.54.7-.7,1.84-.7,2.54,0,.7.7.7,1.84,0,2.54Z" style="fill: #d080f5;"/>
+  </g>
+</svg>
