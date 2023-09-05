@@ -131,7 +131,7 @@ function Card({
                     alt="Card Logo"
                   />
                 ) : (
-                  <span className="mx-auto my-auto text-3xl md:mx-0 drop-shadow">
+                  <span className="flex items-center w-12 pl-2 text-3xl drop-shadow">
                     {imageContent}
                   </span>
                 )}
@@ -269,9 +269,10 @@ function Card({
           </div>
         </div>
       </Dialog.Trigger>
+      {/* DETAILS DIALOG */}
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black bg-opacity-30 backdrop-blur-sm animate-fade-in" />
-        <Dialog.Content className={`data-[state=open]:animate-contentShow z-20 fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-[6px] p-[25px] shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none ${darkMode ? 'text-light-grey bg-dark-grey' : 'bg-white'}`}>
+        <Dialog.Content className={`data-[state=open]:animate-contentShow z-20 fixed top-[50%] left-[50%] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded p-6 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none ${darkMode ? 'text-light-grey bg-dark-grey' : 'bg-white'}`}>
           <Dialog.Description className="mt-[10px] mb-5 text-[15px] flex flex-col gap-3 leading-normal">
             <div>
               <h2>Name</h2>

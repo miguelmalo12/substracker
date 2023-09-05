@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
+import { userState } from "../state/userState";
 import { darkModeState } from "../state/darkModeState";
 
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
@@ -16,6 +17,7 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 
 function MenuMobile({ activePage }) {
   const navigate = useNavigate();
+  const [user, setUser] = useRecoilState(userState);
   const [darkMode] = useRecoilState(darkModeState);
 
   const handleLogout = async () => {
@@ -30,6 +32,15 @@ function MenuMobile({ activePage }) {
       }
       // Clear any client-side storage here if applicable and navigate to login
       localStorage.removeItem("userToken");
+      localStorage.removeItem("userData");
+      
+      setUser({
+        user_id: null,
+        user_email: null,
+        preferred_currency: null,
+        user_password: null,
+      });
+      
       navigate("/login");
     } catch (error) {
       console.error("Failed to logout:", error);
@@ -40,7 +51,7 @@ function MenuMobile({ activePage }) {
     <div className="absolute z-10 -mt-3 dark:bg-dark-grey dark:border-dark dark:text-light-grey w-52 card">
       <div className="p-4 mb-3 border-b border-border">
         <p className="text-sm font-semibold text-medium-grey">
-          john.doe@gmail.com
+         {user?.user_email || "Not logged in"}
         </p>
       </div>
       <div className="p-4 mb-3 border-b border-border">
@@ -100,7 +111,7 @@ function MenuMobile({ activePage }) {
                 </AlertDialog.Cancel>
                 <AlertDialog.Action asChild>
                   <button
-                    onClick={handleLogout}
+                    onTouchStart={handleLogout}
                     className="inline-flex items-center justify-center w-auto px-4 py-2 text-base font-medium rounded bg-rose-100 text-error hover:bg-rose-200 focus:ring-2 focus:ring-error"
                   >
                     Logout

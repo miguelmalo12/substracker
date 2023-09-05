@@ -107,8 +107,8 @@ function Filters({
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
                     sideOffset={12}
-                    alignOffset={-5}
-                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    alignOffset={-8}
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
                         ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
@@ -145,8 +145,8 @@ function Filters({
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
                     sideOffset={12}
-                    alignOffset={-5}
-                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    alignOffset={-8}
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
                         ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
@@ -184,7 +184,7 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
                         ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
@@ -222,7 +222,7 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
                         ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
@@ -291,9 +291,9 @@ function Filters({
                   }}
                 >
                   <SortIcon />
-                  <h3 className="pl-3 font-semibold ">
+                  <h4 className="pl-3 font-semibold ">
                     Due Date
-                  </h3>
+                  </h4>
                   {checkedItem === "Due Date" && (
                     <CheckIcon className="ml-auto" />
                   )}
@@ -307,7 +307,7 @@ function Filters({
                   }}
                 >
                   <SortIcon />
-                  <h3 className="pl-3 font-semibold">Amount</h3>
+                  <h4 className="pl-3 font-semibold">Amount</h4>
                   {checkedItem === "Amount" && (
                     <CheckIcon className="ml-auto" />
                   )}
@@ -321,7 +321,7 @@ function Filters({
                   }}
                 >
                   <SortIcon />
-                  <h3 className="pl-3 font-semibold">Name</h3>
+                  <h4 className="pl-3 font-semibold">Name</h4>
                   {checkedItem === "Name" && <CheckIcon className="ml-auto" />}
                 </DropdownMenu.Item>
               </DropdownMenu.Content>

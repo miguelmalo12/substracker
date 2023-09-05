@@ -16,6 +16,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
   if (type === "select" && (!options || options.length === 0)) return null;
 
   const handleValueChange = (eventOrValue) => {
+   
     if (onChange) {
       // If it's an event (ex: a standard input like 'date' has triggered the change)
       if (eventOrValue && eventOrValue.target) {
@@ -47,7 +48,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
           onValueChange={handleValueChange}
         >
           <Select.Trigger
-            className={`inline-flex items-center justify-center h-6 gap-1 leading-none rounded cursor-pointer ${
+            className={`inline-flex items-center justify-center text-right h-6 gap-1 leading-none rounded cursor-pointer ${
               value ? "" : "text-gray-300 dark:text-zinc-500"
             }`}
           >
@@ -91,7 +92,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
       ) : type === "date" ? (
         <div className="flex-grow text-right">
           <input
-            className={`border-none dark:bg-dark-grey text-right ${
+            className={`border-none dark:bg-dark md:dark:bg-dark-grey text-right ${
               !value ? "text-gray-300 dark:text-zinc-500" : ""
             }`}
             type={type}
@@ -102,7 +103,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
         </div>
       ) : (
         <input
-          className="flex-grow text-right border-none dark:bg-dark-grey"
+          className="flex-grow text-right border-none dark:bg-dark md:dark:bg-dark-grey"
           type={type}
           value={value}
           placeholder={placeholder}

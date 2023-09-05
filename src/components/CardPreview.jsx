@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { darkModeState } from "../state/darkModeState";
 
@@ -14,7 +15,7 @@ function CardPreview({
   nextPaymentDate,
   color,
 }) {
-  const [darkMode] = useRecoilState(darkModeState);
+  const [darkMode] = useRecoilState(darkModeState);  
 
   // Converts recurrence to short form
   const formatRecurrence = (recurrence) => {

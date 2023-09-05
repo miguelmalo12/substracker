@@ -1,10 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState } from "../state/darkModeState";
 import { currencyListState } from "../state/currencyListState";
 import { paymentMethodsState } from "../state/paymentMethodsState";
 import { userState } from "../state/userState";
-        
+
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import * as Popover from "@radix-ui/react-popover";
@@ -26,6 +27,7 @@ function NewSubscription() {
   const navigate = useNavigate();
   const location = useLocation();
   const [user] = useRecoilState(userState);
+  const [darkMode] = useRecoilState(darkModeState);
   const [currencyList] = useRecoilState(currencyListState);
   const paymentMethodsList = useRecoilValue(paymentMethodsState);
 
@@ -89,16 +91,18 @@ function NewSubscription() {
   // Takes the preferred currrency from logged-in user to populate field
   useEffect(() => {
     if (user && user.preferred_currency) {
-      const preferredCurrencyFull = currencyList.find((currency) => currency.includes(`(${user.preferred_currency})`));
+      const preferredCurrencyFull = currencyList.find((currency) =>
+        currency.includes(`(${user.preferred_currency})`)
+      );
       if (preferredCurrencyFull) {
         setSelectedCurrency(preferredCurrencyFull);
       }
     } else {
-      setSelectedCurrency('Canadian Dollar (CAD)'); // Fallback
+      setSelectedCurrency("Canadian Dollar (CAD)"); // Fallback
     }
   }, [user, currencyList]);
 
-  const placeholder = selectedCurrency || 'Canadian Dollar (CAD)';
+  const placeholder = selectedCurrency || "Canadian Dollar (CAD)";
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {
@@ -127,15 +131,23 @@ function NewSubscription() {
 
   // Function to POST new Subscription to database
   const handleAddSubscription = () => {
-    console.log(user)
+    console.log(user);
     setButtonClicked(true);
 
-    if (!name || !category || !nextPaymentDate || !paymentMethod || !recurrence) {
+    if (
+      !name ||
+      !category ||
+      !nextPaymentDate ||
+      !paymentMethod ||
+      !recurrence
+    ) {
       return;
     }
 
     const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
-    const reminderDaysNumber = matchedNumber ? parseInt(matchedNumber[0]) : null;
+    const reminderDaysNumber = matchedNumber
+      ? parseInt(matchedNumber[0])
+      : null;
 
     const newSubscription = {
       user_id: user.user_id,
@@ -158,7 +170,7 @@ function NewSubscription() {
     axios
       .post(`${baseURL}/api/subscriptions/`, newSubscription, {
         withCredentials: true,
-        })
+      })
       .then((response) => {
         navigate("/subscriptions");
       })
@@ -207,7 +219,7 @@ function NewSubscription() {
 
         <main className="flex flex-col-reverse md:flex-row">
           {/* Form fields */}
-          <section className="md:card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
+          <section className="md:card md:dark:bg-dark-grey dark:bg-dark dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
             <div className="pb-6">
               <FieldBorder
                 title={"Name"}
@@ -270,7 +282,14 @@ function NewSubscription() {
                 type={"select"}
                 placeholder={"None"}
                 value={reminderDays}
-                options={["None", "1 day before", "3 days before", "5 days before", "7 days before", "10 days before"]}
+                options={[
+                  "None",
+                  "1 day before",
+                  "3 days before",
+                  "5 days before",
+                  "7 days before",
+                  "10 days before",
+                ]}
                 onChange={(e) => setReminderDays(e.target.value)}
               />
               <FieldBorder
@@ -301,11 +320,18 @@ function NewSubscription() {
             {buttonClicked && (
               <div className="pb-3 text-sm">
                 {!name && <p className="text-error">Name is required.</p>}
-                {!category && <p className="text-error">Category is required.</p>}
-                {!nextPaymentDate && <p className="text-error">Next payment date is required.</p>}
-                {!recurrence && <p className="text-error">Recurrence is required.</p>}
-                {!paymentMethod && <p className="text-error">Payment Method is required.</p>}
-
+                {!category && (
+                  <p className="text-error">Category is required.</p>
+                )}
+                {!nextPaymentDate && (
+                  <p className="text-error">Next payment date is required.</p>
+                )}
+                {!recurrence && (
+                  <p className="text-error">Recurrence is required.</p>
+                )}
+                {!paymentMethod && (
+                  <p className="text-error">Payment Method is required.</p>
+                )}
               </div>
             )}
             <Button
@@ -328,19 +354,30 @@ function NewSubscription() {
                 <div className="relative">
                   <div
                     className="mx-auto my-0 text-3xl cursor-pointer md:mx-0 emoji-placeholder"
-                    onClick={() => setShowEmojiPicker(true)}
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                   >
                     {selectedEmoji || "✏️"}{" "}
                   </div>
                   {showEmojiPicker && (
-                    <div className="absolute top-0 left-0 z-10">
+                    <div className="absolute z-10 hidden md:block md:top-0 md:left-0 ">
                       <Picker
-                      data={data}
-                      previewPosition="none"
-                      onEmojiSelect={handleEmojiClick}
-                    />
+                        data={data}
+                        previewPosition="none"
+                        theme={darkMode ? "dark" : "light"}
+                        onEmojiSelect={handleEmojiClick}
+                      />
                     </div>
                   )}
+                </div>
+              )}
+              {showEmojiPicker && (
+                <div className="absolute z-10 md:hidden md:top-0 md:left-0 ">
+                  <Picker
+                    data={data}
+                    previewPosition="none"
+                    theme={darkMode ? "dark" : "light"}
+                    onEmojiSelect={handleEmojiClick}
+                  />
                 </div>
               )}
               <div className="flex items-center justify-center">

@@ -1,11 +1,17 @@
-import React from 'react';
+import {useState} from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 const ToolTip = ({ content }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleTooltip = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <Tooltip.Provider>
-      <Tooltip.Root>
-        <Tooltip.Trigger asChild >
+      <Tooltip.Root delayDuration={0} open={isOpen} onOpenChange={setIsOpen}>
+        <Tooltip.Trigger asChild onClick={toggleTooltip}  >
           <button className="text-primary drop-shadow hover:border hover:border-primary inline-flex h-[25px] w-[25px] items-center justify-center rounded-full bg-white shadow-[0_0_3px] outline-none focus:shadow-[0_0_0_2px] focus:shadow-dark-grey">
             <p className='text-xs'>?</p>
           </button>
