@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { userState } from './state/userState';
@@ -26,6 +26,7 @@ let cachedRates = null;
 let lastFetchTime = null;
 
 function App() {
+  const [isInitialized, setIsInitialized] = useState(false);
   const [user, setUser] = useRecoilState(userState);
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
@@ -36,25 +37,39 @@ function App() {
 
   const isAuthenticated = Boolean(user.user_id && user.user_email);
 
+  const initializeDarkMode = (userData, setDarkMode) => {
+    if (userData.preferred_theme === 'Dark') {
+      setDarkMode(true);
+    } else {
+      setDarkMode(false);
+    }
+  };
+
   useEffect(() => {
-    // Check if there's user data in local storage when app initializes
     const userData = localStorage.getItem('userData');
     if (userData) {
-      setUser(JSON.parse(userData));
+      const parsedUserData = JSON.parse(userData);
+      setUser(parsedUserData);
+      initializeDarkMode(parsedUserData, setDarkMode);
     }
-  }, [setUser]);
+    setIsInitialized(true);
+  }, [setUser, setDarkMode]);
+
+  useEffect(() => {
+    console.log('Current darkMode state changed:', darkMode);
+  }, [darkMode]);
 
   // Gets all methods and sets them in global state
   useEffect(() => {
     axios
-      .get(`${baseURL}/api/methods/`)
+    .get(`${baseURL}/api/methods/`, { params: { user_id: user.user_id } })
       .then((response) => {
         setPaymentMethodsList(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [setPaymentMethodsList]);
+  }, [setPaymentMethodsList, user]);
 
   // Gets currency rates and sets them in global state
   useEffect(() => {
@@ -96,13 +111,17 @@ function App() {
     };
   }, [menuRef]);
 
+  if (!isInitialized) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Router>
       <div className={darkMode ? "dark" : ""}>
         <div className="dark:bg-dark">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login initializeDarkMode={initializeDarkMode} />} />
           <Route path="/signup" element={<Signup />} />
           { isAuthenticated ? (
               <>

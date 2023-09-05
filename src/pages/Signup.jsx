@@ -43,9 +43,23 @@ function Signup() {
     
     localStorage.removeItem('userData');
     
+    // Validate password match
     event.preventDefault();
     if (password !== repeatPassword) {
       alert("Passwords do not match!");
+      return;
+    }
+
+    // Validate email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      alert("Invalid email format!");
+      return;
+    }
+  
+    // Validate password length
+    if (password.length < 8) {
+      alert("Password must be at least 8 characters long!");
       return;
     }
 

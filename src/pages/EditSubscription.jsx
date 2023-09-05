@@ -1,9 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState } from "../state/darkModeState";
 import { currencyListState } from "../state/currencyListState";
 import { paymentMethodsState } from "../state/paymentMethodsState";
-
 
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
@@ -17,7 +17,7 @@ import NavbarDesktop from "../components/NavbarDesktop";
 import MenuDesktop from "../components/MenuDesktop";
 import FieldBorder from "../components/FieldBorder";
 import Button from "../components/Button";
-import Card from "../components/Card";
+import CardPreview from "../components/CardPreview";
 import Footer from "../components/Footer";
 
 
@@ -25,6 +25,7 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 
 function EditSubscription() {
   const navigate = useNavigate();
+  const [darkMode] = useRecoilState(darkModeState);
   const [currencyList] = useRecoilState(currencyListState);
   const { subscriptionId } = useParams();
   const paymentMethodsList = useRecoilValue(paymentMethodsState);
@@ -50,6 +51,7 @@ function EditSubscription() {
   const [selectedCurrency, setSelectedCurrency] = useState("");
   const [recurrence, setRecurrence] = useState("");
   const [nextPaymentDate, setNextPaymentDate] = useState("");
+  const [reminderDays, setReminderDays] = useState("");
   const [category, setCategory] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [website, setWebsite] = useState("");
@@ -74,6 +76,7 @@ function EditSubscription() {
           setSelectedCurrency(fetchedSubscription.currency);
           setRecurrence(capitalizeFirstLetter(fetchedSubscription.recurrence));
           setNextPaymentDate(formatDate(fetchedSubscription.payment_date));
+          setReminderDays(String(fetchedSubscription.reminder_days));
           setCategory(fetchedSubscription.category_name);
           setPaymentMethod(fetchedSubscription.payment_method);
           setWebsite(fetchedSubscription.website);
@@ -95,6 +98,7 @@ function EditSubscription() {
   const handleEmojiClick = (emoji, event) => {
     event.stopPropagation();
     setSelectedEmoji(emoji.native);
+    setLogo(emoji.native);
     setShowEmojiPicker(false);
   };
 
@@ -131,9 +135,12 @@ function EditSubscription() {
   const handleUpdateSubscription = () => {
     setButtonClicked(true);
 
-    if (!name || !category || !nextPaymentDate || !paymentMethod) {
+    if (!name || !category || !nextPaymentDate || !recurrence || !paymentMethod) {
       return;
     }
+
+    const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
+    const reminderDaysNumber = matchedNumber ? parseInt(matchedNumber[0]) : null;
 
     const updatedSubscription = {
       subscription_id: subscriptionId,
@@ -145,12 +152,12 @@ function EditSubscription() {
       currency: selectedCurrency,
       recurrence: recurrence,
       payment_date: nextPaymentDate,
+      ...(reminderDaysNumber !== null && { reminder_days: reminderDaysNumber }),
       category_name: category,
       color: color,
       logo: logo || selectedEmoji,
       shared_with: sharedNumber,
       payment_method: paymentMethod,
-      is_active: true,
       website: website,
     };
 
@@ -204,7 +211,7 @@ function EditSubscription() {
       <div className="flex-grow">
         <div className="md:flex-grow">
           {/* Nav on Mobile */}
-          <NavbarMobile content={"New Subscription"} goBack={handleGoBack} />
+          <NavbarMobile content={"Edit Subscription"} goBack={handleGoBack} />
           {/* Menu on Desktop */}
           <div className="hidden md:block">
             <MenuDesktop activePage="subscriptions" />
@@ -224,7 +231,7 @@ function EditSubscription() {
 
         <main className="flex flex-col-reverse md:flex-row">
           {/* Form fields */}
-          <section className="md:card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
+          <section className="md:card md:dark:bg-dark-grey dark:bg-dark dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
             <div className="pb-6">
               <FieldBorder
                 title={"Name"}
@@ -284,6 +291,14 @@ function EditSubscription() {
                 onChange={(e) => setNextPaymentDate(e.target.value)}
               />
               <FieldBorder
+                title={"Reminder"}
+                type={"select"}
+                placeholder={"None"}
+                value={reminderDays}
+                options={["None", "1 day before", "3 days before", "5 days before", "7 days before", "10 days before"]}
+                onChange={(e) => setReminderDays(e.target.value)}
+              />
+              <FieldBorder
                 title={"Recurrence"}
                 type={"select"}
                 placeholder={"Select Cicle"}
@@ -324,7 +339,7 @@ function EditSubscription() {
 
           {/* CARD PREVIEW */}
           <section className="flex flex-col justify-center dark:text-light-grey md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center lg:items-baseline">
               {logo && logo.startsWith("http") ? (
                 <img
                   className="w-12 h-12 mx-auto my-0 rounded-full md:mx-0 drop-shadow"
@@ -333,21 +348,34 @@ function EditSubscription() {
                 />
               ) : (
                 // Emoji selector in case there is no logo
-                <>
+                <div className="relative">
                   <div
                     className="mx-auto my-0 text-3xl cursor-pointer md:mx-0 emoji-placeholder"
-                    onClick={() => setShowEmojiPicker(true)}
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                   >
                     {selectedEmoji || "✏️"}{" "}
                   </div>
                   {showEmojiPicker && (
-                    <Picker
-                      data={data}
-                      previewPosition="none"
-                      onEmojiSelect={handleEmojiClick}
-                    />
+                    <div className="absolute z-10 hidden md:block md:top-0 md:left-0 ">
+                      <Picker
+                        data={data}
+                        previewPosition="none"
+                        theme={darkMode ? "dark" : "light"}
+                        onEmojiSelect={handleEmojiClick}
+                      />
+                    </div>
                   )}
-                </>
+                </div>
+              )}
+              {showEmojiPicker && (
+                <div className="absolute z-10 md:hidden md:top-0 md:left-0 ">
+                  <Picker
+                    data={data}
+                    previewPosition="none"
+                    theme={darkMode ? "dark" : "light"}
+                    onEmojiSelect={handleEmojiClick}
+                  />
+                </div>
               )}
               <div className="flex items-center justify-center">
                 <input
@@ -386,7 +414,7 @@ function EditSubscription() {
             <div className="flex flex-col w-full gap-2 pt-4 border-t dark:border-medium-grey">
               <h3>Card Preview</h3>
               <div className="max-w-sm">
-                <Card
+                <CardPreview
                   imageContent={logo || selectedEmoji}
                   name={name}
                   selectedCurrency={selectedCurrency}
@@ -395,7 +423,6 @@ function EditSubscription() {
                   nextPaymentDate={nextPaymentDate}
                   recurrence={recurrence}
                   color={color}
-                  notFunctional={true}
                 />
               </div>
             </div>

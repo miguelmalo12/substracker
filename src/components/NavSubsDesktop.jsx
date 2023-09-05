@@ -8,15 +8,28 @@ function NavSubsDesktop({
   selectedMetric,
   setSelectedInterval,
   setSelectedMetric,
+  displayInterval,
   handleAddClick,
   totalAmount,
   adjustTotalsToInterval,
   preferredCurrency,
-  setFilteredCategory,
-  resetFilters,
   sortSubscriptions,
   setSearchTerm,
+  getCurrencySymbol,
+  updateFilter,
+  resetFilters,
+  setSortCriteria,
+  checkedCategory,
+  setCheckedCategory,
+  checkedCurrency,
+  setCheckedCurrency,
+  checkedPaymentMethod,
+  setCheckedPaymentMethod,
+  checkedShared,
+  setCheckedShared,
+  isAnyFilterActive,
 }) {
+
   return (
     <header className="hidden w-full gap-5 pt-3 mb-4 dark:text-light-grey md:flex">
       {/* Left Card */}
@@ -31,10 +44,20 @@ function NavSubsDesktop({
         </nav>
 
         <Filters
-          resetFilters={resetFilters}
-          setFilteredCategory={setFilteredCategory}
           sortSubscriptions={sortSubscriptions}
           setSearchTerm={setSearchTerm}
+          updateFilter={updateFilter}
+          resetFilters={resetFilters}
+          setSortCriteria={setSortCriteria}
+          checkedCategory={checkedCategory}
+          setCheckedCategory={setCheckedCategory}
+          checkedCurrency={checkedCurrency}
+          setCheckedCurrency={setCheckedCurrency}
+          checkedPaymentMethod={checkedPaymentMethod}
+          setCheckedPaymentMethod={setCheckedPaymentMethod}
+          checkedShared={checkedShared}
+          setCheckedShared={setCheckedShared}
+          isAnyFilterActive={isAnyFilterActive}
         />
         <div className="border dark:border-dark-grey"></div>
       </div>
@@ -44,10 +67,10 @@ function NavSubsDesktop({
         <div className="flex flex-col">
           <h1 className="py-2 text-4xl">
             {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
-            <span className="text-xl">{preferredCurrency}</span>
+            <span className="text-xl">{getCurrencySymbol(preferredCurrency)}</span>
           </h1>
-          <h4 className="text-xl text-medium-grey">
-            {selectedInterval} {selectedMetric}
+          <h4 className="text-lg text-medium-grey">
+            {displayInterval} {selectedMetric}
           </h4>
         </div>
         <div className="flex flex-col gap-3">

@@ -20,13 +20,24 @@ import { ReactComponent as CheckIcon } from "../assets/icons/check.svg";
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Filters({
-  setFilteredCategory,
-  resetFilters,
   sortSubscriptions,
   setSearchTerm,
+  updateFilter,
+  resetFilters,
+  setSortCriteria,
+  checkedCategory,
+  setCheckedCategory,
+  checkedCurrency,
+  setCheckedCurrency,
+  checkedPaymentMethod,
+  setCheckedPaymentMethod,
+  checkedShared,
+  setCheckedShared,
+  isAnyFilterActive,
 }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [checkedItem, setCheckedItem] = useState("Due Date"); // This is for sort dropdown
+
   const [currencyList] = useRecoilState(currencyListState);
   const categoryList = [
     "Entertainment",
@@ -64,7 +75,7 @@ function Filters({
         {/* Filter popover */}
         <div className="flex relative p-1.5 rounded items-center cursor-pointer">
           <DropdownMenu.Root>
-            <div>
+            <div className={`${isAnyFilterActive ? 'text-primary' : ''}`}>
               <DropdownMenu.Trigger className="flex">
                 <FilterIcon className="mr-1 md:mr-3" />
                 <h4>Filter</h4>
@@ -96,10 +107,10 @@ function Filters({
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
                     sideOffset={12}
-                    alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    alignOffset={-8}
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
@@ -107,13 +118,18 @@ function Filters({
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          setFilteredCategory(category);
+                          updateFilter('categoryFilter', category);
+                          setCheckedCategory(category);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
-                        <p>{category}</p>
+                        <p className={checkedCategory === category ? "text-primary" : ""}>
+                          {category}
+                        </p>
+                        {checkedCategory === category && <CheckIcon className="ml-auto text-primary" />}
+
                       </DropdownMenu.Item>
                     ))}
                   </DropdownMenu.SubContent>
@@ -129,10 +145,10 @@ function Filters({
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
                     sideOffset={12}
-                    alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    alignOffset={-8}
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
@@ -140,14 +156,18 @@ function Filters({
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          // Handle the selection of the currency here
-                          console.log(`Selected currency: ${currency}`);
+                          updateFilter('currencyFilter', currency);
+                          setCheckedCurrency(currency);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
-                        <p>{currency}</p>
+                        <p className={checkedCurrency === currency ? "text-primary" : ""}>
+                          {currency}
+                        </p>
+                        {checkedCurrency === currency && <CheckIcon className="ml-auto text-primary" />}
+
                       </DropdownMenu.Item>
                     ))}
                   </DropdownMenu.SubContent>
@@ -164,9 +184,9 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
@@ -174,14 +194,18 @@ function Filters({
                       <DropdownMenu.Item
                         key={index}
                         onSelect={() => {
-                          // Handle the selection of the category here
-                          console.log(`Selected method: ${method.method_name}`);
+                          updateFilter('paymentMethodFilter', method.method_name);
+                          setCheckedPaymentMethod(method.method_name);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
-                        <p>{method.method_name}</p>
+                        <p className={checkedPaymentMethod === method.method_name ? "text-primary" : ""}>
+                          {method.method_name}
+                        </p>
+                        {checkedPaymentMethod === method.method_name && <CheckIcon className="ml-auto text-primary" />}
+
                       </DropdownMenu.Item>
                     ))}
                   </DropdownMenu.SubContent>
@@ -198,25 +222,41 @@ function Filters({
                   <DropdownMenu.SubContent
                     sideOffset={12}
                     alignOffset={-5}
-                    className={`min-w-[220px] bg-white rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
-                        ? "bg-dark-grey text-light-grey border-dark"
+                        ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
                     }`}
                   >
                     <DropdownMenu.Item
-                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                         darkMode ? "hover:bg-dark !important" : ""
                       }`}
+                      onSelect={ () => {
+                        updateFilter('sharedFilter', "Personal");
+                        setCheckedShared("Personal");
+                       }}
                     >
-                      <p>Personal</p>
+                      <p className={checkedShared === "Personal" ? "text-primary" : ""}>
+                          Personal
+                        </p>
+                      {checkedShared === "Personal" && <CheckIcon className="ml-auto text-primary" />}
+
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
-                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 ${
+                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
                         darkMode ? "hover:bg-dark !important" : ""
                       }`}
+                      onSelect={ () => {
+                        updateFilter('sharedFilter', "Shared");
+                        setCheckedShared("Shared");
+                       }}
                     >
-                      <p>Shared</p>
+                      <p className={checkedShared === "Shared" ? "text-primary" : ""}>
+                          Shared
+                        </p>
+                      {checkedShared === "Shared" && <CheckIcon className="ml-auto text-primary" />}
+
                     </DropdownMenu.Item>
                   </DropdownMenu.SubContent>
                 </DropdownMenu.Sub>
@@ -246,13 +286,14 @@ function Filters({
                   className="flex items-center cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Due Date");
+                    setSortCriteria("Due Date");
                     sortSubscriptions("Due Date");
                   }}
                 >
                   <SortIcon />
-                  <h3 className="pl-3 font-semibold ">
+                  <h4 className="pl-3 font-semibold ">
                     Due Date
-                  </h3>
+                  </h4>
                   {checkedItem === "Due Date" && (
                     <CheckIcon className="ml-auto" />
                   )}
@@ -261,11 +302,12 @@ function Filters({
                   className="flex items-center cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Amount");
+                    setSortCriteria("Amount");
                     sortSubscriptions("Amount");
                   }}
                 >
                   <SortIcon />
-                  <h3 className="pl-3 font-semibold">Amount</h3>
+                  <h4 className="pl-3 font-semibold">Amount</h4>
                   {checkedItem === "Amount" && (
                     <CheckIcon className="ml-auto" />
                   )}
@@ -274,11 +316,12 @@ function Filters({
                   className="flex items-center cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Name");
+                    setSortCriteria("Name");
                     sortSubscriptions("Name");
                   }}
                 >
                   <SortIcon />
-                  <h3 className="pl-3 font-semibold">Name</h3>
+                  <h4 className="pl-3 font-semibold">Name</h4>
                   {checkedItem === "Name" && <CheckIcon className="ml-auto" />}
                 </DropdownMenu.Item>
               </DropdownMenu.Content>

@@ -1,10 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { darkModeState } from "../state/darkModeState";
 import { currencyListState } from "../state/currencyListState";
 import { paymentMethodsState } from "../state/paymentMethodsState";
 import { userState } from "../state/userState";
-        
+
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
 import * as Popover from "@radix-ui/react-popover";
@@ -17,7 +18,7 @@ import NavbarDesktop from "../components/NavbarDesktop";
 import MenuDesktop from "../components/MenuDesktop";
 import FieldBorder from "../components/FieldBorder";
 import Button from "../components/Button";
-import Card from "../components/Card";
+import CardPreview from "../components/CardPreview";
 import Footer from "../components/Footer";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
@@ -26,6 +27,7 @@ function NewSubscription() {
   const navigate = useNavigate();
   const location = useLocation();
   const [user] = useRecoilState(userState);
+  const [darkMode] = useRecoilState(darkModeState);
   const [currencyList] = useRecoilState(currencyListState);
   const paymentMethodsList = useRecoilValue(paymentMethodsState);
 
@@ -59,12 +61,11 @@ function NewSubscription() {
   const [name, setName] = useState(nameFromPreviousPage || "");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState(initialCategory);
-  const [selectedCurrency, setSelectedCurrency] = useState(
-    "Canadian Dollar (CAD)"
-  );
+  const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [sharedNumber, setSharedNumber] = useState("0");
   const [nextPaymentDate, setNextPaymentDate] = useState("");
-  const [recurrence, setRecurrence] = useState("Monthly");
+  const [reminderDays, setReminderDays] = useState("");
+  const [recurrence, setRecurrence] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [website, setWebsite] = useState(websiteFromPreviousPage || "");
   const [color, setColor] = useState("bg-primary");
@@ -86,6 +87,22 @@ function NewSubscription() {
   const handleGoBack = () => {
     navigate("/add-subscription");
   };
+
+  // Takes the preferred currrency from logged-in user to populate field
+  useEffect(() => {
+    if (user && user.preferred_currency) {
+      const preferredCurrencyFull = currencyList.find((currency) =>
+        currency.includes(`(${user.preferred_currency})`)
+      );
+      if (preferredCurrencyFull) {
+        setSelectedCurrency(preferredCurrencyFull);
+      }
+    } else {
+      setSelectedCurrency("Canadian Dollar (CAD)"); // Fallback
+    }
+  }, [user, currencyList]);
+
+  const placeholder = selectedCurrency || "Canadian Dollar (CAD)";
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {
@@ -114,11 +131,23 @@ function NewSubscription() {
 
   // Function to POST new Subscription to database
   const handleAddSubscription = () => {
+    console.log(user);
     setButtonClicked(true);
 
-    if (!name || !category || !nextPaymentDate || !paymentMethod) {
+    if (
+      !name ||
+      !category ||
+      !nextPaymentDate ||
+      !paymentMethod ||
+      !recurrence
+    ) {
       return;
     }
+
+    const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
+    const reminderDaysNumber = matchedNumber
+      ? parseInt(matchedNumber[0])
+      : null;
 
     const newSubscription = {
       user_id: user.user_id,
@@ -129,9 +158,9 @@ function NewSubscription() {
       currency: selectedCurrency,
       recurrence: recurrence,
       payment_date: nextPaymentDate,
+      ...(reminderDaysNumber !== null && { reminder_days: reminderDaysNumber }),
       category_name: category,
       payment_method: paymentMethod,
-      is_active: true,
       website: website,
       color: color,
       shared_with: sharedNumber,
@@ -141,7 +170,7 @@ function NewSubscription() {
     axios
       .post(`${baseURL}/api/subscriptions/`, newSubscription, {
         withCredentials: true,
-        })
+      })
       .then((response) => {
         navigate("/subscriptions");
       })
@@ -190,7 +219,7 @@ function NewSubscription() {
 
         <main className="flex flex-col-reverse md:flex-row">
           {/* Form fields */}
-          <section className="md:card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
+          <section className="md:card md:dark:bg-dark-grey dark:bg-dark dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
             <div className="pb-6">
               <FieldBorder
                 title={"Name"}
@@ -228,8 +257,8 @@ function NewSubscription() {
               <FieldBorder
                 title={"Currency"}
                 type={"select"}
-                value={selectedCurrency}
-                placeholder={"Canadian Dollar (CAD)"}
+                value={selectedCurrency || placeholder}
+                placeholder={placeholder}
                 options={currencyList}
                 onChange={(e) => setSelectedCurrency(e.target.value)}
               />
@@ -247,6 +276,21 @@ function NewSubscription() {
                 placeholder={"Select Date"}
                 value={nextPaymentDate}
                 onChange={(e) => setNextPaymentDate(e.target.value)}
+              />
+              <FieldBorder
+                title={"Reminder"}
+                type={"select"}
+                placeholder={"None"}
+                value={reminderDays}
+                options={[
+                  "None",
+                  "1 day before",
+                  "3 days before",
+                  "5 days before",
+                  "7 days before",
+                  "10 days before",
+                ]}
+                onChange={(e) => setReminderDays(e.target.value)}
               />
               <FieldBorder
                 title={"Recurrence"}
@@ -276,9 +320,18 @@ function NewSubscription() {
             {buttonClicked && (
               <div className="pb-3 text-sm">
                 {!name && <p className="text-error">Name is required.</p>}
-                {!category && <p className="text-error">Category is required.</p>}
-                {!nextPaymentDate && <p className="text-error">Next payment date is required.</p>}
-                {!paymentMethod && <p className="text-error">Payment Method is required.</p>}
+                {!category && (
+                  <p className="text-error">Category is required.</p>
+                )}
+                {!nextPaymentDate && (
+                  <p className="text-error">Next payment date is required.</p>
+                )}
+                {!recurrence && (
+                  <p className="text-error">Recurrence is required.</p>
+                )}
+                {!paymentMethod && (
+                  <p className="text-error">Payment Method is required.</p>
+                )}
               </div>
             )}
             <Button
@@ -289,7 +342,7 @@ function NewSubscription() {
 
           {/* CARD PREVIEW */}
           <section className="flex flex-col justify-center dark:text-light-grey md:w-1/2 md:px-6 md:justify-normal md:items-start md:flex-col">
-            <div className="flex flex-col">
+            <div className="flex flex-col items-center lg:items-baseline">
               {logoFromPreviousPage ? (
                 <img
                   className="w-12 h-12 mx-auto my-0 rounded-full md:mx-0 drop-shadow"
@@ -298,21 +351,34 @@ function NewSubscription() {
                 />
               ) : (
                 // Emoji selector in case there is no logo
-                <>
+                <div className="relative">
                   <div
                     className="mx-auto my-0 text-3xl cursor-pointer md:mx-0 emoji-placeholder"
-                    onClick={() => setShowEmojiPicker(true)}
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
                   >
                     {selectedEmoji || "✏️"}{" "}
                   </div>
                   {showEmojiPicker && (
-                    <Picker
-                      data={data}
-                      previewPosition="none"
-                      onEmojiSelect={handleEmojiClick}
-                    />
+                    <div className="absolute z-10 hidden md:block md:top-0 md:left-0 ">
+                      <Picker
+                        data={data}
+                        previewPosition="none"
+                        theme={darkMode ? "dark" : "light"}
+                        onEmojiSelect={handleEmojiClick}
+                      />
+                    </div>
                   )}
-                </>
+                </div>
+              )}
+              {showEmojiPicker && (
+                <div className="absolute z-10 md:hidden md:top-0 md:left-0 ">
+                  <Picker
+                    data={data}
+                    previewPosition="none"
+                    theme={darkMode ? "dark" : "light"}
+                    onEmojiSelect={handleEmojiClick}
+                  />
+                </div>
               )}
               <div className="flex items-center justify-center">
                 <input
@@ -351,7 +417,7 @@ function NewSubscription() {
             <div className="flex flex-col w-full gap-2 pt-4 border-t dark:border-medium-grey">
               <h3>Card Preview</h3>
               <div className="max-w-sm">
-                <Card
+                <CardPreview
                   imageContent={logoFromPreviousPage || selectedEmoji}
                   name={name}
                   selectedCurrency={selectedCurrency}
@@ -360,7 +426,6 @@ function NewSubscription() {
                   nextPaymentDate={nextPaymentDate}
                   recurrence={recurrence}
                   color={color}
-                  notFunctional={true}
                 />
               </div>
             </div>
