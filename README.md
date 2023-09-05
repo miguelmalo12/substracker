@@ -1,70 +1,33 @@
-# Getting Started with Create React App
+# **SubsTracker 🧾**
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## **Description**
 
-## Available Scripts
+**SubsTracker** is a subscription management app designed to help you track all your recurring payments in one central location. The app is designed to simplify your subscription management, making it easy to handle your monthly expenses.
 
-In the project directory, you can run:
+**Slogan:** The Smart Way To Manage Your Subscriptions
 
-### `npm start`
+## **Features**
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. **Subscription Tracking:**
+    - Add, track, and categorize your subscriptions.
+    - Display total weekly, monthly or yearly spend average or total.
+    - Sort and filter subscriptions.
+2. **Currency Conversion:**
+    - Supports multiple currencies.
+    - Convert amounts into your preferred currency.
+3. **Split Expenses:**
+    - Keep track of shared subscriptions and contributors.
+4. **Custom Payment Methods:**
+    - Add your own Payment Methods.
+5. **Fully Responsive:**
+    - User friendly interface and experience on mobile.
+6. **Accessibility in Mind:**
+    - Dark/Light Mode implemented, as well as accessible components using Radix UI.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### **Technologies and Libraries**
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Frontend:** React.js, Tailwind, Radix UI
+- **Backend:** Node.js, Express.js
+- **Database:** MySQL
+- **Libraries:** Nodemon, React Router, Axios, CORS, Dotenv, Recoil, Emoji Mart
+- **Authentication:** Passport.js, bcrypt

@@ -40,6 +40,7 @@ module.exports = {
         '20%': '20%',
         '25%': '25%',
         '30%': '30%',
+        '86': '21.5rem', // 344px
       },
       keyframes: {
         'grow-and-fade-in': {
