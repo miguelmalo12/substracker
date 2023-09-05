@@ -15,6 +15,9 @@ import { ReactComponent as MethodIcon } from "../assets/icons/solid/usp_methods.
 import { ReactComponent as ReminderIcon } from "../assets/icons/solid/usp_reminders.svg";
 import { ReactComponent as UiIcon } from "../assets/icons/solid/usp_ui.svg";
 
+import { ReactComponent as DarkIcon } from "../assets/icons/dark_switch.svg";
+import { ReactComponent as LightIcon } from "../assets/icons/light_switch.svg";
+
 import logo from "../assets/logos/SubsTracker-logo-H.svg";
 
 // For future potential site growth
@@ -74,6 +77,17 @@ function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const user = useRecoilValue(userStateFromLocalStorage);
+
+  const [isDashboardDark, setIsDashboardDark] = useState(true);
+  const [isAddDark, setIsAddDark] = useState(true);
+
+  const toggleDashboard = () => {
+    setIsDashboardDark(!isDashboardDark);
+  };
+
+  const toggleAdd = () => {
+    setIsAddDark(!isAddDark);
+  };
 
   const scrollToDiv = (ref) => {
     const element = document.getElementById(ref);
@@ -355,7 +369,7 @@ function Home() {
       {/* INFO + MOCKUP */}
       <div className="py-16 overflow-hidden bg-white z-99 sm:py-32">
         <div className="px-6 mx-auto max-w-7xl lg:px-8">
-          <div className="grid max-w-2xl grid-cols-1 mx-auto gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+          <div className="grid items-center max-w-2xl grid-cols-1 mx-auto gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <div className="lg:pr-8">
               <div className="lg:max-w-lg">
                 <h2 className="text-base font-semibold leading-7 text-primary">
@@ -365,7 +379,8 @@ function Home() {
                   Simplify Your Recurring Payments with SubsTracker
                 </p>
                 <p className="mt-6 text-lg leading-8 text-gray-600">
-                  Effortlessly manage all your recurring payments, avoid payment surprises, and keep track of your expenses.
+                  Effortlessly manage all your recurring payments, avoid payment
+                  surprises, and keep track of your expenses.
                 </p>
                 <dl className="max-w-xl mt-10 space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
                   {features.map((feature) => (
@@ -374,7 +389,8 @@ function Home() {
                         <div className="absolute w-5 h-5 left-1 top-1 text-primary">
                           {feature.icon}
                         </div>
-                        {feature.name}<br></br>
+                        {feature.name}
+                        <br></br>
                       </dt>
                       <dd className="inline">{feature.description}</dd>
                     </div>
@@ -382,13 +398,29 @@ function Home() {
                 </dl>
               </div>
             </div>
-            <img
-              src="https://tailwindui.com/img/component-images/dark-project-app-screenshot.png"
-              alt="Product screenshot"
-              className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 transition-transform duration-300 ease-in-out z-50 hover:-translate-x-4"
-              width={2432}
-              height={1442}
-            />
+            <div className="relative">
+              <img
+                src={
+                  isDashboardDark
+                    ? "https://i.postimg.cc/C1kxTMbG/dashboard-dark.jpg"
+                    : "https://i.postimg.cc/cCG0qTt9/dashboard-light.jpg"
+                }
+                alt="Product screenshot"
+                className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 transition-transform duration-300 ease-in-out z-50 hover:-translate-x-4"
+                width={2432}
+                height={1442}
+              />
+              <div className="absolute p-1.5 bg-white rounded -top-12 right-6 drop-shadow">
+                <div className="transition-transform duration-300 ease-in-out origin-center cursor-pointer hover:scale-110 transform-gpu">
+                  {isDashboardDark ? (
+                    <LightIcon onClick={toggleDashboard} className={"scale-105"} />
+                  ) : (
+                    <DarkIcon onClick={toggleDashboard} />
+                  )}
+                </div>
+              </div>
+              
+            </div>
           </div>
         </div>
       </div>
@@ -429,7 +461,7 @@ function Home() {
 
       {/* CTA */}
       <div className="bg-white">
-        <div className="py-16 mx-auto max-w-7xl sm:px-6 sm:py-32 lg:px-8">
+        <div className="relative py-16 mx-auto max-w-7xl sm:px-6 sm:py-32 lg:px-8">
           <div className="relative px-6 pt-16 overflow-hidden bg-gray-900 shadow-2xl isolate sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
             <svg
               viewBox="0 0 1024 1024"
@@ -471,11 +503,35 @@ function Home() {
             <div className="relative mt-16 h-80 lg:mt-8">
               <img
                 className="absolute left-0 top-0 w-[57rem] max-w-none rounded-md z-100000 bg-white/5 ring-1 ring-white/10 transition-transform duration-300 ease-in-out z-50 hover:-translate-x-4"
-                src="https://tailwindui.com/img/component-images/dark-project-app-screenshot.png"
+                src={
+                  isAddDark
+                    ? "https://i.postimg.cc/gjydGRvY/add-dark.jpg"
+                    : "https://i.postimg.cc/PqB5Rvvf/add-light.jpg"
+                }
                 alt="App screenshot"
                 width={1824}
                 height={1080}
               />
+              
+            </div>
+            {/* Mobile Swtich */}
+            <div className="absolute p-1.5 bg-white rounded bottom-86 right-8 drop-shadow md:hidden">
+              <div className="transition-transform duration-300 ease-in-out origin-center cursor-pointer hover:scale-110 transform-gpu">
+                {isAddDark ? (
+                  <LightIcon onClick={toggleAdd} className="scale-105" />
+                ) : (
+                  <DarkIcon onClick={toggleAdd} />
+                )}
+              </div>
+            </div>  
+          </div>
+          <div className="absolute p-1.5 hidden bg-white rounded top-20 right-12 drop-shadow md:block">
+            <div className="transition-transform duration-300 ease-in-out origin-center cursor-pointer hover:scale-110 transform-gpu">
+              {isAddDark ? (
+                <LightIcon onClick={toggleAdd} className="scale-105" />
+              ) : (
+                <DarkIcon onClick={toggleAdd} />
+              )}
             </div>
           </div>
         </div>
