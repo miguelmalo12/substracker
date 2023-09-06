@@ -1,4 +1,4 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { darkModeState } from "../state/darkModeState";
 import { userState } from "../state/userState";
 
@@ -21,7 +21,7 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 
 function MenuDesktop({ activePage }) {
   const navigate = useNavigate();
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
   const isActive = (page) => (activePage === page ? "text-primary" : "");
   const [darkMode] = useRecoilState(darkModeState);
 

@@ -1,7 +1,3 @@
-import React, { useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { darkModeState } from "../state/darkModeState";
-
 import { ReactComponent as ChevronDown } from "../assets/icons/chevron_down.svg";
 import { ReactComponent as Shared } from "../assets/icons/users_shared.svg";
 
@@ -15,7 +11,6 @@ function CardPreview({
   nextPaymentDate,
   color,
 }) {
-  const [darkMode] = useRecoilState(darkModeState);  
 
   // Converts recurrence to short form
   const formatRecurrence = (recurrence) => {

@@ -147,8 +147,9 @@ function Signup() {
           </p>
         </div>
       </div>
-      <Footer />
-    </div>
+      <div className="mx-auto">
+        <Footer />
+      </div>    </div>
   );
 }
 

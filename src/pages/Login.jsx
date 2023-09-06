@@ -120,7 +120,9 @@ function Login({ initializeDarkMode }) {
           </p>
         </div>
       </div>
-      <Footer />
+      <div className="mx-auto">
+        <Footer />
+      </div>
     </div>
   );
 }

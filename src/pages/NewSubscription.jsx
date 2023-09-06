@@ -74,8 +74,8 @@ function NewSubscription() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Form validation
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [, setIsFormValid] = useState(false);
+  const [, setErrorMessage] = useState("");
   const [buttonClicked, setButtonClicked] = useState(false);
 
   const handleEmojiClick = (emoji, event) => {
@@ -192,7 +192,7 @@ function NewSubscription() {
 
   useEffect(() => {
     validateForm();
-  }, [name, category, nextPaymentDate, paymentMethod]);
+  }, [name, category, nextPaymentDate, paymentMethod]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="max-w-7xl md:min-h-screen md:flex md:flex-col responsive-padding md:pl-28">
