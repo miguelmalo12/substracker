@@ -38,8 +38,8 @@ function EditSubscription() {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Form validation
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [, setIsFormValid] = useState(false);
+  const [, setErrorMessage] = useState("");
   const [buttonClicked, setButtonClicked] = useState(false);
 
   // This is the info coming empty and then being edited by the get request
@@ -187,9 +187,6 @@ function EditSubscription() {
     
     return `${year}-${month}-${day}`;
   };
-  
-  // Usage:
-  const formattedDate = formatDate("2023-08-26T07:00:00.000Z"); // Output will be "2023-08-26"
 
   // Form validation
   const validateForm = () => {
@@ -204,7 +201,7 @@ function EditSubscription() {
 
   useEffect(() => {
     validateForm();
-  }, [name, category, nextPaymentDate, paymentMethod]);
+  }, [name, category, nextPaymentDate, paymentMethod]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="max-w-7xl md:min-h-screen md:flex md:flex-col responsive-padding md:pl-28">

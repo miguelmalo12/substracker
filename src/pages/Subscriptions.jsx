@@ -24,7 +24,7 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 function Subscriptions({ menuRef }) {
   const navigate = useNavigate();
   // Recoil States
-  const [user, setUser] = useRecoilState(userState);
+  const user = useRecoilValue(userState);
   const rates = useRecoilValue(currencyRatesState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
 
@@ -51,7 +51,7 @@ function Subscriptions({ menuRef }) {
 
   // Variables coming from Filters
   const [filters, setFilters] = useRecoilState(filtersState);
-  const [filteredSubscriptions, setFilteredSubscriptions] = useState([]);
+  const [, setFilteredSubscriptions] = useState([]);
   const [checkedCategory, setCheckedCategory] = useState(null);
   const [checkedCurrency, setCheckedCurrency] = useState(null);
   const [checkedPaymentMethod, setCheckedPaymentMethod] = useState(null);
@@ -378,7 +378,7 @@ function Subscriptions({ menuRef }) {
   useEffect(() => {
     const filtered = applyFilters(sorteredSubscriptions);
     setFilteredSubscriptions(filtered);
-  }, [filters]);
+  }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Checks if any filter is active
   const isAnyFilterActive = Boolean(checkedCurrency || checkedPaymentMethod || checkedCategory || checkedShared);
@@ -402,7 +402,7 @@ function Subscriptions({ menuRef }) {
     return () => {
       resetFilters();
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // This will set the subscriptions to be rendered after search / filters / sort
   const processSubscriptions = (subscriptions) => {
@@ -420,7 +420,7 @@ function Subscriptions({ menuRef }) {
   useEffect(() => {
     const processedSubscriptions = processSubscriptions(subscriptions);
     setSubscriptionsToRender(processedSubscriptions);
-  }, [subscriptions, filters, sortCriteria, searchTerm]);
+  }, [subscriptions, filters, sortCriteria, searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
   
   // Recalculate total amount when parameters change
   useEffect(() => {
@@ -433,7 +433,7 @@ function Subscriptions({ menuRef }) {
     } else if (selectedMetric.toLowerCase() === "average") {
       calculateTotalAmount(subscriptionsToUse);
     }
-  }, [subscriptions, subscriptionsToRender, preferredCurrency, selectedMetric, selectedInterval, filters]);
+  }, [subscriptions, subscriptionsToRender, preferredCurrency, selectedMetric, selectedInterval, filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">

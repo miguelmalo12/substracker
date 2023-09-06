@@ -29,7 +29,7 @@ function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [user, setUser] = useRecoilState(userState);
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
-  const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
+  const [, setMenuVisible] = useRecoilState(mobileMenuState);
   const setPaymentMethodsList = useSetRecoilState(paymentMethodsState);
   const setCurrencyRates = useSetRecoilState(currencyRatesState);
 
@@ -95,7 +95,7 @@ function App() {
     };
 
     fetchCurrencyRates();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Closes mobile menu when clicking outside of it
   useEffect(() => {
@@ -109,7 +109,7 @@ function App() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [menuRef]);
+  }, [menuRef]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isInitialized) {
     return <div>Loading...</div>;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 
 import axios from "axios";
@@ -18,7 +18,7 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 
 function AddSubscription({ menuRef }) {
   const navigate = useNavigate();
-  const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
+  const isMenuVisible = useRecoilValue(mobileMenuState);
 
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState({});

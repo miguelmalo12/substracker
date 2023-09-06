@@ -1,4 +1,4 @@
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from 'recoil';
 import { darkModeState } from "../state/darkModeState";
 
 import Tooltip from "./Tooltip";
@@ -11,7 +11,7 @@ import {
 } from "@radix-ui/react-icons";
 
 function FieldBorder({ title, type, options, value, placeholder, onChange }) {
-  const [darkMode, setDarkMode] = useRecoilState(darkModeState);
+  const darkMode = useRecoilValue(darkModeState);
 
   if (type === "select" && (!options || options.length === 0)) return null;
 

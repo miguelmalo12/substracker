@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 import { currencyListState } from "../state/currencyListState";
 import { paymentMethodsState } from "../state/paymentMethodsState";
@@ -35,7 +35,7 @@ const getCurrencyFullName = (code, currencyList) => {
 function Settings({ menuRef }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
-  const [currencyList, setCurrencyList] = useRecoilState(currencyListState);
+  const currencyList = useRecoilValue(currencyListState);
   const [userInfo, setUserInfo] = useRecoilState(userState);
   const [localCurrency, setLocalCurrency] = useState(
     userInfo.preferred_currency
@@ -48,8 +48,7 @@ function Settings({ menuRef }) {
   const [initialValuesUpdated, setInitialValuesUpdated] = useState(false);
 
   const [newPaymentMethodName, setNewPaymentMethodName] = useState("");
-  const [paymentMethods, setPaymentMethods] =
-    useRecoilState(paymentMethodsState);
+  const setPaymentMethods = useSetRecoilState(paymentMethodsState);
 
   const [originalSettings, setOriginalSettings] = useState({
     preferred_currency: userInfo.preferred_currency,
