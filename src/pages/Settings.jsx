@@ -32,7 +32,7 @@ const getCurrencyFullName = (code, currencyList) => {
   return currency || code;
 };
 
-function Settings({ menuRef }) {
+function Settings({ menuRef, setToggledByButton }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
   const currencyList = useRecoilValue(currencyListState);
@@ -60,6 +60,11 @@ function Settings({ menuRef }) {
 
   const fullCurrencyName = getCurrencyFullName(localCurrency, currencyList);
 
+  const toggleMenu = () => {
+    setToggledByButton(true);
+    setMenuVisible(!isMenuVisible);
+  };
+  
   // Initialize original settings when component renders or userInfo changes
   useEffect(() => {
     setOriginalSettings({
@@ -74,21 +79,26 @@ function Settings({ menuRef }) {
       preferred_currency: localCurrency,
       preferred_theme: localTheme,
     };
-  
+
     if (JSON.stringify(newSettings) !== JSON.stringify(originalSettings)) {
       // Update the settings via PUT request if they have changed
       axios
         .put(`${baseURL}/api/users/${userInfo.user_id}`, newSettings, {
           withCredentials: true,
         })
-        .then(response => {
+        .then((response) => {
           // Update Recoil state and local storage
-          setUserInfo({ ...userInfo, ...newSettings }); 
-          const currentLocalStorageData = JSON.parse(localStorage.getItem("userData"));
-          localStorage.setItem("userData", JSON.stringify({ ...currentLocalStorageData, ...newSettings }));
+          setUserInfo({ ...userInfo, ...newSettings });
+          const currentLocalStorageData = JSON.parse(
+            localStorage.getItem("userData")
+          );
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({ ...currentLocalStorageData, ...newSettings })
+          );
           setSettingsUpdated(true);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log("Failed to update settings:", error);
         });
     } else {
@@ -98,8 +108,8 @@ function Settings({ menuRef }) {
     setInitialTheme(localTheme);
   };
 
-   // CURRENCY Change
-   const handleCurrencyChange = (e) => {
+  // CURRENCY Change
+  const handleCurrencyChange = (e) => {
     setSettingsUpdated(false);
     const selectedFullName = e.target.value;
     const selectedCode = selectedFullName.match(/\(([^)]+)\)/)[1]; // Extracts the code between parentheses
@@ -140,8 +150,6 @@ function Settings({ menuRef }) {
       });
   };
 
-  
-
   return (
     <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
@@ -149,7 +157,7 @@ function Settings({ menuRef }) {
           {/* Nav on Mobile */}
           <NavbarMobile
             content={"Settings"}
-            toggleMenu={() => setMenuVisible(!isMenuVisible)}
+            toggleMenu={toggleMenu}
           />
 
           {/* Nav on Desktop */}
@@ -250,7 +258,11 @@ function Settings({ menuRef }) {
               </Dialog.Root>
             </div>
           </div>
-          <Button content={"Save"} onClick={handleSave} disabled={!initialValuesUpdated} />
+          <Button
+            content={"Save"}
+            onClick={handleSave}
+            disabled={!initialValuesUpdated}
+          />
           {settingsUpdated && (
             <p className="mt-4 text-center text-success">
               Settings successfully updated!

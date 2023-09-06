@@ -68,7 +68,6 @@ function Signup() {
       user_password: password,
       preferred_currency: preferredCurrency.value,
     };
-    console.log("Payload being sent:", payload);
 
     try {
       const response = await fetch(`${baseURL}/api/users/register`, {

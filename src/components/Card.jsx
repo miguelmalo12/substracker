@@ -49,7 +49,6 @@ function Card({
       );
 
       if (response.status === 200) {
-        console.log("Successfully deleted subscription:", subscriptionId);
         removeSubscriptionById(subscriptionId);
       } else {
         console.error("Error deleting subscription:", response.data);

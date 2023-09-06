@@ -21,7 +21,6 @@ function MenuMobile({ activePage }) {
   const [darkMode] = useRecoilState(darkModeState);
 
   const handleLogout = async () => {
-    console.log(`Logging out, hitting URL: ${baseURL}/api/users/logout`);
     try {
       const response = await fetch(`${baseURL}/api/users/logout`, {
         method: "POST",

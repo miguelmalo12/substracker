@@ -30,6 +30,7 @@ function App() {
   const [user, setUser] = useRecoilState(userState);
   const [darkMode, setDarkMode] = useRecoilState(darkModeState);
   const [, setMenuVisible] = useRecoilState(mobileMenuState);
+  const [toggledByButton, setToggledByButton] = useState(false);
   const setPaymentMethodsList = useSetRecoilState(paymentMethodsState);
   const setCurrencyRates = useSetRecoilState(currencyRatesState);
 
@@ -54,10 +55,6 @@ function App() {
     }
     setIsInitialized(true);
   }, [setUser, setDarkMode]);
-
-  useEffect(() => {
-    console.log('Current darkMode state changed:', darkMode);
-  }, [darkMode]);
 
   // Gets all methods and sets them in global state
   useEffect(() => {
@@ -101,15 +98,19 @@ function App() {
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setMenuVisible(false);
+        if (toggledByButton) {
+          setToggledByButton(false);
+        } else {
+          setMenuVisible(false);
+        }
       }
     }
-
+  
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [menuRef]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [menuRef, toggledByButton]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isInitialized) {
     return <div>Loading...</div>;
@@ -125,11 +126,11 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           { isAuthenticated ? (
               <>
-                <Route path="/subscriptions" element={<Subscriptions menuRef={menuRef} />}/>
-                <Route path="/add-subscription" element={<AddSubscription menuRef={menuRef}/>}/>
+                <Route path="/subscriptions" element={<Subscriptions menuRef={menuRef} setToggledByButton={setToggledByButton} />}/>
+                <Route path="/add-subscription" element={<AddSubscription />}/>
                 <Route path="/new-subscription" element={<NewSubscription />} />
                 <Route path="/edit-subscription/:subscriptionId" element={<EditSubscription />} />
-                <Route path="/settings" element={<Settings menuRef={menuRef} />} />
+                <Route path="/settings" element={<Settings menuRef={menuRef} setToggledByButton={setToggledByButton}/>} />
               </>
             ) : null }
           <Route path="*" element={<NotFound />} />

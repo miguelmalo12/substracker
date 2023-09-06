@@ -131,7 +131,6 @@ function NewSubscription() {
 
   // Function to POST new Subscription to database
   const handleAddSubscription = () => {
-    console.log(user);
     setButtonClicked(true);
 
     if (
@@ -166,7 +165,7 @@ function NewSubscription() {
       shared_with: sharedNumber,
       logo: logoFromPreviousPage || selectedEmoji,
     };
-    console.log(newSubscription);
+
     axios
       .post(`${baseURL}/api/subscriptions/`, newSubscription, {
         withCredentials: true,
