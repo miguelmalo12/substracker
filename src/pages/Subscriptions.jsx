@@ -155,12 +155,12 @@ function Subscriptions({ menuRef, setToggledByButton }) {
           setPreferredCurrency(response.data.user.preferred_currency);
         } else {
           console.error("Unexpected data format:", response.data);
-          setPreferredCurrency("C$"); // set to default
+          setPreferredCurrency("C$");
         }
       })
       .catch((error) => {
         console.error("Error fetching user:", error);
-        setPreferredCurrency("C$"); // set to default
+        setPreferredCurrency("C$");
       });
   }, [user]);
 
@@ -235,7 +235,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
         );
       }
 
-      // If the subscription is shared, divide the amount here, after currency conversion
+      // If the subscription is shared, divides the amount here, after currency conversion
       if (subscription.shared_with > 0) {
         adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
       }
@@ -319,7 +319,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
         );
       }
 
-      // If the subscription is shared, divide the amount here, after currency conversion
+      // If the subscription is shared, divides the amount here, after currency conversion
       if (subscription.shared_with > 0) {
         adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
       }

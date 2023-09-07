@@ -81,13 +81,13 @@ function Settings({ menuRef, setToggledByButton }) {
     };
 
     if (JSON.stringify(newSettings) !== JSON.stringify(originalSettings)) {
-      // Update the settings via PUT request if they have changed
+      // Updates the settings via PUT request if they have changed
       axios
         .put(`${baseURL}/api/users/${userInfo.user_id}`, newSettings, {
           withCredentials: true,
         })
         .then((response) => {
-          // Update Recoil state and local storage
+          // Updates Recoil state and local storage
           setUserInfo({ ...userInfo, ...newSettings });
           const currentLocalStorageData = JSON.parse(
             localStorage.getItem("userData")

@@ -51,7 +51,7 @@ function AddSubscription({ menuRef }) {
     axios
       .get(`${baseURL}/api/categories/`)
       .then((response) => {
-        // Transform the array to an object for easier access
+        // Transforms the array to an object for easier access
         const categoryObj = response.data.reduce((acc, category) => {
           acc[category.category_id] = category.category_name;
           return acc;
