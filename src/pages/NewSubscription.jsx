@@ -146,8 +146,9 @@ function NewSubscription() {
     const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
     const reminderDaysNumber = matchedNumber
       ? parseInt(matchedNumber[0])
-      : null;
-
+      : 0;
+    console.log("reminderDaysNumber", reminderDaysNumber);
+    console.log("sharedWith", sharedNumber);
     const newSubscription = {
       user_id: user.user_id,
       service_id: location.state?.id,
@@ -157,7 +158,7 @@ function NewSubscription() {
       currency: selectedCurrency,
       recurrence: recurrence,
       payment_date: nextPaymentDate,
-      ...(reminderDaysNumber !== null && { reminder_days: reminderDaysNumber }),
+      reminder_days: reminderDaysNumber,
       category_name: category,
       payment_method: paymentMethod,
       website: website,

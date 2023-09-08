@@ -76,7 +76,7 @@ function EditSubscription() {
           setSelectedCurrency(fetchedSubscription.currency);
           setRecurrence(capitalizeFirstLetter(fetchedSubscription.recurrence));
           setNextPaymentDate(formatDate(fetchedSubscription.payment_date));
-          setReminderDays(String(fetchedSubscription.reminder_days));
+          setReminderDays(fetchedSubscription.reminder_days);
           setCategory(fetchedSubscription.category_name);
           setPaymentMethod(fetchedSubscription.payment_method);
           setWebsite(fetchedSubscription.website);

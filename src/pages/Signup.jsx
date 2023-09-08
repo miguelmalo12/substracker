@@ -127,14 +127,18 @@ function Signup() {
             />
             <Field
               title={"Currency"}
-              type={"dropdown"}
+              type={"select"}
               options={transformedCurrencyList}
               value={preferredCurrency.value}
+              label={preferredCurrency.label} 
               onChange={(e) => {
                 const selectedCurrency = transformedCurrencyList.find(
                   (currency) => currency.value === e.target.value
                 );
-                setPreferredCurrency(selectedCurrency);
+                setPreferredCurrency({
+                  value: selectedCurrency.value,
+                  label: selectedCurrency.label,
+                });
               }}
               className="pt-0"
             />

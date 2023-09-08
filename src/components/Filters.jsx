@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState } from "../state/darkModeState";
 import { currencyListState } from "../state/currencyListState";
+import { paymentMethodsState } from "../state/paymentMethodsState";
 
 import SearchField from "./SearchField";
 
@@ -53,19 +54,19 @@ function Filters({
     "Miscellaneous",
   ];
 
-  const [paymentMethods, setPaymentMethods] = useState([]);
+  const paymentMethods = useRecoilValue(paymentMethodsState);
 
   // GETS payment methods
-  useEffect(() => {
-    axios
-      .get(`${baseURL}/api/methods/`)
-      .then((response) => {
-        setPaymentMethods(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching payment methods", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${baseURL}/api/methods/`)
+  //     .then((response) => {
+  //       setPaymentMethods(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error fetching payment methods", error);
+  //     });
+  // }, []);
 
   return (
     <div className="z-10 flex items-center justify-between pb-6 md:pb-0">

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 import { currencyRatesState } from "../state/currencyRatesState";
 import { userState } from "../state/userState";
 import { filtersState } from "../state/filtersState";
+import { subscriptionCountState } from '../state/subscriptionCountState';
 
 import axios from "axios";
 
@@ -26,6 +27,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
   // Recoil States
   const user = useRecoilValue(userState);
   const rates = useRecoilValue(currencyRatesState);
+  const setSubscriptionCount = useSetRecoilState(subscriptionCountState);
 
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
 
@@ -81,6 +83,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
         if (response.data && Array.isArray(response.data.subscriptions)) {
           setSubscriptions(response.data.subscriptions);
           setSorteredSubscriptions([...response.data.subscriptions]);
+          setSubscriptionCount(response.data.subscriptions.length);
         } else {
           console.error("Unexpected data format:", response.data);
         }
@@ -90,7 +93,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
         console.error("Error fetching subscriptions:", error);
         setLoading(false);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Caculates amount after "shared with" value; used in Card and in Sort function
   const calculateActualAmount = (amount, sharedNumber) => {

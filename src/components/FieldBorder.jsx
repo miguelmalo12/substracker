@@ -1,6 +1,8 @@
 import { useRecoilValue } from 'recoil';
 import { darkModeState } from "../state/darkModeState";
 
+import currencyIcons from "../utils/CurrencyIcons";
+
 import Tooltip from "./Tooltip";
 
 import * as Select from "@radix-ui/react-select";
@@ -22,9 +24,6 @@ import HealthIcon from "../assets/icons/categories/health&fitness.svg";
 import TelecommunicationsIcon from "../assets/icons/categories/telecommunications.svg";
 import FinanceIcon from "../assets/icons/categories/banking&finance.svg";
 import InsuranceIcon from "../assets/icons/categories/insurance.svg";
-
-// Currency Icons
-import audIcon from "../assets/icons/currencies/aud.svg";
 
 function FieldBorder({ title, type, options, value, placeholder, onChange }) {
   const darkMode = useRecoilValue(darkModeState);
@@ -56,10 +55,6 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
     "Telecommunications": <img className='w-7 h-7' src={TelecommunicationsIcon} alt="Telecommunications" />,
     "Transportation": <img className='w-7 h-7' src={TransportationIcon} alt="Transportation" />,
     "Utilities & Home Expenses": <img className='w-7 h-7' src={UtilitiesIcon} alt="Utilities & Home Expenses" />,
-  };
-
-  const currencyIcons = {
-    "Australian Dollar (AUD)": <img className='w-4 h-4' src={audIcon} alt="AUD" />,
   };
 
   return (
