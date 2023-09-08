@@ -35,8 +35,8 @@ function NotFound() {
           <div className="flex flex-col items-center content-center dark:text-light-grey md:mt-20">
             <div className="flex flex-col items-center content-center pb-6">
               <img
-                className="w-48 mb-7 md:w-72"
-                src="https://i.postimg.cc/kgBbxyjD/not-found.jpg"
+                className="w-48 mb-7 md:w-80"
+                src="https://i.postimg.cc/br3v3Tj0/not-found.png"
                 alt="Description"
               />
               <h3 className="text-center">

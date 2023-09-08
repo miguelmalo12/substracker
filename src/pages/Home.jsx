@@ -15,6 +15,9 @@ import { ReactComponent as MethodIcon } from "../assets/icons/solid/usp_methods.
 import { ReactComponent as ReminderIcon } from "../assets/icons/solid/usp_reminders.svg";
 import { ReactComponent as UiIcon } from "../assets/icons/solid/usp_ui.svg";
 
+import { ReactComponent as MobileIcon } from "../assets/icons/solid/mobile.svg";
+import { ReactComponent as MobileDashboardIcon } from "../assets/icons/solid/mobile_dashboard.svg";
+
 import { ReactComponent as DarkIcon } from "../assets/icons/dark_switch.svg";
 import { ReactComponent as LightIcon } from "../assets/icons/light_switch.svg";
 
@@ -46,6 +49,21 @@ const features = [
   },
 ];
 
+const mobileFeatures = [
+  {
+    name: "Fully Optimized for Mobile",
+    description:
+      "With SubsTracker's mobile-friendly interface, you're not confined to a desk to manage your subscriptions, giving you freedom to focus on what really matters.",
+    icon: <MobileIcon />,
+  },
+  {
+    name: "Quick View Dashboard",
+    description:
+      "Our mobile dashboard is designed for quick and easy access to all your subscriptions. Get a comprehensive view with just a swipe and a tap.",
+    icon: <MobileDashboardIcon />,
+  },
+];
+
 const usp = [
   {
     name: "All-in-One Dashboard",
@@ -68,10 +86,16 @@ const usp = [
   {
     name: "User-Friendly Interface",
     description:
-      "With a focus on user experience, SubsTracker offers a clean, intuitive, and responsive design that makes managing all your recurring payments a smooth and enjoyable process.",
+      "With a focus on user experience, SubsTracker offers a clean, intuitive, and responsive design. Whether you prefer a bright interface or the comfort of dark mode, managing all your recurring payments has never been so smooth and enjoyable.",
     icon: <UiIcon />,
   },
 ];
+
+const stats = [
+  { name: 'Save time tracking recurring payments, allowing your team to focus on more critical tasks.', value: 'Save Time' },
+  { name: 'Utilize data to make informed decisions about your company\'s subscription portfolio.', value: 'Reduce Costs' },
+  { name: 'All your global payments are converted into your preferred currency for easy expense tracking.', value: 'Simplify Multi-currency' },
+]
 
 function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -413,14 +437,121 @@ function Home() {
               <div className="absolute p-1.5 bg-white rounded -top-12 right-6 drop-shadow">
                 <div className="transition-transform duration-300 ease-in-out origin-center cursor-pointer hover:scale-110 transform-gpu">
                   {isDashboardDark ? (
-                    <LightIcon onClick={toggleDashboard} className={"scale-105"} />
+                    <LightIcon
+                      onClick={toggleDashboard}
+                      className={"scale-105"}
+                    />
                   ) : (
                     <DarkIcon onClick={toggleDashboard} />
                   )}
                 </div>
               </div>
-              
             </div>
+          </div>
+        </div>
+      </div>
+      {/* INFO + MOCKUP END */}
+
+      {/* MOBILE MOCKUP + INFO */}
+      <div className="py-16 overflow-hidden z-99 sm:py-32">
+        <div className="px-6 mx-auto max-w-7xl lg:px-2">
+          <div className="grid items-center max-w-2xl grid-cols-1 mx-auto gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+            <div className="relative order-2 lg:order-1">
+              <img
+                src="https://i.postimg.cc/VLvnr7MW/mobile-mockup.jpg"
+                alt="Product screenshot"
+                className="w-[60rem] sm:w-[60rem] md:-ml-4 lg:-ml-0 transition-transform duration-300 ease-in-out z-50 hover:-translate-x-4"
+                // width={2432}
+                // height={1442}
+              />
+            </div>
+            <div className="order-1 lg:pr-8 lg:order-2">
+              <div className="lg:max-w-lg">
+                <h2 className="text-base font-semibold leading-7 text-primary">
+                  Mobile Friendly
+                </h2>
+                <p className="mt-2 text-3xl font-bold tracking-tight text-dark-grey sm:text-4xl">
+                  Manage Your Subscriptions On The Go
+                </p>
+                <p className="mt-6 text-lg leading-8 text-gray-600">
+                  Take full control of your recurring payments, anytime,
+                  anywhere, right from the palm of your hand.{" "}
+                </p>
+                <dl className="max-w-xl mt-10 space-y-8 text-base leading-7 text-gray-600 lg:max-w-none">
+                  {mobileFeatures.map((mobileFeature) => (
+                    <div key={mobileFeature.name} className="relative pl-9">
+                      <dt className="inline font-semibold text-dark-grey">
+                        <div className="absolute w-5 h-5 left-1 top-1 text-primary">
+                          {mobileFeature.icon}
+                        </div>
+                        {mobileFeature.name}
+                        <br></br>
+                      </dt>
+                      <dd className="inline">{mobileFeature.description}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* INFO + MOCKUP END */}
+
+      <div className="relative py-24 overflow-hidden bg-gray-900 isolate sm:py-32">
+        <img
+          src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=focalpoint&fp-y=.8&w=2830&h=1500&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply"
+          alt=""
+          className="absolute inset-0 object-cover object-right w-full h-full -z-10 md:object-center"
+        />
+        <div
+          className="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl"
+          aria-hidden="true"
+        >
+          <div
+            className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#9145B6] to-[#D180F6] opacity-20"
+            style={{
+              clipPath:
+                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+            }}
+          />
+        </div>
+        <div
+          className="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu"
+          aria-hidden="true"
+        >
+          <div
+            className="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#9145B6] to-[#D180F6] opacity-20"
+            style={{
+              clipPath:
+                "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
+            }}
+          />
+        </div>
+        <div className="px-6 mx-auto max-w-7xl lg:px-8">
+          <div className="max-w-2xl mx-auto lg:mx-0">
+            <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
+              Are You a Business?
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-gray-300">
+              Whether you’re a solo entrepreneur or part of a larger
+              organization, SubsTracker can be an invaluable tool for managing
+              all your business-related recurring payments.
+            </p>
+          </div>
+          <div className="max-w-2xl mx-auto mt-10 lg:mx-0 lg:max-w-none">
+            <dl className="grid grid-cols-1 gap-8 mt-16 sm:mt-20 sm:grid-cols-2 lg:grid-cols-3">
+              {stats.map((stat) => (
+                <div key={stat.name} className="flex flex-col-reverse">
+                  <dt className="text-base leading-7 text-gray-300">
+                    {stat.name}
+                  </dt>
+                  <dd className="text-2xl font-bold leading-9 tracking-tight text-white">
+                    {stat.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
       </div>
@@ -512,7 +643,6 @@ function Home() {
                 width={1824}
                 height={1080}
               />
-              
             </div>
             {/* Mobile Swtich */}
             <div className="absolute p-1.5 bg-white rounded bottom-86 right-8 drop-shadow md:hidden">
@@ -523,7 +653,7 @@ function Home() {
                   <DarkIcon onClick={toggleAdd} />
                 )}
               </div>
-            </div>  
+            </div>
           </div>
           <div className="absolute p-1.5 hidden bg-white rounded top-20 right-12 drop-shadow md:block">
             <div className="transition-transform duration-300 ease-in-out origin-center cursor-pointer hover:scale-110 transform-gpu">
