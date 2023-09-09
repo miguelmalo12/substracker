@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState } from "../state/darkModeState";
 import { currencyListState } from "../state/currencyListState";
@@ -17,8 +16,6 @@ import { ReactComponent as PaymentIcon } from "../assets/icons/pay_method.svg";
 import { ReactComponent as SharedIcon } from "../assets/icons/users_shared.svg";
 import { ReactComponent as ChevronRight } from "../assets/icons/chevron_right.svg";
 import { ReactComponent as CheckIcon } from "../assets/icons/check.svg";
-
-const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Filters({
   sortSubscriptions,
@@ -55,18 +52,6 @@ function Filters({
   ];
 
   const paymentMethods = useRecoilValue(paymentMethodsState);
-
-  // GETS payment methods
-  // useEffect(() => {
-  //   axios
-  //     .get(`${baseURL}/api/methods/`)
-  //     .then((response) => {
-  //       setPaymentMethods(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("There was an error fetching payment methods", error);
-  //     });
-  // }, []);
 
   return (
     <div className="z-10 flex items-center justify-between pb-6 md:pb-0">
