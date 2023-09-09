@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { darkModeState } from "../state/darkModeState";
 import { currencyListState } from "../state/currencyListState";
+import { paymentMethodsState } from "../state/paymentMethodsState";
 
 import SearchField from "./SearchField";
 
@@ -53,21 +54,19 @@ function Filters({
     "Miscellaneous",
   ];
 
-  const [paymentMethods, setPaymentMethods] = useState([]);
+  const paymentMethods = useRecoilValue(paymentMethodsState);
 
   // GETS payment methods
-
-  useEffect(() => {
-    // Fetch payment methods when the component mounts
-    axios
-      .get(`${baseURL}/api/methods/`)
-      .then((response) => {
-        setPaymentMethods(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching payment methods", error);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${baseURL}/api/methods/`)
+  //     .then((response) => {
+  //       setPaymentMethods(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("There was an error fetching payment methods", error);
+  //     });
+  // }, []);
 
   return (
     <div className="z-10 flex items-center justify-between pb-6 md:pb-0">
@@ -121,14 +120,14 @@ function Filters({
                           updateFilter('categoryFilter', category);
                           setCheckedCategory(category);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-primary hover:text-white ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
-                        <p className={checkedCategory === category ? "text-primary" : ""}>
+                        <p className={checkedCategory === category ? "font-bold" : ""}>
                           {category}
                         </p>
-                        {checkedCategory === category && <CheckIcon className="ml-auto text-primary" />}
+                        {checkedCategory === category && <CheckIcon className="ml-auto" />}
 
                       </DropdownMenu.Item>
                     ))}
@@ -159,7 +158,7 @@ function Filters({
                           updateFilter('currencyFilter', currency);
                           setCheckedCurrency(currency);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-primary hover:text-white ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
@@ -197,7 +196,7 @@ function Filters({
                           updateFilter('paymentMethodFilter', method.method_name);
                           setCheckedPaymentMethod(method.method_name);
                         }}
-                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
+                        className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-primary hover:text-white ${
                           darkMode ? "hover:bg-dark !important" : ""
                         }`}
                       >
@@ -229,7 +228,7 @@ function Filters({
                     }`}
                   >
                     <DropdownMenu.Item
-                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
+                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-primary hover:text-white ${
                         darkMode ? "hover:bg-dark !important" : ""
                       }`}
                       onSelect={ () => {
@@ -244,7 +243,7 @@ function Filters({
 
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
-                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-gray-100 hover:text-dark-grey ${
+                      className={`relative flex items-center h-6 pl-6 text-sm leading-none rounded outline-none cursor-pointer select-none hover:bg-primary hover:text-white ${
                         darkMode ? "hover:bg-dark !important" : ""
                       }`}
                       onSelect={ () => {

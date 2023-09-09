@@ -1,6 +1,8 @@
 import { useRecoilValue } from 'recoil';
 import { darkModeState } from "../state/darkModeState";
 
+import currencyIcons from "../utils/CurrencyIcons";
+
 import Tooltip from "./Tooltip";
 
 import * as Select from "@radix-ui/react-select";
@@ -9,6 +11,19 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@radix-ui/react-icons";
+
+// Category icons
+import SoftwareIcon from "../assets/icons/categories/software&apps.svg";
+import TransportationIcon from "../assets/icons/categories/transportation.svg";
+import MiscellaneousIcon from "../assets/icons/categories/miscellaneous.svg";
+import EducationIcon from "../assets/icons/categories/education&learning.svg";
+import UtilitiesIcon from "../assets/icons/categories/utilities.svg";
+import FoodIcon from "../assets/icons/categories/food&beverages.svg";
+import EntertainmentIcon from "../assets/icons/categories/entertainment.svg";
+import HealthIcon from "../assets/icons/categories/health&fitness.svg";
+import TelecommunicationsIcon from "../assets/icons/categories/telecommunications.svg";
+import FinanceIcon from "../assets/icons/categories/banking&finance.svg";
+import InsuranceIcon from "../assets/icons/categories/insurance.svg";
 
 function FieldBorder({ title, type, options, value, placeholder, onChange }) {
   const darkMode = useRecoilValue(darkModeState);
@@ -26,6 +41,20 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
         onChange({ target: { value: eventOrValue } });
       }
     }
+  };
+
+  const categoryIcons = {
+    "Banking & Finance": <img className='w-7 h-7' src={FinanceIcon} alt="Banking & Finance" />,
+    "Education & Learning": <img className='w-7 h-7' src={EducationIcon} alt="Education & Learning" />,
+    "Entertainment": <img className='w-7 h-7' src={EntertainmentIcon} alt="Entertainment" />,
+    "Food & Beverages": <img className='w-7 h-7' src={FoodIcon} alt="Food & Beverages" />,
+    "Health & Fitness": <img className='w-7 h-7' src={HealthIcon} alt="Health & Fitness" />,
+    "Insurance": <img className='w-7 h-7' src={InsuranceIcon} alt="Insurance" />,
+    "Miscellaneous": <img className='w-7 h-7' src={MiscellaneousIcon} alt="Miscellaneous" />,
+    "Software & Apps": <img className='w-7 h-7' src={SoftwareIcon} alt="Software & Apps" />,
+    "Telecommunications": <img className='w-7 h-7' src={TelecommunicationsIcon} alt="Telecommunications" />,
+    "Transportation": <img className='w-7 h-7' src={TransportationIcon} alt="Transportation" />,
+    "Utilities & Home Expenses": <img className='w-7 h-7' src={UtilitiesIcon} alt="Utilities & Home Expenses" />,
   };
 
   return (
@@ -60,7 +89,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
           <Select.Portal>
             <Select.Content
               className={`overflow-hidden rounded md:-ml-12 drop-shadow ${
-                darkMode ? "bg-dark" : "bg-white"
+                darkMode ? "bg-dark-grey border border-dark drop-shadow" : "bg-white"
               }`}
             >
               <Select.ScrollUpButton className="flex items-center justify-center h-7">
@@ -71,10 +100,14 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
                   <Select.Item
                     key={index}
                     value={option}
-                    className={`relative flex items-center h-6 px-6 text-xs leading-none rounded select-none hover:bg-primary ${
+                    className={`relative dropdown-item flex items-center h-6 px-6 text-xs leading-none rounded select-none hover:bg-primary ${
                       darkMode ? "text-light-grey" : ""
-                    } hover:text-white`}
+                    } hover:text-white ${
+                      title === "Category" ? "mb-2" : ""
+                    }`}
                   >
+                    {title === "Category" && <span className="mr-2">{categoryIcons[option]}</span>}
+                    {title === "Currency" && <span className="mr-2">{currencyIcons[option]}</span>}
                     <Select.ItemText>{option}</Select.ItemText>
                     <Select.ItemIndicator className="absolute left-0 inline-flex items-center justify-center w-6 ">
                       <CheckIcon />

@@ -52,7 +52,7 @@ function CardPreview({
 
     const dateObj = new Date(date); // No need to append 'T00:00:00Z'
 
-    if (isNaN(dateObj.getTime())) return "Invalid Date"; // Return 'Invalid Date' or handle it however you want
+    if (isNaN(dateObj.getTime())) return "Invalid Date";
 
     const day = dateObj.getUTCDate();
     const month = dateObj.toLocaleString("en-US", {

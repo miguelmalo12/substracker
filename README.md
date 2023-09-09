@@ -27,7 +27,7 @@
 ### **Technologies and Libraries**
 
 - **Frontend:** React.js, Tailwind, Radix UI
-- **Backend:** Node.js, Express.js
+- **Backend:** Node.js, Express.js, Knex.js
 - **Database:** MySQL
 - **Libraries:** Nodemon, React Router, Axios, CORS, Dotenv, Recoil, Emoji Mart
 - **Authentication:** Passport.js, bcrypt

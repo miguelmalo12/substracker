@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { mobileMenuState } from "../state/mobileMenuState";
 import { currencyRatesState } from "../state/currencyRatesState";
 import { userState } from "../state/userState";
 import { filtersState } from "../state/filtersState";
+import { subscriptionCountState } from '../state/subscriptionCountState';
 
 import axios from "axios";
 
@@ -21,22 +22,26 @@ import Card from "../components/Card";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
-function Subscriptions({ menuRef }) {
+function Subscriptions({ menuRef, setToggledByButton }) {
   const navigate = useNavigate();
   // Recoil States
   const user = useRecoilValue(userState);
   const rates = useRecoilValue(currencyRatesState);
+  const setSubscriptionCount = useSetRecoilState(subscriptionCountState);
+
   const [isMenuVisible, setMenuVisible] = useRecoilState(mobileMenuState);
 
   const [selectedInterval, setSelectedInterval] = useState("Monthly");
   const [selectedMetric, setSelectedMetric] = useState("Average");
   const intervalMapping = {
-    "Monthly": "Current Month",
-    "Yearly": "Current Year",
-    "Weekly": "Current Week"
+    Monthly: "Current Month",
+    Yearly: "Current Year",
+    Weekly: "Current Week",
   };
-  let displayInterval = selectedMetric === "Total" ? intervalMapping[selectedInterval] : selectedInterval;
-
+  let displayInterval =
+    selectedMetric === "Total"
+      ? intervalMapping[selectedInterval]
+      : selectedInterval;
 
   const [subscriptions, setSubscriptions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,6 +68,11 @@ function Subscriptions({ menuRef }) {
     navigate("/add-subscription");
   };
 
+  const toggleMenu = () => {
+    setToggledByButton(true);
+    setMenuVisible(!isMenuVisible);
+  };
+
   //GET Subscriptions
   useEffect(() => {
     axios
@@ -73,6 +83,7 @@ function Subscriptions({ menuRef }) {
         if (response.data && Array.isArray(response.data.subscriptions)) {
           setSubscriptions(response.data.subscriptions);
           setSorteredSubscriptions([...response.data.subscriptions]);
+          setSubscriptionCount(response.data.subscriptions.length);
         } else {
           console.error("Unexpected data format:", response.data);
         }
@@ -82,7 +93,7 @@ function Subscriptions({ menuRef }) {
         console.error("Error fetching subscriptions:", error);
         setLoading(false);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Caculates amount after "shared with" value; used in Card and in Sort function
   const calculateActualAmount = (amount, sharedNumber) => {
@@ -92,12 +103,7 @@ function Subscriptions({ menuRef }) {
   };
 
   // SORT subscriptions by criteria selected
-  const sortSubscriptions = (criteria, subscriptionsToSort) => {
-    if (!Array.isArray(subscriptionsToSort)) {
-      console.error('Invalid argument: subscriptionsToSort must be an array');
-      return [];
-    }
-    
+  const sortSubscriptions = (criteria, subscriptionsToSort = []) => {
     let sortedSubscriptions = [...subscriptionsToSort];
 
     if (criteria === "Due Date") {
@@ -106,8 +112,14 @@ function Subscriptions({ menuRef }) {
       );
     } else if (criteria === "Amount") {
       sortedSubscriptions.sort((a, b) => {
-        const actualAmountA = calculateActualAmount(a.amount, a.shared_with);
-        const actualAmountB = calculateActualAmount(b.amount, b.shared_with);
+        const actualAmountA = adjustAmountToRecurrence(
+          calculateActualAmount(a.amount, a.shared_with),
+          a.recurrence
+        );
+        const actualAmountB = adjustAmountToRecurrence(
+          calculateActualAmount(b.amount, b.shared_with),
+          b.recurrence
+        );
 
         const convertedAmountA = convertCurrency(
           a.currency,
@@ -134,7 +146,7 @@ function Subscriptions({ menuRef }) {
   //GET user's preferred currency
   useEffect(() => {
     const userId = user.user_id;
-   
+
     axios
       .get(`${baseURL}/api/users/${userId}`)
       .then((response) => {
@@ -146,12 +158,12 @@ function Subscriptions({ menuRef }) {
           setPreferredCurrency(response.data.user.preferred_currency);
         } else {
           console.error("Unexpected data format:", response.data);
-          setPreferredCurrency("C$"); // set to default
+          setPreferredCurrency("C$");
         }
       })
       .catch((error) => {
         console.error("Error fetching user:", error);
-        setPreferredCurrency("C$"); // set to default
+        setPreferredCurrency("C$");
       });
   }, [user]);
 
@@ -169,8 +181,10 @@ function Subscriptions({ menuRef }) {
     const fromCurrencyCode = extractCurrencyCode(fromCurrency);
     const toCurrencyCode = extractCurrencyCode(toCurrency);
 
-    if (!rates[fromCurrencyCode] || !rates[toCurrencyCode]) {
-      console.error("Invalid currency");
+    if (
+      !Object.hasOwnProperty.call(rates, fromCurrencyCode) ||
+      !Object.hasOwnProperty.call(rates, toCurrencyCode)
+    ) {
       return amount; // Fallback
     }
 
@@ -193,10 +207,13 @@ function Subscriptions({ menuRef }) {
   // Calculates total amount in preferred currency
   const calculateTotalAmount = async (subscriptionsToCalculate) => {
     if (!Array.isArray(subscriptionsToCalculate)) {
-      console.error("subscriptionsToCalculate is not an array:", subscriptionsToCalculate);
+      console.error(
+        "subscriptionsToCalculate is not an array:",
+        subscriptionsToCalculate
+      );
       return;
     }
-    
+
     let total = 0;
 
     for (let subscription of subscriptionsToCalculate) {
@@ -221,7 +238,7 @@ function Subscriptions({ menuRef }) {
         );
       }
 
-      // If the subscription is shared, divide the amount here, after currency conversion
+      // If the subscription is shared, divides the amount here, after currency conversion
       if (subscription.shared_with > 0) {
         adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
       }
@@ -305,7 +322,7 @@ function Subscriptions({ menuRef }) {
         );
       }
 
-      // If the subscription is shared, divide the amount here, after currency conversion
+      // If the subscription is shared, divides the amount here, after currency conversion
       if (subscription.shared_with > 0) {
         adjustedAmount = adjustedAmount / (subscription.shared_with + 1);
       }
@@ -314,7 +331,7 @@ function Subscriptions({ menuRef }) {
     }
 
     return total;
-  }; 
+  };
 
   // Rerenders subscription list when one is deleted
   const removeSubscriptionById = (id) => {
@@ -328,12 +345,12 @@ function Subscriptions({ menuRef }) {
   // Converts currency 3 letter code to symbol
   const getCurrencySymbol = (currencyCode) => {
     switch (currencyCode) {
-      case 'CAD':
-        return 'C$';
-      case 'USD':
-        return '$';
-      case 'EUR':
-        return '€';
+      case "CAD":
+        return "C$";
+      case "USD":
+        return "$";
+      case "EUR":
+        return "€";
       default:
         return currencyCode;
     }
@@ -342,36 +359,51 @@ function Subscriptions({ menuRef }) {
   // Applies FILTERS
   const applyFilters = (unfilteredSubscriptions) => {
     let filteredSubscriptions = [...unfilteredSubscriptions];
-    
-    const { categoryFilter, currencyFilter, paymentMethodFilter, sharedFilter } = filters;
-  
+
+    const {
+      categoryFilter,
+      currencyFilter,
+      paymentMethodFilter,
+      sharedFilter,
+    } = filters;
+
     if (categoryFilter) {
-      filteredSubscriptions = filteredSubscriptions.filter(sub => sub.category_name === categoryFilter);
+      filteredSubscriptions = filteredSubscriptions.filter(
+        (sub) => sub.category_name === categoryFilter
+      );
     }
 
     if (currencyFilter) {
-      filteredSubscriptions = filteredSubscriptions.filter(sub => sub.currency === currencyFilter);
+      filteredSubscriptions = filteredSubscriptions.filter(
+        (sub) => sub.currency === currencyFilter
+      );
     }
 
     if (paymentMethodFilter) {
-      filteredSubscriptions = filteredSubscriptions.filter(sub => sub.payment_method === paymentMethodFilter);
+      filteredSubscriptions = filteredSubscriptions.filter(
+        (sub) => sub.payment_method === paymentMethodFilter
+      );
     }
 
     if (sharedFilter) {
-      if (sharedFilter === 'Personal') {
-        filteredSubscriptions = filteredSubscriptions.filter(sub => sub.shared_with === 0);
-      } else if (sharedFilter === 'Shared') {
-        filteredSubscriptions = filteredSubscriptions.filter(sub => sub.shared_with > 0);
+      if (sharedFilter === "Personal") {
+        filteredSubscriptions = filteredSubscriptions.filter(
+          (sub) => sub.shared_with === 0
+        );
+      } else if (sharedFilter === "Shared") {
+        filteredSubscriptions = filteredSubscriptions.filter(
+          (sub) => sub.shared_with > 0
+        );
       }
     }
-    
+
     return filteredSubscriptions;
   };
 
   const updateFilter = (filterName, newValue) => {
     setFilters({
       ...filters,
-      [filterName]: newValue
+      [filterName]: newValue,
     });
   };
 
@@ -381,7 +413,9 @@ function Subscriptions({ menuRef }) {
   }, [filters]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Checks if any filter is active
-  const isAnyFilterActive = Boolean(checkedCurrency || checkedPaymentMethod || checkedCategory || checkedShared);
+  const isAnyFilterActive = Boolean(
+    checkedCurrency || checkedPaymentMethod || checkedCategory || checkedShared
+  );
 
   // Resets FILTERS
   const resetFilters = () => {
@@ -409,11 +443,14 @@ function Subscriptions({ menuRef }) {
     let searchableSubscriptions = subscriptions.filter((subscription) =>
       subscription.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    
+
     let filteredSubscriptions = applyFilters(searchableSubscriptions);
-    
-    let sortedSubscriptions = sortSubscriptions(sortCriteria, filteredSubscriptions);
-  
+
+    let sortedSubscriptions = sortSubscriptions(
+      sortCriteria,
+      filteredSubscriptions
+    );
+
     return sortedSubscriptions;
   };
 
@@ -421,11 +458,14 @@ function Subscriptions({ menuRef }) {
     const processedSubscriptions = processSubscriptions(subscriptions);
     setSubscriptionsToRender(processedSubscriptions);
   }, [subscriptions, filters, sortCriteria, searchTerm]); // eslint-disable-line react-hooks/exhaustive-deps
-  
+
   // Recalculate total amount when parameters change
   useEffect(() => {
-    const subscriptionsToUse = selectedMetric.toLowerCase() === "average" ? subscriptionsToRender : subscriptions;
-  
+    const subscriptionsToUse =
+      selectedMetric.toLowerCase() === "average"
+        ? subscriptionsToRender
+        : subscriptions;
+
     if (selectedMetric.toLowerCase() === "total") {
       calculateTotalForCurrentInterval(selectedInterval).then((total) => {
         setTotalAmount(total);
@@ -439,10 +479,7 @@ function Subscriptions({ menuRef }) {
     <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
         {/* Nav on Mobile */}
-        <NavbarMobile
-          content={"Subscriptions"}
-          toggleMenu={() => setMenuVisible(!isMenuVisible)}
-        />
+        <NavbarMobile content={"Subscriptions"} toggleMenu={toggleMenu} />
 
         {/* Nav on Desktop */}
         <NavSubsDesktop
@@ -504,7 +541,9 @@ function Subscriptions({ menuRef }) {
           <div className="flex flex-col items-center">
             <h1 className="py-2 text-4xl">
               {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
-              <span className="text-xl">{getCurrencySymbol(preferredCurrency)}</span>
+              <span className="text-xl">
+                {getCurrencySymbol(preferredCurrency)}
+              </span>
             </h1>
             <h4 className="text-medium-grey">
               {displayInterval} {selectedMetric}

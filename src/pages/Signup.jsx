@@ -37,12 +37,14 @@ function Signup() {
   // POST Register User
   const handleSignup = async (event) => {
     if (user && user.user_id) {
-      alert("You're already logged in. Please log out first to create a new account.");
+      alert(
+        "You're already logged in. Please log out first to create a new account."
+      );
       return;
     }
-    
-    localStorage.removeItem('userData');
-    
+
+    localStorage.removeItem("userData");
+
     // Validate password match
     event.preventDefault();
     if (password !== repeatPassword) {
@@ -56,7 +58,7 @@ function Signup() {
       alert("Invalid email format!");
       return;
     }
-  
+
     // Validate password length
     if (password.length < 8) {
       alert("Password must be at least 8 characters long!");
@@ -68,7 +70,6 @@ function Signup() {
       user_password: password,
       preferred_currency: preferredCurrency.value,
     };
-    console.log("Payload being sent:", payload);
 
     try {
       const response = await fetch(`${baseURL}/api/users/register`, {
@@ -126,14 +127,18 @@ function Signup() {
             />
             <Field
               title={"Currency"}
-              type={"dropdown"}
+              type={"select"}
               options={transformedCurrencyList}
               value={preferredCurrency.value}
+              label={preferredCurrency.label} 
               onChange={(e) => {
                 const selectedCurrency = transformedCurrencyList.find(
                   (currency) => currency.value === e.target.value
                 );
-                setPreferredCurrency(selectedCurrency);
+                setPreferredCurrency({
+                  value: selectedCurrency.value,
+                  label: selectedCurrency.label,
+                });
               }}
               className="pt-0"
             />
@@ -141,7 +146,10 @@ function Signup() {
           </form>
           <p className="text-center">
             Already have an account?{" "}
-            <span onClick={() => navigate('/login')} className="font-bold cursor-pointer text-primary">
+            <span
+              onClick={() => navigate("/login")}
+              className="font-bold cursor-pointer text-primary"
+            >
               Login
             </span>
           </p>
@@ -149,7 +157,8 @@ function Signup() {
       </div>
       <div className="mx-auto">
         <Footer />
-      </div>    </div>
+      </div>{" "}
+    </div>
   );
 }
 

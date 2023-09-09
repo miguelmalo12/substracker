@@ -6,10 +6,6 @@ body {
     @apply bg-white text-dark-grey;
 }
 
-.dark body {
-    @apply text-white bg-dark;
-}
-
 h1 {
     @apply text-lg font-bold;
 }
@@ -63,10 +59,7 @@ textarea::placeholder {
     }
 }
 
-.text-primary svg {
-    color: #9145B6; 
-}
-
+/* This is used on the subscription cards */
 .gradient-overlay::before {
     content: "";
     position: absolute;
@@ -75,11 +68,18 @@ textarea::placeholder {
     bottom: 0;
     left: 0;
     background: linear-gradient(to right, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.2));
-    pointer-events: none; /* So it won't interfere with clickable elements on the card */
+    pointer-events: none;
     z-index: 1;
   }
 
-/* This is used on the subscription cards */
 .lighten-on-hover:hover {
-    filter: brightness(1.1); /* Adjust as needed; 1 is the original brightness */
+    filter: brightness(1.1);
 }
+
+.dropdown-item:focus-visible {
+    @apply outline-none ring-1 ring-primary;
+  }
+
+  :focus-visible {
+    @apply outline-none;
+  }
