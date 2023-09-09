@@ -106,7 +106,7 @@ function NewSubscription() {
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {
-      console.error("Invalid currencyString:", currencyString);
+      console.warn("Invalid currencyString:", currencyString);
       return "";
     }
     switch (currencyString) {
@@ -147,8 +147,7 @@ function NewSubscription() {
     const reminderDaysNumber = matchedNumber
       ? parseInt(matchedNumber[0])
       : 0;
-    console.log("reminderDaysNumber", reminderDaysNumber);
-    console.log("sharedWith", sharedNumber);
+  
     const newSubscription = {
       user_id: user.user_id,
       service_id: location.state?.id,
@@ -156,7 +155,7 @@ function NewSubscription() {
       description: description,
       amount: amount,
       currency: selectedCurrency,
-      recurrence: recurrence,
+      recurrence: recurrence.toLowerCase(),
       payment_date: nextPaymentDate,
       reminder_days: reminderDaysNumber,
       category_name: category,

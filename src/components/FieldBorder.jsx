@@ -108,6 +108,8 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
                   >
                     {title === "Category" && <span className="mr-2">{categoryIcons[option]}</span>}
                     {title === "Currency" && <span className="mr-2">{currencyIcons[option]}</span>}
+                    {title === "Preferred Currency" && <span className="mr-2">{currencyIcons[option]}</span>}
+
                     <Select.ItemText>{option}</Select.ItemText>
                     <Select.ItemIndicator className="absolute left-0 inline-flex items-center justify-center w-6 ">
                       <CheckIcon />
