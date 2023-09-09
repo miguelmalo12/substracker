@@ -108,7 +108,7 @@ function EditSubscription() {
 
   const getCurrencySymbol = (currencyString) => {
     if (typeof currencyString !== "string") {
-      console.error("Invalid currencyString:", currencyString);
+      console.warn("Invalid currencyString:", currencyString);
       return "";
     }
     switch (currencyString) {
@@ -139,7 +139,7 @@ function EditSubscription() {
       return;
     }
 
-    const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
+    const matchedNumber = reminderDays ? String(reminderDays).match(/\d+/) : null;
     const reminderDaysNumber = matchedNumber ? parseInt(matchedNumber[0]) : null;
 
     const updatedSubscription = {
@@ -150,7 +150,7 @@ function EditSubscription() {
       description: description,
       amount: amount,
       currency: selectedCurrency,
-      recurrence: recurrence,
+      recurrence: recurrence.toLowerCase(),
       payment_date: nextPaymentDate,
       ...(reminderDaysNumber !== null && { reminder_days: reminderDaysNumber }),
       category_name: category,
