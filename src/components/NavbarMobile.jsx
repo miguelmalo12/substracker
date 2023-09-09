@@ -1,7 +1,6 @@
 import { ReactComponent as BurgerMenu } from "../assets/icons/burger_menu.svg";
 import { ReactComponent as LeftArrow } from "../assets/icons/left_arrow.svg";
 
-
 function NavbarMobile({ content, toggleMenu, goBack }) {
   return (
     <header className="mb-4 md:hidden dark:text-light-grey">

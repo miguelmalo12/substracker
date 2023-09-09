@@ -37,7 +37,7 @@ function Navbar({ content }) {
           </div>{" "}
           <div></div>
         </nav>
-        <div className="mt-2 mb-8 border"></div>
+        <div className="mt-2 mb-8 border dark:border-t-0 dark:border-medium-grey"></div>
       </div>
     </header>
   );

@@ -76,7 +76,7 @@ function EditSubscription() {
           setSelectedCurrency(fetchedSubscription.currency);
           setRecurrence(capitalizeFirstLetter(fetchedSubscription.recurrence));
           setNextPaymentDate(formatDate(fetchedSubscription.payment_date));
-          setReminderDays(String(fetchedSubscription.reminder_days));
+          setReminderDays(fetchedSubscription.reminder_days);
           setCategory(fetchedSubscription.category_name);
           setPaymentMethod(fetchedSubscription.payment_method);
           setWebsite(fetchedSubscription.website);
@@ -182,7 +182,7 @@ function EditSubscription() {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-indexed in JS
+    const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     
     return `${year}-${month}-${day}`;
