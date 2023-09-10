@@ -8,11 +8,13 @@ import Navbar from "../components/Navbar";
 import Field from "../components/Field";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Signup() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useRecoilState(userState);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,8 +45,6 @@ function Signup() {
       return;
     }
 
-    localStorage.removeItem("userData");
-
     // Validate password match
     event.preventDefault();
     if (password !== repeatPassword) {
@@ -64,6 +64,9 @@ function Signup() {
       alert("Password must be at least 8 characters long!");
       return;
     }
+
+    setIsLoading(true);
+    localStorage.removeItem("userData");
 
     const payload = {
       user_email: email,
@@ -92,6 +95,8 @@ function Signup() {
     } catch (error) {
       console.error("There was a problem with the signup:", error);
       alert("There was a problem with the signup.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -144,6 +149,7 @@ function Signup() {
             />
             <Button content={"Signup"} onClick={handleSignup} />
           </form>
+          {isLoading && <Loader inline={"inline"} />}
           <p className="text-center">
             Already have an account?{" "}
             <span

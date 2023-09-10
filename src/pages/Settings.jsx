@@ -150,7 +150,6 @@ function Settings({ menuRef, setToggledByButton }) {
         withCredentials: true,
       })
       .then((response) => {
-        console.log(response.data)
         setMethodAdded(true);
         const addedMethod = { ...newPaymentMethod, payment_method_id: response.data.payment_method_id };
         setPaymentMethods((prevMethods) => [...prevMethods, addedMethod]);
