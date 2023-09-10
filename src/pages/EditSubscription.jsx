@@ -43,7 +43,7 @@ function EditSubscription() {
   const [buttonClicked, setButtonClicked] = useState(false);
 
   // This is the info coming empty and then being edited by the get request
-  const [userId, setUserId] = useState("");
+  const [, setUserId] = useState("");
   const [serviceId, setServiceId] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -61,8 +61,22 @@ function EditSubscription() {
 
   // Function to GET subscription data from database
   useEffect(() => {
+    const userDataJSON = localStorage.getItem('userData');
+    if (!userDataJSON) {
+      console.error("User data is missing from localStorage");
+      return;
+    }
+
+    const userData = JSON.parse(userDataJSON);
+    const userId = userData.user_id;
+    if (!userId) {
+      console.error("User ID is missing from userData in localStorage");
+      return;
+    }
+    
     if (subscriptionId) {
     axios.get(`${baseURL}/api/subscriptions/${subscriptionId}`, {
+      params: { user_id: userId },
       withCredentials: true,
     })
         .then((response) => {
@@ -141,6 +155,19 @@ function EditSubscription() {
 
     const matchedNumber = reminderDays ? String(reminderDays).match(/\d+/) : null;
     const reminderDaysNumber = matchedNumber ? parseInt(matchedNumber[0]) : null;
+
+    const userDataJSON = localStorage.getItem('userData'); 
+    if (!userDataJSON) {
+      console.error("User data is missing from localStorage");
+      return;
+    }
+
+    const userData = JSON.parse(userDataJSON);
+    const userId = userData.user_id;
+    if (!userId) {
+      console.error("User ID is missing from userData in localStorage");
+      return;
+    }
 
     const updatedSubscription = {
       subscription_id: subscriptionId,
