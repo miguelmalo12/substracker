@@ -75,8 +75,24 @@ function Subscriptions({ menuRef, setToggledByButton }) {
 
   //GET Subscriptions
   useEffect(() => {
+    const userDataJSON = localStorage.getItem('userData');
+    if (!userDataJSON) {
+      console.error("User ID is missing from localStorage");
+      return;
+    }
+
+    const userData = JSON.parse(userDataJSON);
+    const userId = userData.user_id;
+    if (!userId) {
+      console.error("User ID is missing from userData in localStorage");
+      return;
+    }
+
     axios
       .get(`${baseURL}/api/subscriptions/`, {
+        params: {
+          user_id: userId
+        },
         withCredentials: true,
       })
       .then((response) => {
