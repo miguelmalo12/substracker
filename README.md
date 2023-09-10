@@ -1,4 +1,5 @@
 # **SubsTracker 🧾**
+https://substracker.netlify.app/
 
 ## **Description**
 
@@ -28,6 +29,7 @@
 
 - **Frontend:** React.js, Tailwind, Radix UI
 - **Backend:** Node.js, Express.js, Knex.js
-- **Database:** MySQL
+- **Database:** PostgreSQL
 - **Libraries:** Nodemon, React Router, Axios, CORS, Dotenv, Recoil, Emoji Mart
 - **Authentication:** Passport.js, bcrypt
+- **Deployment:** Frontend: Netlify / Backend: Render

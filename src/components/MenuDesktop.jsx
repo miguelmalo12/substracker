@@ -22,6 +22,7 @@ const baseURL = process.env.REACT_APP_BASE_URL;
 function MenuDesktop({ activePage }) {
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userState);
+
   const isActive = (page) => (activePage === page ? "text-primary" : "");
   const [darkMode] = useRecoilState(darkModeState);
 
