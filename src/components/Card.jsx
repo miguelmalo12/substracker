@@ -42,10 +42,26 @@ function Card({
 
   // DELETE Method
   const deleteSubscription = async (subscriptionId) => {
+    const userDataJSON = localStorage.getItem('userData'); 
+    if (!userDataJSON) {
+      console.error("User data is missing from localStorage");
+      return;
+    }
+  
+    const userData = JSON.parse(userDataJSON);
+    const userId = userData.user_id;
+    if (!userId) {
+      console.error("User ID is missing from userData in localStorage");
+      return;
+    }
+    
     try {
       const response = await axios.delete(
         `${baseURL}/api/subscriptions/${subscriptionId}`,
-        { withCredentials: true }
+        {
+          params: { user_id: userId },
+          withCredentials: true
+        }
       );
 
       if (response.status === 200) {
