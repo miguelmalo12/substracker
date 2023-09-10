@@ -8,11 +8,13 @@ import Navbar from "../components/Navbar";
 import Field from "../components/Field";
 import Button from "../components/Button";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function Login({ initializeDarkMode }) {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const user = useRecoilValue(userState);
   const [password, setPassword] = useState("");
@@ -21,6 +23,7 @@ function Login({ initializeDarkMode }) {
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    setIsLoading(true);
 
     const payload = {
       email,
@@ -57,6 +60,8 @@ function Login({ initializeDarkMode }) {
     } catch (error) {
       console.error("There was a problem with the login:", error);
       alert("There was a problem with the login.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,6 +114,8 @@ function Login({ initializeDarkMode }) {
             />
             <Button content={"Login"} onClick={handleLogin} />
           </form>
+          {isLoading && <Loader inline={"inline"} />}
+
           <p className="text-center">
             Don't have an account?{" "}
             <span

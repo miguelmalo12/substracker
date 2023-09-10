@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
-import { userStateFromLocalStorage } from "../state/userState";
+import { useRecoilState } from "recoil";
+import { userState } from "../state/userState";
 
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -100,7 +100,7 @@ const stats = [
 function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const user = useRecoilValue(userStateFromLocalStorage);
+  const [user, setUser] = useRecoilState(userState);
 
   const [isDashboardDark, setIsDashboardDark] = useState(true);
   const [isAddDark, setIsAddDark] = useState(true);
@@ -119,6 +119,21 @@ function Home() {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  // Reads local storage to make sure to show login option or not
+  useEffect(() => {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    } else {
+      setUser({
+        user_id: null,
+        user_email: null,
+        preferred_currency: null,
+        user_password: null,
+      });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <main>
