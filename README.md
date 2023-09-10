@@ -1,5 +1,6 @@
 # **SubsTracker 🧾**
 https://substracker.netlify.app/
+by Miguel Malo
 
 ## **Description**
 
@@ -33,3 +34,4 @@ https://substracker.netlify.app/
 - **Libraries:** Nodemon, React Router, Axios, CORS, Dotenv, Recoil, Emoji Mart
 - **Authentication:** Passport.js, bcrypt
 - **Deployment:** Frontend: Netlify / Backend: Render
+- **Design:** Figma
