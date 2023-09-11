@@ -15,7 +15,7 @@ import Switch from "./Switch";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
-function MenuMobile({ activePage }) {
+function MenuMobile({ activePage, toggleMenu }) {
   const navigate = useNavigate();
   const [user, setUser] = useRecoilState(userState);
   const [darkMode] = useRecoilState(darkModeState);
@@ -46,6 +46,12 @@ function MenuMobile({ activePage }) {
     }
   };
 
+  // Close menu when navigating to another page
+  const handleNavigation = (path) => {
+    navigate(path);
+    toggleMenu();
+  };
+
   return (
     <div className="absolute z-10 -mt-3 dark:bg-dark-grey dark:border-dark dark:text-light-grey w-52 card">
       <div className="p-4 mb-3 border-b border-border">
@@ -56,7 +62,7 @@ function MenuMobile({ activePage }) {
       <div className="p-4 mb-3 border-b border-border">
         <div
           className="flex pb-3 mb-3 cursor-pointer"
-          onClick={() => navigate("/subscriptions")}
+          onClick={() => handleNavigation("/subscriptions")}
         >
           {activePage === "subscriptions" && (
             <ActiveMenuIcon className="absolute left-0" />
@@ -66,7 +72,7 @@ function MenuMobile({ activePage }) {
         </div>
         <div
           className="flex pb-3 cursor-pointer"
-          onClick={() => navigate("/settings")}
+          onClick={() => handleNavigation("/settings")}
         >
           {activePage === "settings" && (
             <ActiveMenuIcon className="absolute left-0" />

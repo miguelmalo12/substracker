@@ -34,4 +34,5 @@ by Miguel Malo
 - **Libraries:** Nodemon, React Router, Axios, CORS, Dotenv, Recoil, Emoji Mart
 - **Authentication:** Passport.js, bcrypt
 - **Deployment:** Frontend: Netlify / Backend: Render
+- **Transactional Emails:** SendGrid
 - **Design:** Figma

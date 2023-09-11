@@ -73,6 +73,20 @@ function Subscriptions({ menuRef, setToggledByButton }) {
     setMenuVisible(!isMenuVisible);
   };
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   //GET Subscriptions
   useEffect(() => {
     const userDataJSON = localStorage.getItem('userData');
@@ -528,7 +542,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
 
         {/* Menu on Mobile */}
         <div ref={menuRef}>
-          {isMenuVisible && <MenuMobile activePage="subscriptions" />}
+          {isMenuVisible && <MenuMobile activePage="subscriptions" toggleMenu={toggleMenu} />}
         </div>
         {/* Menu on Desktop */}
         <div className="hidden md:block">
