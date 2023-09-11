@@ -72,6 +72,20 @@ function Settings({ menuRef, setToggledByButton }) {
     setMenuVisible(!isMenuVisible);
   };
 
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuVisible(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Initialize original settings when component renders or userInfo changes
   useEffect(() => {
     setOriginalSettings({
@@ -192,23 +206,23 @@ function Settings({ menuRef, setToggledByButton }) {
 
           {/* Menu on Mobile */}
           <div ref={menuRef}>
-            {isMenuVisible && <MenuMobile activePage="settings" />}
+            {isMenuVisible && <MenuMobile activePage="settings" toggleMenu={toggleMenu} />}
           </div>
           {/* Menu on Desktop */}
           <div className="hidden md:block">
             <MenuDesktop activePage="settings" />
           </div>
         </section>
-        <div className="pt-4 md:hidden">
+        <div className="pt-4 md:hidden dark:text-light-grey">
           <SettingsIcon className="w-8 h-8 mx-auto" />
         </div>
         <div className="gap-6 md:flex">
           {/* Left Card */}
-          <section className="mt-4 md:mt-10 md:card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
+          <section className="mt-4 md:mt-10 md:card dark:bg-dark md:dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
             <div className="pb-6">
               <div className="flex items-center justify-between pt-4 pb-2 border-b-2 dark:border-medium-grey">
                 <h2 className="mr-3">Email</h2>
-                <p className="flex-grow text-right border-none dark:bg-dark-grey">
+                <p className="flex-grow text-right border-none dark:bg-dark md:dark:bg-dark-grey">
                   {userInfo.user_email}
                 </p>
               </div>
@@ -378,7 +392,7 @@ function Settings({ menuRef, setToggledByButton }) {
             )}
           </section>
           {/* Right Card */}
-          <section className="p-1.5 mt-8 h-fit md:mt-10 card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
+          <section className="p-2.5 md:p-1.5 mt-8 h-fit md:mt-10 card dark:bg-dark-grey dark:text-light-grey dark:border-dark md:py-3 md:px-6 md:w-1/2">
             <div className="py-1">
               <div className="flex items-center content-center -space-x-2 overflow-hidden">
                 <img

@@ -63,11 +63,12 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
         {" "}
         <h2 className="mr-3">{title}</h2>
         {title === "Payment Method" && (
-          <Tooltip
-            content={
-              "You can add your own custom payment methods from the Settings page."
-            }
-          />
+          <div className='hidden md:block'>
+            <Tooltip
+              content={"You can add your own custom payment methods from the Settings page."}
+            />
+          </div>
+          
         )}
       </div>
       {type === "select" ? (
@@ -88,6 +89,8 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
 
           <Select.Portal>
             <Select.Content
+              side={title === "Payment Method" ? 'top' : undefined}
+              position={title === "Payment Method" ? 'popper' : undefined}
               className={`overflow-hidden rounded md:-ml-12 drop-shadow ${
                 darkMode ? "bg-dark-grey border border-dark drop-shadow" : "bg-white"
               }`}
