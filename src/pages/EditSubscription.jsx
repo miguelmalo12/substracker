@@ -59,6 +59,10 @@ function EditSubscription() {
   const [sharedNumber, setSharedNumber] = useState("");
   const [logo, setLogo] = useState("");
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Function to GET subscription data from database
   useEffect(() => {
     const userDataJSON = localStorage.getItem('userData');
@@ -267,7 +271,7 @@ function EditSubscription() {
               <FieldBorder
                 title={"Description"}
                 type={"text"}
-                placeholder={"Enter Description"}
+                placeholder={"Enter Desc. (optional)"}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
@@ -303,7 +307,7 @@ function EditSubscription() {
                 title={"Shared with"}
                 type={"select"}
                 value={sharedNumber}
-                placeholder={"Select Number"}
+                placeholder={"Select Number (optional)"}
                 options={["0", "1", "2", "3", "4", "5", "6"]}
                 onChange={(e) => setSharedNumber(e.target.value)}
               />
@@ -341,7 +345,7 @@ function EditSubscription() {
               <FieldBorder
                 title={"Website"}
                 type={"url"}
-                placeholder={"Enter Website"}
+                placeholder={"Enter Website (optional)"}
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
               />

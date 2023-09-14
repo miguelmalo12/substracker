@@ -19,6 +19,7 @@ import NoSubs from "../components/NoSubs";
 import Footer from "../components/Footer";
 import NavSubsDesktop from "../components/NavSubsDesktop";
 import Card from "../components/Card";
+import Loader from "../components/Loader";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
@@ -542,7 +543,9 @@ function Subscriptions({ menuRef, setToggledByButton }) {
 
         {/* Menu on Mobile */}
         <div ref={menuRef}>
-          {isMenuVisible && <MenuMobile activePage="subscriptions" toggleMenu={toggleMenu} />}
+          {isMenuVisible && (
+            <MenuMobile activePage="subscriptions" toggleMenu={toggleMenu} />
+          )}
         </div>
         {/* Menu on Desktop */}
         <div className="hidden md:block">
@@ -599,40 +602,39 @@ function Subscriptions({ menuRef, setToggledByButton }) {
         </section>
 
         <div className="relative">
-          {!loading && sorteredSubscriptions.length === 0 ? (
+          {loading ? (
+            <Loader />
+          ) : sorteredSubscriptions.length === 0 ? (
             <div className="flex items-center justify-center">
               <NoSubs />
             </div>
           ) : (
             <div
-              className="grid gap-2.5 mb-5"
-              style={{
-                gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-              }}
+              className="grid gap-2.5 mb-5 grid-custom"
             >
               {subscriptionsToRender.map((subscription) => (
                 <Card
-                  key={subscription.subscription_id}
-                  id={subscription.subscription_id}
-                  imageContent={subscription.logo}
-                  name={subscription.name}
-                  description={subscription.description}
-                  category={subscription.category_name}
-                  selectedCurrency={subscription.currency}
-                  amount={subscription.amount}
-                  actualAmount={calculateActualAmount(
-                    subscription.amount,
-                    subscription.shared_with
-                  )}
-                  sharedNumber={subscription.shared_with}
-                  recurrence={subscription.recurrence}
-                  nextPaymentDate={subscription.payment_date}
-                  reminderDays={subscription.reminder_days}
-                  paymentMethod={subscription.payment_method}
-                  website={subscription.website}
-                  color={subscription.color}
-                  removeSubscriptionById={removeSubscriptionById}
-                />
+                key={subscription.subscription_id}
+                id={subscription.subscription_id}
+                imageContent={subscription.logo}
+                name={subscription.name}
+                description={subscription.description}
+                category={subscription.category_name}
+                selectedCurrency={subscription.currency}
+                amount={subscription.amount}
+                actualAmount={calculateActualAmount(
+                  subscription.amount,
+                  subscription.shared_with
+                )}
+                sharedNumber={subscription.shared_with}
+                recurrence={subscription.recurrence}
+                nextPaymentDate={subscription.payment_date}
+                reminderDays={subscription.reminder_days}
+                paymentMethod={subscription.payment_method}
+                website={subscription.website}
+                color={subscription.color}
+                removeSubscriptionById={removeSubscriptionById}
+              />
               ))}
             </div>
           )}

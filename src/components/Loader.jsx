@@ -1,6 +1,6 @@
 function Loader({ inline }) {
   return (
-    <div className={`flex items-center justify-center ${
+    <div className={`flex mt-[-20%] items-center justify-center ${
         inline ? '' : 'h-screen'
       }`}
       role="status"

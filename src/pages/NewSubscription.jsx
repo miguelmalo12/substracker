@@ -78,6 +78,10 @@ function NewSubscription() {
   const [, setErrorMessage] = useState("");
   const [buttonClicked, setButtonClicked] = useState(false);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleEmojiClick = (emoji, event) => {
     event.stopPropagation();
     setSelectedEmoji(emoji.native);
@@ -230,7 +234,7 @@ function NewSubscription() {
               <FieldBorder
                 title={"Description"}
                 type={"text"}
-                placeholder={"Enter Description"}
+                placeholder={"Enter Desc. (optional)"}
                 onChange={(e) => setDescription(e.target.value)}
               />
               <FieldBorder
@@ -265,7 +269,7 @@ function NewSubscription() {
                 title={"Shared with"}
                 type={"select"}
                 value={sharedNumber}
-                placeholder={"Select Number"}
+                placeholder={"Select Number (optional)"}
                 options={["0", "1", "2", "3", "4", "5", "6"]}
                 onChange={(e) => setSharedNumber(e.target.value)}
               />
@@ -310,7 +314,7 @@ function NewSubscription() {
               <FieldBorder
                 title={"Website"}
                 type={"url"}
-                placeholder={"Enter Website"}
+                placeholder={"Enter Website (optional)"}
                 value={website}
                 onChange={(e) => setWebsite(e.target.value)}
               />

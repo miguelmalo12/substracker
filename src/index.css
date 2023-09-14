@@ -35,12 +35,6 @@ textarea::placeholder {
     @apply bg-white border rounded drop-shadow;
 }
 
-@media (min-width: 768px) {
-    .md\:card {
-        @apply bg-white border rounded drop-shadow;
-    }
-}
-
 .responsive-padding {
     @apply px-6 py-4 md:px-10;
 }
@@ -51,12 +45,6 @@ textarea::placeholder {
 
 .responsive-navbar-padding {
     @apply px-6 py-4 md:px-10;
-}
-
-@media (min-width: 768px) {
-    .responsive-navbar-padding {
-        @apply p-0; 
-    }
 }
 
 /* This is used on the subscription cards */
@@ -80,6 +68,19 @@ textarea::placeholder {
     @apply outline-none ring-1 ring-primary;
   }
 
-  :focus-visible {
+:focus-visible {
     @apply outline-none;
-  }
+}
+
+/* Custom media queries */
+@media (min-width: 768px) {
+    .md\:card {
+        @apply bg-white border rounded drop-shadow;
+    }
+    .responsive-navbar-padding {
+        @apply p-0; 
+    }
+    .grid-custom {
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    }
+}
