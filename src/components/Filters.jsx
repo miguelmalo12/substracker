@@ -54,11 +54,11 @@ function Filters({
   const paymentMethods = useRecoilValue(paymentMethodsState);
 
   return (
-    <div className="z-10 flex items-center justify-between pb-6 md:pb-0">
+    <div className="flex items-center justify-between pb-6 md:pb-0">
       <div className="flex gap-1 mr-5 md:mr-0 md:gap-6">
         {/* Filter popover */}
-        <div className="flex relative p-1.5 rounded items-center cursor-pointer">
-          <DropdownMenu.Root>
+        <DropdownMenu.Root>
+          <div className="flex relative p-1.5 rounded items-center cursor-pointer">
             <div className={`${isAnyFilterActive ? 'text-primary' : ''}`}>
               <DropdownMenu.Trigger className="flex">
                 <FilterIcon className="mr-1 md:mr-3" />
@@ -67,7 +67,7 @@ function Filters({
             </div>
             <DropdownMenu.Portal>
               <DropdownMenu.Content
-                className={`flex flex-col gap-5 p-4 mb-3 md:ml-20 border rounded drop-shadow ${
+                className={`flex flex-col md:ml-20 border rounded drop-shadow ${
                   darkMode
                     ? "bg-dark-grey text-light-grey border-dark"
                     : "bg-white"
@@ -75,22 +75,22 @@ function Filters({
               >
                 <h4
                   onClick={resetFilters}
-                  className="cursor-pointer text-primary"
+                  className="p-3 cursor-pointer text-primary"
                 >
                   Reset Filter
                 </h4>
                 <DropdownMenu.Separator className="border border-border" />
 
                 <DropdownMenu.Sub>
-                  <DropdownMenu.SubTrigger className="flex items-center justify-between">
+                  <DropdownMenu.SubTrigger className="flex items-center justify-between p-3 cursor-pointer">
                     <div className="flex">
                       <CategoryIcon className="w-6 h-6 mr-3" />
-                      <h4>Category</h4>
+                      <p className="text-sm font-semibold md:font-bold">Category</p>
                     </div>
                     <ChevronRight className="w-3 h-3 ml-4" />
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
-                    sideOffset={12}
+                    sideOffset={2}
                     alignOffset={-8}
                     className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
@@ -120,17 +120,17 @@ function Filters({
                 </DropdownMenu.Sub>
 
                 <DropdownMenu.Sub>
-                  <DropdownMenu.SubTrigger className="flex items-center justify-between">
+                  <DropdownMenu.SubTrigger className="flex items-center justify-between p-3 cursor-pointer">
                     <div className="flex">
                       <CurrencyIcon className="w-6 h-6 mr-3" />
-                      <h4>Currency</h4>
+                      <p className="text-sm font-semibold md:font-bold">Currency</p>
                     </div>
                     <ChevronRight className="w-3 h-3 ml-4" />
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
-                    sideOffset={12}
+                    sideOffset={2}
                     alignOffset={-8}
-                    className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
+                    className={`min-w-[220px] overflow-y-auto max-h-[90vh] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
                         ? "bg-dark-grey text-light-grey border-dark border"
                         : "bg-white"
@@ -158,15 +158,15 @@ function Filters({
                 </DropdownMenu.Sub>
 
                 <DropdownMenu.Sub>
-                  <DropdownMenu.SubTrigger className="flex items-center justify-between">
+                  <DropdownMenu.SubTrigger className="flex items-center justify-between p-3 cursor-pointer">
                     <div className="flex">
                       <PaymentIcon className="w-6 h-6 mr-3" />
-                      <h4>Payment Method</h4>
+                      <p className="text-sm font-semibold md:font-bold">Payment Method</p>
                     </div>
                     <ChevronRight className="w-3 h-3 ml-4" />
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
-                    sideOffset={12}
+                    sideOffset={2}
                     alignOffset={-5}
                     className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
@@ -196,15 +196,15 @@ function Filters({
                 </DropdownMenu.Sub>
 
                 <DropdownMenu.Sub>
-                  <DropdownMenu.SubTrigger className="flex items-center justify-between">
-                    <div className="flex">
+                  <DropdownMenu.SubTrigger className="flex items-center justify-between p-3 cursor-pointer">
+                    <div className="flex items-center">
                       <SharedIcon className="mr-3 w-7 h-7" />
-                      <h4>Shared</h4>
+                      <p className="text-sm font-semibold md:font-bold">Shared</p>
                     </div>
                     <ChevronRight className="w-3 h-3 ml-4" />
                   </DropdownMenu.SubTrigger>
                   <DropdownMenu.SubContent
-                    sideOffset={12}
+                    sideOffset={2}
                     alignOffset={-5}
                     className={`min-w-[220px] -ml-24 md:ml-0 rounded-md p-1.5 shadow-lg animate animate-fadeInEase ${
                       darkMode
@@ -246,28 +246,28 @@ function Filters({
                 </DropdownMenu.Sub>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
-          </DropdownMenu.Root>
-        </div>
+          </div>
+        </DropdownMenu.Root>
 
         {/* Sort popover */}
-        <div className="flex relative p-1.5 rounded items-center cursor-pointer">
-          <DropdownMenu.Root>
+        <DropdownMenu.Root>
+          <div className="flex relative p-1.5 rounded items-center cursor-pointer">
             <DropdownMenu.Trigger className="flex">
               <SortIcon className="mr-2 md:mr-3" />
               <h4>Sort</h4>
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
-              <DropdownMenu.Content className={`flex flex-col gap-5 p-4 mb-3 md:ml-20 border w-48 rounded drop-shadow ${
+              <DropdownMenu.Content className={`flex flex-col md:ml-20 border w-48 rounded drop-shadow ${
                   darkMode
                     ? "bg-dark-grey text-light-grey border-dark"
                     : "bg-white"
                 }`}>
-                <DropdownMenu.Item className="mb-2">
-                  <h4 className="mb-4">Sorty By</h4>
+                <DropdownMenu.Item>
+                  <h4 className="p-3">Sorty By</h4>
                   <DropdownMenu.Separator className="border border-border" />
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
-                  className="flex items-center cursor-pointer"
+                  className="flex items-center p-3 cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Due Date");
                     setSortCriteria("Due Date");
@@ -275,15 +275,15 @@ function Filters({
                   }}
                 >
                   <SortIcon />
-                  <h4 className="pl-3 font-semibold ">
+                  <p className="pl-3 text-sm font-semibold md:font-bold ">
                     Due Date
-                  </h4>
+                  </p>
                   {checkedItem === "Due Date" && (
                     <CheckIcon className="ml-auto" />
                   )}
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
-                  className="flex items-center cursor-pointer"
+                  className="flex items-center p-3 cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Amount");
                     setSortCriteria("Amount");
@@ -291,13 +291,13 @@ function Filters({
                   }}
                 >
                   <SortIcon />
-                  <h4 className="pl-3 font-semibold">Amount</h4>
+                  <p className="pl-3 text-sm font-semibold md:font-bold">Amount</p>
                   {checkedItem === "Amount" && (
                     <CheckIcon className="ml-auto" />
                   )}
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
-                  className="flex items-center cursor-pointer"
+                  className="flex items-center p-3 cursor-pointer"
                   onClick={() => {
                     setCheckedItem("Name");
                     setSortCriteria("Name");
@@ -305,13 +305,13 @@ function Filters({
                   }}
                 >
                   <SortIcon />
-                  <h4 className="pl-3 font-semibold">Name</h4>
+                  <p className="pl-3 text-sm font-semibold md:font-bold">Name</p>
                   {checkedItem === "Name" && <CheckIcon className="ml-auto" />}
                 </DropdownMenu.Item>
               </DropdownMenu.Content>
             </DropdownMenu.Portal>
-          </DropdownMenu.Root>
-        </div>
+          </div>
+        </DropdownMenu.Root>
       </div>
 
       <div className="flex cursor-pointer">

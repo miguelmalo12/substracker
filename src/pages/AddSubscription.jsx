@@ -13,12 +13,14 @@ import ButtonSmall from "../components/ButtonSmall";
 import SearchField from "../components/SearchField";
 import ExistingSubsCard from "../components/ExistingSubsCard";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function AddSubscription({ menuRef }) {
   const navigate = useNavigate();
   const isMenuVisible = useRecoilValue(mobileMenuState);
+  const [loading, setLoading] = useState(true);
 
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState({});
@@ -42,9 +44,11 @@ function AddSubscription({ menuRef }) {
       .then((response) => {
         setServices(response.data);
         setFilteredServices(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
+        setLoading(false);
       });
 
     //GET Categories
@@ -91,24 +95,44 @@ function AddSubscription({ menuRef }) {
             {/* Nav on Desktop */}
             <NavbarDesktop content={"Add Subscription"} goBack={handleGoBack} />
           </div>
-          <ButtonSmall content={"+ New"} type={"primary"} onClick={handleAddNewClick} />
+          <ButtonSmall
+            content={"+ New"}
+            type={"primary"}
+            onClick={handleAddNewClick}
+          />
         </div>
-        <SearchField placeholder={"Search Service..."} setSearchTerm={setSearchTerm} />
+        <SearchField
+          placeholder={"Search Service..."}
+          setSearchTerm={setSearchTerm}
+        />
       </div>
       <div className="md:flex md:dark:bg-dark-grey dark:text-light-grey dark:border-dark md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
-        {filteredServices.map((service) => {
-          return (
-            <ExistingSubsCard
-              key={service.service_id}
-              service={service}
-              categories={categories}
-              onClick={() => navigate('/new-subscription/', { state: {logo: service.logo_url, name: service.service_name, id: service.service_id, categoryId: service.category_id, website: service.website} })}
-            />
-          );
-        })}
+        {loading ? (
+          <Loader />
+        ) : (
+          filteredServices.map((service) => {
+            return (
+              <ExistingSubsCard
+                key={service.service_id}
+                service={service}
+                categories={categories}
+                onClick={() =>
+                  navigate("/new-subscription/", {
+                    state: {
+                      logo: service.logo_url,
+                      name: service.service_name,
+                      id: service.service_id,
+                      categoryId: service.category_id,
+                      website: service.website,
+                    },
+                  })
+                }
+              />
+            );
+          })
+        )}
       </div>
       <Footer />
-
     </main>
   );
 }

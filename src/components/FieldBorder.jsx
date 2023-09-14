@@ -131,7 +131,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
         <div className="flex-grow text-right">
           <input
             className={`border-none dark:bg-dark md:dark:bg-dark-grey text-right ${
-              !value ? "text-gray-300 dark:text-zinc-500" : ""
+              !value ? "text-gray-300 dark:text-zinc-500 bg-white" : ""
             }`}
             type={type}
             value={value}

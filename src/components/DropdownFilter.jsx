@@ -17,7 +17,7 @@ function DropdownFilter({ options, onChange }) {
   return (
     <>
       <div
-        className="relative flex items-center w-32 h-10 border rounded cursor-pointer dark:bg-dark-grey md:dark:bg-dark dark:border-dark"
+        className="relative flex items-center w-32 h-10 border rounded cursor-pointer md:w-28 dark:bg-dark-grey md:dark:bg-dark dark:border-dark"
         onClick={handleClick}
       >
         <span className="w-full px-2 font-semibold double-arrow-dropdown">

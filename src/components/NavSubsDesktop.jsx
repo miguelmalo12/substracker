@@ -65,7 +65,7 @@ function NavSubsDesktop({
       {/* Right Card */}
       <div className="w-1/3 flex h-34 gap-2.5 p-5 dark:bg-dark-grey dark:border-dark justify-between card min-w-max">
         <div className="flex flex-col">
-          <h1 className="py-2 text-4xl">
+          <h1 className="py-2 text-3xl">
             {adjustTotalsToInterval(totalAmount, selectedInterval).toFixed(2)}{" "}
             <span className="text-xl">{getCurrencySymbol(preferredCurrency)}</span>
           </h1>
