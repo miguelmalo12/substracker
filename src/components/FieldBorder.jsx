@@ -24,6 +24,7 @@ import HealthIcon from "../assets/icons/categories/health&fitness.svg";
 import TelecommunicationsIcon from "../assets/icons/categories/telecommunications.svg";
 import FinanceIcon from "../assets/icons/categories/banking&finance.svg";
 import InsuranceIcon from "../assets/icons/categories/insurance.svg";
+import { ReactComponent as CalendarIcon } from "../assets/icons/solid/calendar.svg";
 
 function FieldBorder({ title, type, options, value, placeholder, onChange }) {
   const darkMode = useRecoilValue(darkModeState);
@@ -128,10 +129,11 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
           </Select.Portal>
         </Select.Root>
       ) : type === "date" ? (
-        <div className="flex-grow text-right">
+        <div className="relative flex-grow text-right">
+          <CalendarIcon className={`absolute right-0 z-0 w-4 h-4 cursor-pointer bottom-1.5 ${!value ? "text-gray-300 dark:text-zinc-500" : ""} `} />
           <input
-            className={`border-none dark:bg-dark md:dark:bg-dark-grey text-right ${
-              !value ? "text-gray-300 dark:text-zinc-500 bg-white" : ""
+            className={`border-none z-10 dark:bg-dark text-dark-grey dark:text-light-grey bg-white md:dark:bg-dark-grey text-right ${
+              !value ? "text-gray-300 dark:text-zinc-500 bg-white dark:bg-dark" : ""
             }`}
             type={type}
             value={value}
