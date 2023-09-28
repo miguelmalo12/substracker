@@ -13,6 +13,8 @@ import axios from "axios";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import NewPassword from "./pages/NewPassword";
 import Subscriptions from "./pages/Subscriptions";
 import AddSubscription from "./pages/AddSubscription";
 import NewSubscription from "./pages/NewSubscription";
@@ -135,6 +137,8 @@ function App() {
               element={<Login initializeDarkMode={initializeDarkMode} />}
             />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/new-password" element={<NewPassword />} />
             {isAuthenticated ? (
               <>
                 <Route

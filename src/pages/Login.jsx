@@ -70,11 +70,16 @@ function Login({ initializeDarkMode }) {
       <Navbar content={"Select Account"} />
       {/* Conditionally render the "Go to Subscriptions" button */}
       {user && user.user_id && (
-          <div className="max-w-sm pb-6 mx-auto">
-              <h2 className="pb-3">You are already logged in as {user && user.user_email} </h2>
-            <Button content={"Go To Dashboard"} onClick={() => navigate('/subscriptions')} />
-          </div>
-          )}
+        <div className="max-w-sm pb-6 mx-auto">
+          <h2 className="pb-3">
+            You are already logged in as {user && user.user_email}{" "}
+          </h2>
+          <Button
+            content={"Go To Dashboard"}
+            onClick={() => navigate("/subscriptions")}
+          />
+        </div>
+      )}
       <div className="flex-grow">
         <div className="max-w-sm mx-auto">
           <div>
@@ -118,13 +123,13 @@ function Login({ initializeDarkMode }) {
 
           <p className="text-center">
             Don't have an account?{" "}
-            <span
-              onClick={() => navigate("/signup")}
-              className="font-bold cursor-pointer text-primary"
-            >
+            <span onClick={() => navigate("/signup")} className="font-bold cursor-pointer text-primary">
               Signup
             </span>
           </p>
+            <p onClick={() => navigate("/forgot-password")} className="pt-8 font-light text-center cursor-pointer text-primary">
+              Forgot your password?
+            </p>
         </div>
       </div>
       <div className="mx-auto">
