@@ -72,6 +72,11 @@ textarea::placeholder {
     @apply outline-none;
 }
 
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    cursor: pointer;
+}
+
 /* Custom media queries */
 @media (min-width: 768px) {
     .md\:card {

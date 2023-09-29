@@ -1,5 +1,5 @@
 # **SubsTracker 🧾**
-https://substracker.netlify.app/
+https://substrackerapp.com/
 by Miguel Malo
 
 ## **Description**
@@ -19,11 +19,13 @@ by Miguel Malo
     - Convert amounts into your preferred currency.
 3. **Split Expenses:**
     - Keep track of shared subscriptions and contributors.
-4. **Custom Payment Methods:**
+4. **Payment Reminders:**
+    - Set reminders for individual payments to avoid late fees or accidental renewals.
+5. **Custom Payment Methods:**
     - Add your own Payment Methods.
-5. **Fully Responsive:**
+6. **Fully Responsive:**
     - User friendly interface and experience on mobile.
-6. **Accessibility in Mind:**
+7. **Accessibility in Mind:**
     - Dark/Light Mode implemented, as well as accessible components using Radix UI.
 
 ### **Technologies and Libraries**
@@ -31,8 +33,7 @@ by Miguel Malo
 - **Frontend:** React.js, Tailwind, Radix UI
 - **Backend:** Node.js, Express.js, Knex.js
 - **Database:** PostgreSQL
-- **Libraries:** Nodemon, React Router, Axios, CORS, Dotenv, Recoil, Emoji Mart
+- **Libraries:** Nodemon, React Router, Axios, CORS, Dotenv, Recoil, Emoji Mart, SendGrid Mail
 - **Authentication:** Passport.js, bcrypt
-- **Deployment:** Frontend: Netlify / Backend: Render
 - **Transactional Emails:** SendGrid
 - **Design:** Figma
