@@ -165,6 +165,7 @@ function Settings({ menuRef, setToggledByButton }) {
       })
       .then((response) => {
         setMethodAdded(true);
+        setMethodDeleted(false);
         const addedMethod = { ...newPaymentMethod, payment_method_id: response.data.payment_method_id };
         setPaymentMethods((prevMethods) => [...prevMethods, addedMethod]);
       })

@@ -20,7 +20,7 @@ function Login({ initializeDarkMode }) {
   const [password, setPassword] = useState("");
   const setUserState = useSetRecoilState(userStateFromLocalStorage);
   const setDarkMode = useSetRecoilState(darkModeState);
-
+  
   const handleLogin = async (event) => {
     event.preventDefault();
     setIsLoading(true);

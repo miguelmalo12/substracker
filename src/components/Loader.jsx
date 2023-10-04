@@ -1,5 +1,19 @@
+import React, { useState, useEffect } from 'react';
+
 function Loader({ inline }) {
+
+  const [showMessage, setShowMessage] = useState(false);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setShowMessage(true);
+    }, 4000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   return (
+    <>
     <div className={`flex items-center justify-center ${
         inline ? '' : 'h-screen mt-[-45%] md:mt-[-20%]'
       }`}
@@ -23,6 +37,13 @@ function Loader({ inline }) {
       </svg>
       <p>Loading...</p>
     </div>
+    {showMessage && (
+      <p className="my-8 text-center">
+        Please hang tight! It might take a moment if we're waking up the servers.
+        Thanks for your patience.
+      </p>
+    )}
+    </>
   );
 }
 
