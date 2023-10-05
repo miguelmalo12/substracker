@@ -20,12 +20,15 @@ import FieldBorder from "../components/FieldBorder";
 import Button from "../components/Button";
 import CardPreview from "../components/CardPreview";
 import Footer from "../components/Footer";
+import Loader from "../components/Loader";
 
 const baseURL = process.env.REACT_APP_BASE_URL;
 
 function NewSubscription() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [postingSubscription, setPostingSubscription] = useState(false);
+
   const [user] = useRecoilState(userState);
   const [darkMode] = useRecoilState(darkModeState);
   const [currencyList] = useRecoilState(currencyListState);
@@ -146,6 +149,7 @@ function NewSubscription() {
     ) {
       return;
     }
+    setPostingSubscription(true);
 
     const matchedNumber = reminderDays ? reminderDays.match(/\d+/) : null;
     const reminderDaysNumber = matchedNumber
@@ -175,10 +179,12 @@ function NewSubscription() {
         withCredentials: true,
       })
       .then((response) => {
+        setPostingSubscription(false);
         navigate("/subscriptions");
       })
       .catch((error) => {
         console.log(error);
+        setPostingSubscription(false);
       });
   };
 
@@ -320,27 +326,26 @@ function NewSubscription() {
               />
             </div>
             {/* Error messages */}
-            {buttonClicked && (
-              <div className="pb-3 text-sm">
-                {!name && <p className="text-error">Name is required.</p>}
-                {!category && (
-                  <p className="text-error">Category is required.</p>
-                )}
-                {!nextPaymentDate && (
-                  <p className="text-error">Next payment date is required.</p>
-                )}
-                {!recurrence && (
-                  <p className="text-error">Recurrence is required.</p>
-                )}
-                {!paymentMethod && (
-                  <p className="text-error">Payment Method is required.</p>
-                )}
-              </div>
-            )}
+            {buttonClicked &&
+              (!name || !category || !nextPaymentDate || !paymentMethod) && (
+                <div className="pb-3 text-sm">
+                  {!name && <p className="text-error">Name is required.</p>}
+                  {!category && (
+                    <p className="text-error">Category is required.</p>
+                  )}
+                  {!nextPaymentDate && (
+                    <p className="text-error">Next payment date is required.</p>
+                  )}
+                  {!paymentMethod && (
+                    <p className="text-error">Payment Method is required.</p>
+                  )}
+                </div>
+              )}
             <Button
               content={"Add Subscription"}
               onClick={handleAddSubscription}
             />
+            {postingSubscription && <Loader inline={"inline"} />}
           </section>
 
           {/* CARD PREVIEW */}

@@ -129,7 +129,7 @@ function App() {
   return (
     <Router>
       <div className={darkMode ? "dark" : ""}>
-        <div className="dark:bg-dark">
+        <div className="min-h-screen dark:bg-dark md:min-h-full">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
