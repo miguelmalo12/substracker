@@ -27,14 +27,14 @@ function AddSubscription({ menuRef }) {
 
   // Used on the Search Field
   const [filteredServices, setFilteredServices] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleGoBack = () => {
     navigate("/subscriptions");
   };
 
   const handleAddNewClick = () => {
-    navigate('/new-subscription');
+    navigate("/new-subscription");
   };
 
   useEffect(() => {
@@ -68,69 +68,78 @@ function AddSubscription({ menuRef }) {
   // Filters the services based on the search term
   useEffect(() => {
     setFilteredServices(
-      services.filter(service =>
-        service.service_name ? service.service_name.toLowerCase().includes(searchTerm.toLowerCase()) : false
+      services.filter((service) =>
+        service.service_name
+          ? service.service_name
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
+          : false
       )
     );
   }, [searchTerm, services]);
 
   return (
-    <main className="min-h-screen max-w-7xl md:h-fh responsive-padding md:pl-28 dark:text-light-grey">
-      {/* Nav on Mobile */}
-      <NavbarMobile content={"Add Subscription"} goBack={handleGoBack} />
+    <main className="min-h-screen max-w-7xl md:h-fh md:flex md:flex-col responsive-padding md:pl-28 dark:text-light-grey">
+      <div className="flex-grow">
+        {/* Nav on Mobile */}
+        <NavbarMobile content={"Add Subscription"} goBack={handleGoBack} />
 
-      {/* Menu on Mobile */}
-      <div ref={menuRef}>
-        {isMenuVisible && <MenuMobile activePage="subscriptions" />}
-      </div>
+        {/* Menu on Mobile */}
+        <div ref={menuRef}>
+          {isMenuVisible && <MenuMobile activePage="subscriptions" />}
+        </div>
 
-      {/* Menu on Desktop */}
-      <div className="hidden md:block">
-        <MenuDesktop activePage="subscriptions" />
-      </div>
+        {/* Menu on Desktop */}
+        <div className="hidden md:block">
+          <MenuDesktop activePage="subscriptions" />
+        </div>
 
-      <div className="pt-3 md:flex md:justify-between">
-        <div className="flex items-center justify-between mb-3 md:w-full md:mr-6">
-          <div>
-            {/* Nav on Desktop */}
-            <NavbarDesktop content={"Add Subscription"} goBack={handleGoBack} />
+        <div className="pt-3 md:flex md:justify-between">
+          <div className="flex items-center justify-between mb-3 md:w-full md:mr-6">
+            <div>
+              {/* Nav on Desktop */}
+              <NavbarDesktop
+                content={"Add Subscription"}
+                goBack={handleGoBack}
+              />
+            </div>
+            <ButtonSmall
+              content={"+ New"}
+              type={"primary"}
+              onClick={handleAddNewClick}
+            />
           </div>
-          <ButtonSmall
-            content={"+ New"}
-            type={"primary"}
-            onClick={handleAddNewClick}
+          <SearchField
+            placeholder={"Search Service..."}
+            setSearchTerm={setSearchTerm}
           />
         </div>
-        <SearchField
-          placeholder={"Search Service..."}
-          setSearchTerm={setSearchTerm}
-        />
-      </div>
-      <div className="md:flex md:dark:bg-dark-grey dark:text-light-grey dark:border-dark md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
-        {loading ? (
-          <Loader />
-        ) : (
-          filteredServices.map((service) => {
-            return (
-              <ExistingSubsCard
-                key={service.service_id}
-                service={service}
-                categories={categories}
-                onClick={() =>
-                  navigate("/new-subscription/", {
-                    state: {
-                      logo: service.logo_url,
-                      name: service.service_name,
-                      id: service.service_id,
-                      categoryId: service.category_id,
-                      website: service.website,
-                    },
-                  })
-                }
-              />
-            );
-          })
-        )}
+        <div className="flex-grow md:flex md:dark:bg-dark-grey dark:text-light-grey dark:border-dark md:gap-6 md:px-8 md:py-6 md:justify-evenly md:flex-wrap md:card">
+          {loading ? (
+            <Loader subscription={true} />
+          ) : (
+            filteredServices.map((service) => {
+              return (
+                <ExistingSubsCard
+                  key={service.service_id}
+                  service={service}
+                  categories={categories}
+                  onClick={() =>
+                    navigate("/new-subscription/", {
+                      state: {
+                        logo: service.logo_url,
+                        name: service.service_name,
+                        id: service.service_id,
+                        categoryId: service.category_id,
+                        website: service.website,
+                      },
+                    })
+                  }
+                />
+              );
+            })
+          )}
+        </div>
       </div>
       <Footer />
     </main>

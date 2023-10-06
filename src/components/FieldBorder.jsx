@@ -129,7 +129,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
           </Select.Portal>
         </Select.Root>
       ) : type === "date" ? (
-        <div className="relative flex-grow text-right">
+        <label className="relative flex-grow text-right">
           <CalendarIcon className={`absolute right-0 z-0 w-4 h-4 cursor-pointer bottom-1.5 ${!value ? "text-gray-300 dark:text-zinc-500" : ""} `} />
           <input
             className={`border-none z-10 dark:bg-dark text-dark-grey dark:text-light-grey bg-white md:dark:bg-dark-grey text-right ${
@@ -140,7 +140,7 @@ function FieldBorder({ title, type, options, value, placeholder, onChange }) {
             placeholder={placeholder}
             onChange={handleValueChange}
           />
-        </div>
+        </label>
       ) : (
         <input
           className="flex-grow text-right border-none dark:bg-dark md:dark:bg-dark-grey"

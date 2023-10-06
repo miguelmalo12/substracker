@@ -603,7 +603,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
 
         <div className="relative">
           {loading ? (
-            <Loader />
+            <Loader subscription={true} />
           ) : sorteredSubscriptions.length === 0 ? (
             <div className="flex items-center justify-center">
               <NoSubs />

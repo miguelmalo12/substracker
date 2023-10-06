@@ -18,10 +18,13 @@ function ForgotPassword() {
     const user = useRecoilValue(userState);
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
+        setIsSubmitting(true); // Disables button
+
         try {
             const response = await axios.post(`${baseURL}/api/users/forgot-password`, { user_email: email });
     
@@ -72,7 +75,7 @@ function ForgotPassword() {
           </div>
           <form onSubmit={handleSubmit}>
             <Field title={"Email"} type={"email"} value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Button content={"Reset Password"} />
+            <Button content={"Reset Password"} disabled={isSubmitting} />
             {message && <p className="text-center text-error">{message}</p>}
           </form>
 
