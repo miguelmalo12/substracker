@@ -7,7 +7,7 @@ function ExistingSubsCard({ service, categories, onClick }) {
     <div className="flex items-center justify-between w-full py-4 border-b dark:border-medium-grey md:max-w-xs">
       <div className="flex items-center flex-grow">
         <img
-          className="rounded-full drop-shadow"
+          className="w-12 h-12 rounded-full drop-shadow"
           src={logo_url}
           alt={service_name}
         />
