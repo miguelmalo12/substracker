@@ -60,16 +60,27 @@ function App() {
     setIsInitialized(true);
   }, [setUser, setDarkMode]);
 
+  // Helper function to sort payment methods
+  function sortPaymentMethods(a, b) {
+    if (a.user_id === null) return -1; 
+    if (b.user_id === null) return 1;
+
+    return a.payment_method_id - b.payment_method_id;
+  }
+
   // Gets all methods and sets them in global state
   useEffect(() => {
-    axios
-      .get(`${baseURL}/api/methods/`, { params: { user_id: user.user_id } })
-      .then((response) => {
-        setPaymentMethodsList(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (user && user.user_id) {
+      axios
+        .get(`${baseURL}/api/methods/`, { params: { user_id: user.user_id } })
+        .then((response) => {
+          const sortedMethods = response.data.sort(sortPaymentMethods);
+          setPaymentMethodsList(sortedMethods);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   }, [setPaymentMethodsList, user]);
 
   // Gets currency rates and sets them in global state
