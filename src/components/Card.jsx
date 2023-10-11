@@ -292,7 +292,7 @@ function Card({
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black bg-opacity-30 backdrop-blur-sm animate-fade-in" />
-        <Dialog.Content   className={`overflow-y-auto max-h-[90vh] md:max-h-full data-[state=open]:animate-contentShow z-20 fixed top-[50%] left-[50%] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded p-6 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none ${darkMode ? 'text-light-grey bg-dark-grey' : 'bg-white'}`}
+        <Dialog.Content   className={`overflow-y-auto max-h-[90vh] data-[state=open]:animate-contentShow z-20 fixed top-[50%] left-[50%] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded p-6 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,_hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] focus:outline-none ${darkMode ? 'text-light-grey bg-dark-grey' : 'bg-white'}`}
 >
           <Dialog.Description className="mt-[10px] mb-5 text-[15px] flex flex-col gap-3 leading-normal">
             <div>

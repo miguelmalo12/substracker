@@ -80,13 +80,13 @@ const usp = [
   {
     name: "Custom Payment Methods",
     description:
-      "SubsTracker allows you to add your own payment methods, providing a comprehensive way to track how you're making your recurring payments. No matter how you are making that payment, see it all in one place.",
+      "SubsTracker allows you to add your own payment methods used, providing a comprehensive way to track how you're making your recurring payments.",
     icon: <MethodIcon />,
   },
   {
     name: "User-Friendly Interface",
     description:
-      "With a focus on user experience, SubsTracker offers a clean, intuitive, and responsive design. Whether you prefer a bright interface or the comfort of dark mode, managing all your recurring payments has never been so smooth and enjoyable.",
+      "With a focus on user experience, SubsTracker offers a clean, intuitive, and responsive design. Whether you prefer a bright interface or the comfort of dark mode, managing subscriptions has never been so smooth and enjoyable.",
     icon: <UiIcon />,
   },
 ];
@@ -314,12 +314,21 @@ function Home() {
                 your monthly expenses.
               </p>
               <div className="flex items-center justify-center mt-10 gap-x-6">
-                <button
-                  onClick={() => navigate("/signup")}
-                  className="rounded bg-primary animate-bounce px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                >
-                  Start Now
-                </button>
+                {user.user_id ? (
+                  <button
+                    onClick={() => navigate("/subscriptions")}
+                    className="rounded bg-primary animate-bounce px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    Access Your Dashboard
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="rounded bg-primary animate-bounce px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  >
+                    Start Now
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -468,7 +477,7 @@ function Home() {
       {/* INFO + MOCKUP END */}
 
       {/* MOBILE MOCKUP + INFO */}
-      <div className="py-16 overflow-hidden z-99 sm:py-32">
+      <div className="py-16 overflow-hidden z-99 sm:py-32 dark:bg-white">
         <div className="px-6 mx-auto max-w-7xl lg:px-2">
           <div className="grid items-center max-w-2xl grid-cols-1 mx-auto gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <div className="relative order-2 lg:order-1">
@@ -633,7 +642,7 @@ function Home() {
                 Take Control of Your Recurring Payments
               </h2>
               <p className="mt-6 text-lg leading-8 text-gray-300">
-                Never miss a payment or pay for a forgotten subscription again
+                Say goodbye to late fees or accidental renewals
                 and navigate your financial commitments with ease. Get started
                 with SubsTracker today.
               </p>
