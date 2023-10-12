@@ -149,10 +149,16 @@ function EditSubscription() {
         return match ? match[1] : currencyString;
     }
   };
-
+  
+  // Adjusts the input width based on the amount
   useEffect(() => {
     if (measureRef.current) {
-      const adjustedWidth = measureRef.current.offsetWidth + 5;
+      let adjustedWidth;
+      if(amount === '0' || amount === 0) {
+        adjustedWidth = measureRef.current.offsetWidth + measureRef.current.offsetWidth / 2;
+      } else {
+        adjustedWidth = measureRef.current.offsetWidth + 5;
+      }
       setInputWidth(`${adjustedWidth}px`);
     }
   }, [amount]);
