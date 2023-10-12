@@ -152,7 +152,7 @@ function Card({
                 )}
                 <div className={`pl-3 ${textColor}`}>
                   <h2
-                    className={`font-extrabold truncate w-[13ch] ${textColor}`}
+                    className={`font-extrabold truncate w-[13ch] ${textColor} ${window.innerWidth <= 390 ? 'truncate w-[10ch]' : ''}`}
                   >
                     {name || "Name"}
                   </h2>
@@ -169,7 +169,7 @@ function Card({
                 {sharedNumber > 0 && (
                   <Shared className={`absolute w-6 h-6 -left-8 ${textColor}`} />
                 )}
-                <div className="flex items-center p-2 px-3 bg-white rounded min-w-[63px] drop-shadow h-9">
+                <div className="flex items-center justify-center p-2 bg-white rounded min-w-[63px] drop-shadow h-9">
                   <p className="text-xs text-dark-grey">
                     {formatDate(nextPaymentDate)}
                   </p>
