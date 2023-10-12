@@ -33,7 +33,7 @@ function EditSubscription() {
   const { subscriptionId } = useParams();
   const paymentMethodsList = useRecoilValue(paymentMethodsState);
 
-  const [inputWidth, setInputWidth] = useState("auto");
+  const [inputWidth, setInputWidth] = useState("82px");
   const measureRef = useRef(null);
 
   //Emojis
@@ -149,16 +149,11 @@ function EditSubscription() {
         return match ? match[1] : currencyString;
     }
   };
-  
+
   // Adjusts the input width based on the amount
   useEffect(() => {
     if (measureRef.current) {
-      let adjustedWidth;
-      if(amount === '0' || amount === 0) {
-        adjustedWidth = measureRef.current.offsetWidth + measureRef.current.offsetWidth / 2;
-      } else {
-        adjustedWidth = measureRef.current.offsetWidth + 5;
-      }
+      const adjustedWidth = measureRef.current.offsetWidth + 5;
       setInputWidth(`${adjustedWidth}px`);
     }
   }, [amount]);
