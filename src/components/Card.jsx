@@ -30,7 +30,7 @@ function Card({
   actualAmount,
   sharedNumber,
   recurrence,
-  nextPaymentDate,
+  paymentDate,
   reminderDays,
   paymentMethod,
   website,
@@ -39,6 +39,38 @@ function Card({
 }) {
   const [darkMode] = useRecoilState(darkModeState);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // Formats the next payment date to show on card
+  const getNextPaymentDate = (originalDate, recurrence) => {
+    const originalPaymentDate = new Date(originalDate);
+    const currentDate = new Date();
+
+    currentDate.setHours(0, 0, 0, 0);
+  
+    if (recurrence.toLowerCase() === "monthly") {
+      originalPaymentDate.setFullYear(currentDate.getFullYear(), currentDate.getMonth(), originalPaymentDate.getDate());
+  
+      // If this date has already passed in the current month, move to next month
+      if (originalPaymentDate < currentDate) {
+        originalPaymentDate.setMonth(originalPaymentDate.getMonth() + 1);
+      }
+    } else if (recurrence.toLowerCase() === "yearly") {
+      originalPaymentDate.setFullYear(currentDate.getFullYear());
+  
+      // If this date has already passed in the current year, move to next year
+      if (originalPaymentDate < currentDate) {
+        originalPaymentDate.setFullYear(originalPaymentDate.getFullYear() + 1);
+      }
+    } else if (recurrence.toLowerCase() === "weekly") {
+      // Move the date to the next occurrence of the same weekday
+      while (originalPaymentDate < currentDate) {
+        originalPaymentDate.setDate(originalPaymentDate.getDate() + 7);
+      }
+    }
+  
+    return originalPaymentDate;
+  };  
+  const nextPaymentDate = getNextPaymentDate(paymentDate, recurrence);
 
   // DELETE Method
   const deleteSubscription = async (subscriptionId) => {
@@ -107,10 +139,10 @@ function Card({
   };
 
   // Formats the next payment date or use default if not chosen
-  const formatDate = (date) => {
+  const formatDate = (date, includeYear = false) => {
     if (!date) return "01 Jan";
 
-    const dateObj = new Date(date); // No need to append 'T00:00:00Z'
+    const dateObj = new Date(date);
 
     if (isNaN(dateObj.getTime())) return "Invalid Date";
 
@@ -120,7 +152,13 @@ function Card({
       timeZone: "UTC",
     });
 
-    return `${day} ${month}`;
+    let formattedDate = `${day} ${month}`;
+    if (includeYear) {
+      const year = dateObj.getUTCFullYear();
+      formattedDate += ` ${year}`;
+    }
+
+    return formattedDate;
   };
 
   // Checks if the color is white and changes the text color to black
@@ -320,8 +358,8 @@ function Card({
               <p>{sharedNumber}</p>
             </div>
             <div>
-              <h2>Next Payment</h2>
-              <p>{formatDate(nextPaymentDate)}</p>
+              <h2>Next Payment / First Payment</h2>
+              <p>{formatDate(nextPaymentDate, true)} / {formatDate(paymentDate, true)}</p>
             </div>
             <div>
               <h2>Reminder Days</h2>

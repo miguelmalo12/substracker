@@ -133,14 +133,42 @@ function Subscriptions({ menuRef, setToggledByButton }) {
       : Number(amount);
   };
 
+  // Helper function to calculate next date based on recurrence, used in sorting
+  const calculateNextDueDate = (subscription) => {
+    const paymentDate = new Date(subscription.payment_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Ignore time part
+
+    while (paymentDate < today) {
+      switch (subscription.recurrence.toLowerCase()) {
+        case 'monthly':
+          paymentDate.setMonth(paymentDate.getMonth() + 1);
+          break;
+        case 'yearly':
+          paymentDate.setFullYear(paymentDate.getFullYear() + 1);
+          break;
+        case 'weekly':
+          paymentDate.setDate(paymentDate.getDate() + 7);
+          break;
+        default:
+          console.warn(`Unknown recurrence type: ${subscription.recurrence}`);
+          break;
+      }
+    }
+
+    return paymentDate;
+  };
+
   // SORT subscriptions by criteria selected
   const sortSubscriptions = (criteria, subscriptionsToSort = []) => {
     let sortedSubscriptions = [...subscriptionsToSort];
 
     if (criteria === "Due Date") {
-      sortedSubscriptions.sort(
-        (a, b) => new Date(a.payment_date) - new Date(b.payment_date)
-      );
+      sortedSubscriptions.sort((a, b) => {
+        const nextDueDateA = calculateNextDueDate(a);
+        const nextDueDateB = calculateNextDueDate(b);
+        return nextDueDateA - nextDueDateB;
+      });
     } else if (criteria === "Amount") {
       sortedSubscriptions.sort((a, b) => {
         const actualAmountA = adjustAmountToRecurrence(
@@ -505,7 +533,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
       calculateTotalAmount(subscriptionsToUse);
     }
   }, [subscriptions, subscriptionsToRender, preferredCurrency, selectedMetric, selectedInterval, filters]); // eslint-disable-line react-hooks/exhaustive-deps
-
+  
   return (
     <main className="responsive-padding dark:bg-dark md:pl-28 max-w-7xl md:min-h-screen md:flex md:flex-col">
       <div className="flex-grow">
@@ -628,7 +656,7 @@ function Subscriptions({ menuRef, setToggledByButton }) {
                 )}
                 sharedNumber={subscription.shared_with}
                 recurrence={subscription.recurrence}
-                nextPaymentDate={subscription.payment_date}
+                paymentDate={subscription.payment_date}
                 reminderDays={subscription.reminder_days}
                 paymentMethod={subscription.payment_method}
                 website={subscription.website}
