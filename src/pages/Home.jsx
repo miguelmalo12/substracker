@@ -338,7 +338,7 @@ function Home() {
             style={{ transform: "scale(0)", opacity: "0" }}
           >
             <img
-              src="https://i.postimg.cc/8kJyjgJP/netflix-3d.png"
+              src="https://ik.imagekit.io/mmalo/SubsTracker/Images/netflix-3d.png"
               alt="Netflix Icon"
               className="drop-shadow-xl"
             />
@@ -348,7 +348,7 @@ function Home() {
             style={{ transform: "scale(0)", opacity: "0" }}
           >
             <img
-              src="https://i.postimg.cc/05TVSXDG/slack-3d.png"
+              src="https://ik.imagekit.io/mmalo/SubsTracker/Images/slack-3d.png"
               alt="Slack Icon"
               className="drop-shadow-xl"
             />
@@ -358,7 +358,7 @@ function Home() {
             style={{ transform: "scale(0)", opacity: "0" }}
           >
             <img
-              src="https://i.postimg.cc/T1DQSnMW/spotify-3d.png"
+              src="https://ik.imagekit.io/mmalo/SubsTracker/Images/spotify-3d.png"
               alt="Spotify Icon"
               className="drop-shadow-xl"
             />
@@ -369,7 +369,7 @@ function Home() {
             style={{ transform: "scale(0)", opacity: "0" }}
           >
             <img
-              src="https://i.postimg.cc/jSKvgW8L/dropbox-3d.png"
+              src="https://ik.imagekit.io/mmalo/SubsTracker/Images/figma-3d.png"
               alt="Dropbox Icon"
               className="drop-shadow-xl"
             />
@@ -380,7 +380,7 @@ function Home() {
             style={{ transform: "scale(0)", opacity: "0" }}
           >
             <img
-              src="https://i.postimg.cc/RF8XXX8B/youtube-3d.png"
+              src="https://ik.imagekit.io/mmalo/SubsTracker/Images/youtube-3d.png"
               alt="Youtube Icon"
               className="drop-shadow-xl"
             />
@@ -390,7 +390,7 @@ function Home() {
             style={{ transform: "scale(0)", opacity: "0" }}
           >
             <img
-              src="https://i.postimg.cc/htrsHSwM/amazon-3d.png"
+              src="https://ik.imagekit.io/mmalo/SubsTracker/Images/amazon-3d.png"
               alt="Amazon Icon"
               className="drop-shadow-xl"
             />
@@ -450,8 +450,8 @@ function Home() {
               <img
                 src={
                   isDashboardDark
-                    ? "https://i.postimg.cc/C1kxTMbG/dashboard-dark.jpg"
-                    : "https://i.postimg.cc/cCG0qTt9/dashboard-light.jpg"
+                    ? "https://ik.imagekit.io/mmalo/SubsTracker/Images/substracker-dark.jpg"
+                    : "https://ik.imagekit.io/mmalo/SubsTracker/Images/substracker-dashboard-light.jpg"
                 }
                 alt="Product screenshot"
                 className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0 transition-transform duration-300 ease-in-out z-50 hover:-translate-x-4"
@@ -482,7 +482,7 @@ function Home() {
           <div className="grid items-center max-w-2xl grid-cols-1 mx-auto gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
             <div className="relative order-2 lg:order-1">
               <img
-                src="https://i.postimg.cc/VLvnr7MW/mobile-mockup.jpg"
+                src="https://ik.imagekit.io/mmalo/SubsTracker/Images/mobile-mockup.jpeg"
                 alt="Product screenshot"
                 className="w-[60rem] sm:w-[60rem] md:-ml-4 lg:-ml-0 transition-transform duration-300 ease-in-out z-50 hover:-translate-x-4"
                 // width={2432}
@@ -660,8 +660,8 @@ function Home() {
                 className="absolute left-0 top-0 w-[57rem] max-w-none rounded-md z-100000 bg-white/5 ring-1 ring-white/10 transition-transform duration-300 ease-in-out z-50 hover:-translate-x-4"
                 src={
                   isAddDark
-                    ? "https://i.postimg.cc/gjydGRvY/add-dark.jpg"
-                    : "https://i.postimg.cc/PqB5Rvvf/add-light.jpg"
+                    ? "https://ik.imagekit.io/mmalo/SubsTracker/Images/add-subscription-dark.jpg"
+                    : "https://ik.imagekit.io/mmalo/SubsTracker/Images/add-subscription-light.jpg"
                 }
                 alt="App screenshot"
                 width={1824}
@@ -694,7 +694,7 @@ function Home() {
       {/* Footer */}
       <footer className="py-8 text-white bg-gray-800">
         <div className="container mx-auto text-center">
-          <p className="mb-4">© 2023 SubsTracker. All Rights Reserved.</p>
+          <p className="mb-4">© {new Date().getFullYear()} SubsTracker. All Rights Reserved.</p>
           {/* <div className="space-x-4">
             <a
               href="https://linkedin.com"
